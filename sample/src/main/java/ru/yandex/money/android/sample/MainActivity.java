@@ -11,10 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.yandex.money.IdentifierType;
+import com.yandex.money.ParamsP2P;
 import com.yandex.money.model.InstanceId;
 
+import java.math.BigDecimal;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
+import ru.yandex.money.android.PaymentFragment;
 
 public class MainActivity extends ActionBarActivity implements Consts {
 
@@ -26,21 +31,14 @@ public class MainActivity extends ActionBarActivity implements Consts {
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
+            ParamsP2P params = new ParamsP2P("41001901291751", IdentifierType.ACCOUNT, new BigDecimal("2.00"), "test");
+
+            PaymentFragment paymentFragment = PaymentFragment.newInstance(CLIENT_ID, params);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, paymentFragment)
                     .commit();
         }
 
-        Future<InstanceId> futureInstanceId = App.getApp().execute(new InstanceId.Request(CLIENT_ID));
-
-        try {
-            InstanceId instanceId = futureInstanceId.get();
-            onResult(instanceId.getStatus() + ": " + instanceId.getInstanceId());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            Log.e(TAG, e.getMessage());
-        }
     }
 
     private void onResult(String asd2) {
@@ -67,21 +65,4 @@ public class MainActivity extends ActionBarActivity implements Consts {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
-    }
-
 }
