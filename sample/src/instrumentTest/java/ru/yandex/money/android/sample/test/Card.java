@@ -5,7 +5,7 @@ package ru.yandex.money.android.sample.test;
  */
 public class Card {
 
-    public final static Card non3ds = new Card("4268037111484391", "04", "17", "874", "TEST", "a@a.a");
+    public final static Card non3ds = new Card("4268037111484391", "04", "2017", "874", "TEST", "a@aa.aa");
 
     public static String ID_CARD_NUMBER = "card-number";
     public static String ID_MONTH = "month";
