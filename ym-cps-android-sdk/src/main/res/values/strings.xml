@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">ym-android</string>
+
+    <string name="error_title">Oops&#8230; Something wrong happened.</string>
+    <string name="error_payee_not_found">Payee not found.</string>
+    <string name="error_payment_refused">Payment refused.</string>
+    <string name="error_unknown">Unknown error occurred: %1$s</string>
+
+    <string name="success_thank_you">Thank you!</string>
+    <string name="success_comment">You had been charged for %1$.2f rub.</string>
+    <string name="success_save_card_data">Save card.</string>
+    <string name="success_save_description">Next time you won\'t have to input them again.</string>
 </resources>

@@ -1,25 +1,15 @@
 package ru.yandex.money.android.sample;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.yandex.money.IdentifierType;
-import com.yandex.money.ParamsP2P;
-import com.yandex.money.model.InstanceId;
+import com.yandex.money.ParamsPhone;
 
 import java.math.BigDecimal;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
-import ru.yandex.money.android.PaymentFragment;
+import ru.yandex.money.android.fragments.PaymentFragment;
 
 public class MainActivity extends ActionBarActivity implements Consts {
 
@@ -31,20 +21,13 @@ public class MainActivity extends ActionBarActivity implements Consts {
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-            ParamsP2P params = new ParamsP2P("41001901291751", IdentifierType.ACCOUNT, new BigDecimal("2.00"), "test");
-
-            PaymentFragment paymentFragment = PaymentFragment.newInstance(CLIENT_ID, params);
+            PaymentFragment paymentFragment = PaymentFragment
+                    .newInstance(CLIENT_ID, new ParamsPhone("79112611383", new BigDecimal(2)));
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, paymentFragment)
                     .commit();
         }
-
     }
-
-    private void onResult(String asd2) {
-        Toast.makeText(this, asd2, Toast.LENGTH_LONG).show();
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

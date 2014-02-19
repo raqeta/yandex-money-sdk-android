@@ -47,7 +47,7 @@ public class YandexMoneyDroid {
 
     private void setupYm() {
         ym = new YandexMoney();
-        ym.setDebugLogging(true); // set up logging (set false for production!)
+        ym.setDebugLogging(true); // set up logging (todo set false for production!)
     }
 
     public <T> Future<T> execute(final IRequest<T> request) {
@@ -75,12 +75,12 @@ public class YandexMoneyDroid {
                 if (resp.isSuccess()) {
                     return resp.getInstanceId();
                 } else {
-                    throw new IOException(new RuntimeException(resp.getError()));
+                    throw new IOException(resp.getError());
                 }
             } catch (InterruptedException e) {
                 throw new IllegalStateException("InstanceId request interrupted");
             } catch (ExecutionException e) {
-                throw new IOException(e.getCause());
+                throw new IOException(e.getMessage());
             }
         } else {
             return instanceId;
@@ -102,7 +102,7 @@ public class YandexMoneyDroid {
         } catch (InterruptedException e) {
             throw new IllegalStateException("RequestExternalPayment request interrupted");
         } catch (ExecutionException e) {
-            throw new IOException("RequestExternalPayment failed, see cause", e.getCause());
+            throw new IOException("RequestExternalPayment failed, see cause");
         }
     }
 
@@ -115,7 +115,7 @@ public class YandexMoneyDroid {
         } catch (InterruptedException e) {
             throw new IllegalStateException("ProcessExternalPayment request interrupted");
         } catch (ExecutionException e) {
-            throw new IOException("ProcessExternalPayment failed, see cause", e.getCause());
+            throw new IOException("ProcessExternalPayment failed, see cause");
         }
     }
 }
