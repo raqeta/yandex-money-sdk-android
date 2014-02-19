@@ -72,11 +72,12 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="appcompat-v7-19.0.1" level="project" />
     <orderEntry type="library" exported="" name="gson-2.2.4" level="project" />
-    <orderEntry type="module" module-name="ym-cps-android-sdk" exported="" />
+    <orderEntry type="library" exported="" scope="TEST" name="robotium-solo-4.3.1" level="project" />
     <orderEntry type="library" exported="" name="okhttp-1.2.1" level="project" />
     <orderEntry type="library" exported="" name="ym-java-epr-sdk-1.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-19.0.1" level="project" />
     <orderEntry type="library" exported="" name="okhttp-protocols-1.2.1" level="project" />
+    <orderEntry type="module" module-name="ym-cps-android-sdk" exported="" />
   </component>
 </module>
 

@@ -23,4 +23,6 @@ dependencies {
     compile 'com.android.support:support-v4:19.0.1'
     compile project(':ym-cps-android-sdk')
     compile fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+
+    instrumentTestCompile 'com.jayway.android.robotium:robotium-solo:4.+'
 }

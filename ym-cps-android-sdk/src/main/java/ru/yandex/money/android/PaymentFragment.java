@@ -1,18 +1,23 @@
 package ru.yandex.money.android;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.yandex.money.ParamsP2P;
+import com.yandex.money.model.ProcessExternalPayment;
 import com.yandex.money.model.RequestExternalPayment;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,8 +28,8 @@ public class PaymentFragment extends Fragment {
 
     public static final String TAG = PaymentFragment.class.getName();
 
-    private static String ARG_CLIENT_ID = "ru.yandex.money.android.arg_client_id";
-    private static String ARG_PATTERN_ID = "ru.yandex.money.android.arg_pattern_id";
+    public static String ARG_CLIENT_ID = "ru.yandex.money.android.arg_client_id";
+    public static String ARG_PATTERN_ID = "ru.yandex.money.android.arg_pattern_id";
 
     private YandexMoneyDroid ymd;
 
@@ -80,6 +85,7 @@ public class PaymentFragment extends Fragment {
 
         progress = (ProgressBar) view.findViewById(R.id.progress);
         webview = (WebView) view.findViewById(R.id.webview);
+        webview.getSettings().setJavaScriptEnabled(true);
 
         String patternId = "phone-topup";
         Map<String, String> params = new HashMap<String, String>();
@@ -87,14 +93,37 @@ public class PaymentFragment extends Fragment {
         params.put("phone-number", "79112611383");
         try {
             RequestExternalPayment requestExternalPayment = ymd.requestShop(patternId, params);
-            progress.setVisibility(View.GONE);
-            webview.setVisibility(View.VISIBLE);
-            Toast.makeText(getActivity(), requestExternalPayment.getRequestId(), Toast.LENGTH_LONG).show();
+            if (requestExternalPayment.isSuccess()) {
+                ProcessExternalPayment processExternalPayment = ymd.process(requestExternalPayment.getRequestId(), false);
+                if (processExternalPayment.isExtAuthRequired()) {
+                    progress.setVisibility(View.GONE);
+                    webview.setVisibility(View.VISIBLE);
+                    String url = makeUrl(processExternalPayment);
+                    webview.loadUrl(url);
+//                    webSettings.
+//                    Intent i = new Intent(Intent.ACTION_VIEW);
+//                    i.setData(Uri.parse(url));
+//                    startActivity(i);
+                } else if (processExternalPayment.isSuccess()) {
+
+                }
+            } else {
+                Toast.makeText(getActivity(), requestExternalPayment.getError(), Toast.LENGTH_LONG).show();
+            }
+
         } catch (IOException e) {
-            Toast.makeText(getActivity(), "fukcup " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "fuck up " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
         return view;
+    }
+
+    private String makeUrl(ProcessExternalPayment processExternalPayment) {
+        String res = processExternalPayment.getAcsUri() + "?";
+        for (Map.Entry<String, String> entry : processExternalPayment.getAcsParams().entrySet()) {
+            res = res + entry.getKey() + "=" + entry.getValue() + "&";
+        }
+        return res;
     }
 
     @Override

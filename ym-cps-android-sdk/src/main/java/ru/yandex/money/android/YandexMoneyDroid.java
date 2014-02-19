@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.yandex.money.ParamsP2P;
 import com.yandex.money.YandexMoney;
 import com.yandex.money.model.InstanceId;
+import com.yandex.money.model.ProcessExternalPayment;
 import com.yandex.money.model.RequestExternalPayment;
 import com.yandex.money.net.IRequest;
 
@@ -20,6 +21,9 @@ import java.util.concurrent.Future;
  * Created by dvmelnikov on 12/02/14.
  */
 public class YandexMoneyDroid {
+
+    public final static String SUCCESS_URI = "ym-cps-android-sdk://ext_auth_success";
+    public final static String FAIL_URI = "ym-cps-android-sdk://ext_auth_fail";
 
     private String clientId;
     private Prefs prefs;
@@ -98,7 +102,20 @@ public class YandexMoneyDroid {
         } catch (InterruptedException e) {
             throw new IllegalStateException("RequestExternalPayment request interrupted");
         } catch (ExecutionException e) {
-            throw new IOException(e.getCause());
+            throw new IOException("RequestExternalPayment failed, see cause", e.getCause());
+        }
+    }
+
+    public ProcessExternalPayment process(String requestId, boolean requestToken) throws IOException {
+        String instanceId = getInstanceId();
+        ProcessExternalPayment.Request req = new ProcessExternalPayment.Request(accessToken, instanceId, requestId, SUCCESS_URI, FAIL_URI, requestToken);
+        Future<ProcessExternalPayment> futureResp = execute(req);
+        try {
+            return futureResp.get();
+        } catch (InterruptedException e) {
+            throw new IllegalStateException("ProcessExternalPayment request interrupted");
+        } catch (ExecutionException e) {
+            throw new IOException("ProcessExternalPayment failed, see cause", e.getCause());
         }
     }
 }
