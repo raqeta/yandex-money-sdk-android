@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import java.util.Collections;
 import java.util.Map;
 
-import ru.yandex.money.android.utils.Arguments;
+import ru.yandex.money.android.utils.Bundles;
 
 /**
  * @author vyasevich
@@ -31,7 +31,7 @@ abstract class BasePaymentFragment extends Fragment {
             T fragment, String clientId, String patternId, Map<String, String> params) {
 
         Bundle parameters = new Bundle();
-        Arguments.writeStringMapToBundle(parameters, params);
+        Bundles.writeStringMapToBundle(parameters, params);
 
         Bundle args = new Bundle();
         args.putString(EXTRA_CLIENT_ID, clientId);
@@ -58,6 +58,6 @@ abstract class BasePaymentFragment extends Fragment {
         clientId = args.getString(EXTRA_CLIENT_ID);
         patternId = args.getString(EXTRA_PATTERN_ID);
         Bundle parameters = args.getBundle(EXTRA_PARAMS);
-        params = Collections.unmodifiableMap(Arguments.readStringMapFromBundle(parameters));
+        params = Collections.unmodifiableMap(Bundles.readStringMapFromBundle(parameters));
     }
 }
