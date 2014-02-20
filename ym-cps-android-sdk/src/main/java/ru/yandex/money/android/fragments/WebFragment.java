@@ -3,6 +3,7 @@ package ru.yandex.money.android.fragments;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,9 +89,8 @@ public class WebFragment extends BasePaymentFragment {
         try {
             RequestExternalPayment requestExternalPayment =
                     ymd.requestShop(getPatternId(), getParams());
-            contractAmount = requestExternalPayment.getContractAmount().doubleValue();
-
             if (requestExternalPayment.isSuccess()) {
+                contractAmount = requestExternalPayment.getContractAmount().doubleValue();
                 ProcessExternalPayment processExternalPayment =
                         ymd.process(requestExternalPayment.getRequestId(), false);
 
@@ -129,6 +129,12 @@ public class WebFragment extends BasePaymentFragment {
             } else if (url.contains(YandexMoneyDroid.FAIL_URI)) {
                 getPaymentFragment().showError("fail");
             }
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            System.out.println("!!!!: " + url);
+            return true;
         }
     }
 }
