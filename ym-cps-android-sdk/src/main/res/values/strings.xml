@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">ym-android</string>
-
     <string name="error_title">Oops&#8230; Something wrong happened.</string>
     <string name="error_payee_not_found">Payee not found.</string>
     <string name="error_payment_refused">Payment refused.</string>

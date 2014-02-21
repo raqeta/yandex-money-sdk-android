@@ -2,11 +2,11 @@ package ru.yandex.money.android;
 
 import android.text.TextUtils;
 
-import com.yandex.money.ParamsP2P;
 import com.yandex.money.YandexMoney;
-import com.yandex.money.model.InstanceId;
-import com.yandex.money.model.ProcessExternalPayment;
-import com.yandex.money.model.RequestExternalPayment;
+import com.yandex.money.model.common.params.ParamsP2P;
+import com.yandex.money.model.cps.InstanceId;
+import com.yandex.money.model.cps.ProcessExternalPayment;
+import com.yandex.money.model.cps.RequestExternalPayment;
 import com.yandex.money.net.IRequest;
 
 import java.io.IOException;
@@ -73,7 +73,9 @@ public class YandexMoneyDroid {
             try {
                 InstanceId resp = futureInstanceId.get();
                 if (resp.isSuccess()) {
-                    return resp.getInstanceId();
+                    instanceId = resp.getInstanceId();
+                    prefs.storeInstanceId(instanceId);
+                    return instanceId;
                 } else {
                     throw new IOException(resp.getError());
                 }

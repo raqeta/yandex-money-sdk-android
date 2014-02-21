@@ -3,10 +3,8 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
-    <application android:allowBackup="true"
-        android:label="@string/app_name"
-        >
-
+    <application android:allowBackup="true">
+        <activity android:name=".PaymentActivity"/>
     </application>
 
 </manifest>

@@ -1,10 +1,11 @@
 package ru.yandex.money.android.fragments;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import ru.yandex.money.android.R;
 import ru.yandex.money.android.utils.Views;
@@ -29,8 +30,22 @@ public class SuccessFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.success_fragment, container, false);
         assert view != null : "view is null";
+
         Views.setText(view, R.id.comment, getString(R.string.success_comment,
                 getArguments().getDouble(EXTRA_CONTRACT_AMOUNT)));
+
+        Button button = (Button) view.findViewById(R.id.saveCard);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSaveCardClicked();
+            }
+        });
+
         return view;
+    }
+
+    private void onSaveCardClicked() {
+
     }
 }
