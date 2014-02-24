@@ -129,7 +129,7 @@ public class WebFragment extends Fragment {
             String url = makeUrl(pep);
             webView.loadUrl(url);
         } else if (pep.isSuccess()) {
-            getPaymentActivity().showSuccess(contractAmount);
+            getPaymentActivity().showSuccess(contractAmount, pep.getMoneySource());
         } else if (pep.isInProgress()) {
             Threads.sleepSafely(pep.getNextRetry());
             processExternalPayment(requestId, requestToken);

@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.yandex.money.model.common.MoneySource;
 import com.yandex.money.model.common.params.ParamsP2P;
 import com.yandex.money.model.common.params.ParamsPhone;
 
@@ -58,8 +59,8 @@ public class PaymentActivity extends Activity {
         replaceFragment(ErrorFragment.newInstance(error));
     }
 
-    public void showSuccess(double contractAmount) {
-        replaceFragment(SuccessFragment.newInstance(contractAmount));
+    public void showSuccess(double contractAmount, MoneySource moneySource) {
+        replaceFragment(SuccessFragment.newInstance(contractAmount, moneySource));
     }
 
     private void replaceFragment(Fragment fragment) {

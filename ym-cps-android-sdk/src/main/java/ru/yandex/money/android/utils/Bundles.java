@@ -9,6 +9,7 @@ import java.util.Map;
  * @author vyasevich
  */
 public final class Bundles {
+
     public static void writeStringMapToBundle(Bundle bundle, Map<String, String> map) {
         if (bundle == null) {
             throw new NullPointerException("bundle is null");
