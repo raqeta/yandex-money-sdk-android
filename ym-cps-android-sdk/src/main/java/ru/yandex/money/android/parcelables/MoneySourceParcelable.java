@@ -1,4 +1,4 @@
-package ru.yandex.money.android.fragments.parcelables;
+package ru.yandex.money.android.parcelables;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,7 +10,6 @@ import ru.yandex.money.android.utils.Parcelables;
 /**
  * @author vyasevich
  */
-@Deprecated
 public class MoneySourceParcelable implements Parcelable {
 
     private final MoneySource moneySource;

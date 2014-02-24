@@ -10,6 +10,9 @@ import android.widget.Button;
 import com.yandex.money.model.common.MoneySource;
 
 import ru.yandex.money.android.R;
+import ru.yandex.money.android.database.DatabaseStorage;
+import ru.yandex.money.android.parcelables.MoneySourceParcelable;
+import ru.yandex.money.android.utils.Threads;
 import ru.yandex.money.android.utils.Views;
 
 /**
@@ -25,7 +28,7 @@ public class SuccessFragment extends Fragment {
     public static SuccessFragment newInstance(double contractAmount, MoneySource moneySource) {
         Bundle args = new Bundle();
         args.putDouble(EXTRA_CONTRACT_AMOUNT, contractAmount);
-        args.putString(EXTRA_MONEY_SOURCE, MoneySource.toJson(moneySource).toString());
+        args.putParcelable(EXTRA_MONEY_SOURCE, new MoneySourceParcelable(moneySource));
 
         SuccessFragment frg = new SuccessFragment();
         frg.setArguments(args);
@@ -37,12 +40,15 @@ public class SuccessFragment extends Fragment {
         View view = inflater.inflate(R.layout.success_fragment, container, false);
         assert view != null : "view is null";
 
-        Bundle arguments = getArguments();
-        assert arguments != null : "no arguments for SuccessFragment";
-        moneySource = MoneySource.parseJson(arguments.getString(EXTRA_MONEY_SOURCE));
+        Bundle args = getArguments();
+        assert args != null : "no arguments for SuccessFragment";
+
+        MoneySourceParcelable moneySourceParcelable = args.getParcelable(EXTRA_MONEY_SOURCE);
+        assert moneySourceParcelable != null : "no money source specified for SuccessFragment";
+        moneySource = moneySourceParcelable.getMoneySource();
 
         Views.setText(view, R.id.comment, getString(R.string.success_comment,
-                arguments.getDouble(EXTRA_CONTRACT_AMOUNT)));
+                args.getDouble(EXTRA_CONTRACT_AMOUNT)));
 
         Button button = (Button) view.findViewById(R.id.saveCard);
         button.setOnClickListener(new View.OnClickListener() {
@@ -56,6 +62,11 @@ public class SuccessFragment extends Fragment {
     }
 
     private void onSaveCardClicked() {
-
+        Threads.runOnBackground(new Runnable() {
+            @Override
+            public void run() {
+                new DatabaseStorage(getActivity()).insertMoneySource(moneySource);
+            }
+        });
     }
 }
