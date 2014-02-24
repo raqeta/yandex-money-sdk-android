@@ -4,7 +4,9 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application android:allowBackup="true">
-        <activity android:name=".PaymentActivity"/>
+        <activity android:name=".PaymentActivity"
+            android:theme="@style/Theme.YandexMoney"
+            android:configChanges="keyboard|keyboardHidden|orientation"/>
     </application>
 
 </manifest>
