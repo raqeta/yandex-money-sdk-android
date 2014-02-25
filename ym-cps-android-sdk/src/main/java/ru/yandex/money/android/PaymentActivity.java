@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.yandex.money.model.common.MoneySource;
 import com.yandex.money.model.common.params.ParamsP2P;
 import com.yandex.money.model.common.params.ParamsPhone;
 
@@ -47,20 +46,24 @@ public class PaymentActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.payment_fragment);
+        setContentView(R.layout.payment_activity);
         arguments = new PaymentArguments(getIntent().getBundleExtra(EXTRA_ARGUMENTS));
 
         if (savedInstanceState == null) {
-            replaceFragment(WebFragment.newInstance(arguments));
+            replaceFragment(WebFragment.newInstance());
         }
+    }
+
+    public PaymentArguments getArguments() {
+        return arguments;
     }
 
     public void showError(String error) {
         replaceFragment(ErrorFragment.newInstance(error));
     }
 
-    public void showSuccess(double contractAmount, MoneySource moneySource) {
-        replaceFragment(SuccessFragment.newInstance(contractAmount, moneySource));
+    public void showSuccess(String requestId, double contractAmount) {
+        replaceFragment(SuccessFragment.newInstance(requestId, contractAmount));
     }
 
     private void replaceFragment(Fragment fragment) {

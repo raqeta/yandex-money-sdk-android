@@ -43,6 +43,6 @@ public class BasicTest extends ActivityInstrumentationTestCase2 {
         solo.typeTextInWebElement(By.id(Card.ID_FIO), card.getFio());
         solo.typeTextInWebElement(By.id(Card.ID_CPS_EMAIL), card.getEmail());
         solo.clickOnWebElement(By.id("mobile-cps_submit-button"));
-        solo.sleep(10000);
+        solo.sleep(100000);
     }
 }

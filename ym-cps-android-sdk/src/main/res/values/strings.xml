@@ -1,11 +1,27 @@
 <resources>
-    <string name="error_title">Oops&#8230; Something wrong happened.</string>
-    <string name="error_payee_not_found">Payee not found.</string>
-    <string name="error_payment_refused">Payment refused.</string>
-    <string name="error_unknown">Unknown error occurred: %1$s</string>
 
+    <!-- Errors -->
+    <string name="error_oops_title">Oops!</string>
+    <string name="error_something_wrong_title">Something wrong</string>
+    <string name="error_illegal_param_client_id_title">Can\'t do it</string>
+    <string name="error_illegal_param_client_id">This app is refused to do any payments.</string>
+    <string name="error_illegal_param_csc">You\'ve specified wrong %1$s code.</string>
+    <string name="error_authorization_reject">Your bank refused to withdraw money.</string>
+    <string name="error_payee_not_found">Payee not found.</string>
+    <string name="error_payment_refused">The shop you are trying to pay to couldn\'t accept your payment.</string>
+    <string name="error_unknown">Payment failed: please try again in a few minutes.</string>
+
+    <!-- Error Actions -->
+    <string name="error_action_try_again">Try again</string>
+    <string name="error_action_try_another_card">Try another card</string>
+
+    <!-- Success Fragment -->
     <string name="success_thank_you">Thank you!</string>
     <string name="success_comment">You had been charged for %1$.2f rub.</string>
-    <string name="success_save_card_data">Save card.</string>
-    <string name="success_save_description">Next time you won\'t have to input them again.</string>
+    <string name="success_save_card">Save card.</string>
+    <string name="success_save_card_description">Next time you won\'t be needed to input them again.</string>
+    <string name="success_saving_card">Saving card&#8230;</string>
+    <string name="success_saving_card_description">Please wait a moment.</string>
+    <string name="success_card_saved_description">All done! Next time you need to specify %1$s code only.</string>
+
 </resources>

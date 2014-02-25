@@ -1,7 +1,6 @@
 package ru.yandex.money.android.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import com.yandex.money.model.cps.RequestExternalPayment;
 import java.io.IOException;
 import java.util.Map;
 
-import ru.yandex.money.android.PaymentActivity;
 import ru.yandex.money.android.PaymentArguments;
 import ru.yandex.money.android.Prefs;
 import ru.yandex.money.android.R;
@@ -27,7 +25,7 @@ import ru.yandex.money.android.utils.Threads;
 /**
  * @author vyasevich
  */
-public class WebFragment extends Fragment {
+public class WebFragment extends PaymentFragment {
 
     private static final String EXTRA_REQUEST_ID = "ru.yandex.money.android.extra.REQUEST_ID";
     private static final String EXTRA_CONTRACT_AMOUNT = "ru.yandex.money.android.extra.CONTRACT_AMOUNT";
@@ -42,16 +40,14 @@ public class WebFragment extends Fragment {
     private String requestId;
     private double contractAmount;
 
-    public static WebFragment newInstance(PaymentArguments arguments) {
-        WebFragment frg = new WebFragment();
-        frg.setArguments(arguments.toBundle());
-        return frg;
+    public static WebFragment newInstance() {
+        return new WebFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        arguments = new PaymentArguments(getArguments());
+        arguments = getPaymentActivity().getArguments();
         ymd = new YandexMoneyDroid(arguments.getClientId(), new Prefs(getActivity()));
         if (savedInstanceState != null) {
             requestId = savedInstanceState.getString(EXTRA_REQUEST_ID);
@@ -105,7 +101,7 @@ public class WebFragment extends Fragment {
             if (rep.isSuccess()) {
                 requestId = rep.getRequestId();
                 contractAmount = rep.getContractAmount().doubleValue();
-                processExternalPayment(requestId, false);
+                processExternalPayment(requestId);
             } else {
                 getPaymentActivity().showError(rep.getError());
             }
@@ -114,25 +110,25 @@ public class WebFragment extends Fragment {
         }
     }
 
-    private void processExternalPayment(String requestId, boolean requestToken) {
+    private void processExternalPayment(String requestId) {
         try {
-            ProcessExternalPayment pep = ymd.process(requestId, requestToken);
-            onExternalPaymentProcessed(pep, requestToken);
+            ProcessExternalPayment pep = ymd.process(requestId, false);
+            onExternalPaymentProcessed(pep);
         } catch (IOException e) {
             getPaymentActivity().showError(e.getMessage());
         }
     }
 
-    private void onExternalPaymentProcessed(ProcessExternalPayment pep, boolean requestToken) {
+    private void onExternalPaymentProcessed(ProcessExternalPayment pep) {
         if (pep.isExtAuthRequired()) {
             showWebView();
             String url = makeUrl(pep);
             webView.loadUrl(url);
         } else if (pep.isSuccess()) {
-            getPaymentActivity().showSuccess(contractAmount, pep.getMoneySource());
+            getPaymentActivity().showSuccess(requestId, contractAmount);
         } else if (pep.isInProgress()) {
             Threads.sleepSafely(pep.getNextRetry());
-            processExternalPayment(requestId, requestToken);
+            processExternalPayment(requestId);
         } else {
             getPaymentActivity().showError(pep.getError());
         }
@@ -146,17 +142,13 @@ public class WebFragment extends Fragment {
         return url;
     }
 
-    private PaymentActivity getPaymentActivity() {
-        return (PaymentActivity) getActivity();
-    }
-
     private class Client extends WebViewClient {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             if (url.contains(YandexMoneyDroid.SUCCESS_URI)) {
-                processExternalPayment(requestId, true);
+                processExternalPayment(requestId);
             } else if (url.contains(YandexMoneyDroid.FAIL_URI)) {
-                getPaymentActivity().showError("fail");
+                getPaymentActivity().showError(null);
             }
         }
     }

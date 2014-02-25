@@ -3,8 +3,6 @@ package ru.yandex.money.android;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.yandex.money.model.common.MoneySource;
-
 /**
  * Created by dvmelnikov on 12/02/14.
  */
@@ -29,9 +27,5 @@ public class Prefs {
 
     public String restoreInstanceId() {
         return prefs.getString(PREF_INSTANCE_ID, "");
-    }
-
-    public void storeCard(MoneySource moneySource) {
-
     }
 }
