@@ -31,4 +31,13 @@
     <string name="cards_payment_options_available">Available Payment Options</string>
     <string name="cards_delete_card">Delete</string>
 
+    <!-- CSC Fragment -->
+    <string name="csc_code">%1$s code</string>
+    <string name="csc_three">3-digits</string>
+    <string name="csc_four">4-digits</string>
+    <string name="csc_back">back</string>
+    <string name="csc_front">front</string>
+    <string name="csc_hint">%1$s code on the %2$s of your card.</string>
+    <string name="csc_pay">Pay</string>
+
 </resources>

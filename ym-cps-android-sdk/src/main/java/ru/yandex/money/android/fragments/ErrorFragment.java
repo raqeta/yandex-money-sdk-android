@@ -70,10 +70,10 @@ public class ErrorFragment extends Fragment {
             actionResId = R.string.error_action_try_again;
         }
 
-        Views.setText(view, R.id.title, getString(titleResId));
-        Views.setText(view, R.id.message, getString(messageResId));
+        Views.setText(view, R.id.error_title, getString(titleResId));
+        Views.setText(view, R.id.error_message, getString(messageResId));
 
-        Button action = (Button) view.findViewById(R.id.action);
+        Button action = (Button) view.findViewById(R.id.error_action);
         if (actionResId == notSpecified) {
             action.setVisibility(View.GONE);
             action.setOnClickListener(null);

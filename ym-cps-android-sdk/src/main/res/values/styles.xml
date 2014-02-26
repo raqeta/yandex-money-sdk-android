@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="YandexMoney.Theme" parent="android:Theme.Holo.Light">
-        <!--<item name="android:background">@color/ym_background</item>-->
-    </style>
+    <style name="YandexMoney.Theme" parent="android:Theme.Holo.Light"/>
 
     <style name="YandexMoney.Button" parent="android:Widget.Button">
         <item name="android:layout_width">wrap_content</item>

@@ -14,6 +14,7 @@ import java.util.List;
 
 import ru.yandex.money.android.database.DatabaseStorage;
 import ru.yandex.money.android.fragments.CardsFragment;
+import ru.yandex.money.android.fragments.CscFragment;
 import ru.yandex.money.android.fragments.ErrorFragment;
 import ru.yandex.money.android.fragments.SuccessFragment;
 import ru.yandex.money.android.fragments.WebFragment;
@@ -101,6 +102,10 @@ public class PaymentActivity extends Activity {
         replaceFragment(SuccessFragment.newInstance(requestId, contractAmount));
     }
 
+    public void showCsc(MoneySource moneySource) {
+        replaceFragment(CscFragment.newInstance(requestId, moneySource));
+    }
+
     private void requestExternalPayment() {
         reqId = dataServiceHelper.requestShop(arguments.getPatternId(), arguments.getParams());
     }
@@ -112,7 +117,7 @@ public class PaymentActivity extends Activity {
             double contractAmount = rep.getContractAmount().doubleValue();
             replaceFragment(cards.size() == 0 ?
                     WebFragment.newInstance(requestId, contractAmount) :
-                    CardsFragment.newInstance(requestId, rep.getTitle(), contractAmount));
+                    CardsFragment.newInstance(rep.getTitle(), contractAmount));
         } else {
             showError(rep.getError());
         }

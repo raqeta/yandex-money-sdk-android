@@ -13,17 +13,17 @@
 
         <TextView
             style="@style/YandexMoney.TextView.Title"
-            android:id="@+id/title"
+            android:id="@+id/error_title"
             android:text="@string/error_illegal_param_client_id_title"/>
 
         <TextView
             style="@style/YandexMoney.TextView"
-            android:id="@+id/message"
+            android:id="@+id/error_message"
             android:text="@string/error_illegal_param_client_id"/>
 
         <Button
             style="@style/YandexMoney.Button.Primary.Large"
-            android:id="@+id/action"
+            android:id="@+id/error_action"
             android:text="@string/error_action_try_again"/>
 
     </LinearLayout>

@@ -32,4 +32,13 @@
     <string name="cards_payment_options_available">Доступные способы оплаты</string>
     <string name="cards_delete_card">Удалить</string>
 
+    <!-- CSC Fragment -->
+    <string name="csc_code">Код %1$s</string>
+    <string name="csc_three">Трехзначный</string>
+    <string name="csc_four">Четырехзначный</string>
+    <string name="csc_back">оборотной</string>
+    <string name="csc_front">лицевой</string>
+    <string name="csc_hint">%1$s код на %2$s стороне вашей банковской карты.</string>
+    <string name="csc_pay">Заплатить</string>
+
 </resources>

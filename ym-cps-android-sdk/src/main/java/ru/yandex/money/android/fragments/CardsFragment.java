@@ -6,6 +6,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -25,13 +26,12 @@ import ru.yandex.money.android.utils.Views;
 /**
  * @author vyasevich
  */
-public class CardsFragment extends PaymentFragment {
+public class CardsFragment extends PaymentFragment implements AdapterView.OnItemClickListener {
 
     private static final String EXTRA_TITLE = "ru.yandex.money.android.extra.TITLE";
 
-    public static CardsFragment newInstance(String requestId, String title, double contractAmount) {
+    public static CardsFragment newInstance(String title, double contractAmount) {
         Bundle args = new Bundle();
-        args.putString(EXTRA_REQUEST_ID, requestId);
         args.putString(EXTRA_TITLE, title);
         args.putDouble(EXTRA_CONTRACT_AMOUNT, contractAmount);
 
@@ -55,8 +55,15 @@ public class CardsFragment extends PaymentFragment {
 
         ListView list = (ListView) view.findViewById(android.R.id.list);
         list.setAdapter(new CardsAdapter());
+        list.setOnItemClickListener(this);
 
         return view;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        MoneySource moneySource = (MoneySource) parent.getItemAtPosition(position);
+        getPaymentActivity().showCsc(moneySource);
     }
 
     private class CardsAdapter extends BaseAdapter {
