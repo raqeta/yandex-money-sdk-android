@@ -17,6 +17,9 @@ import ru.yandex.money.android.utils.Bundles;
  */
 public class DataServiceHelper {
 
+    public final static String SUCCESS_URI = "ym-cps-android-sdk://ext_auth_success";
+    public final static String FAIL_URI = "ym-cps-android-sdk://ext_auth_fail";
+
     private Context context;
     private String clientId;
 
@@ -28,34 +31,27 @@ public class DataServiceHelper {
         this.accessToken = accessToken;
     }
 
-    public String requestP2P(ParamsP2P params) throws IOException {
-        return requestExternalPayment(clientId, ParamsP2P.PATTERN_ID, params.makeParams());
-    }
-
-    public String requestShop(String patternId, Map<String, String> params) throws IOException {
+    public String requestShop(String patternId, Map<String, String> params) {
         return requestExternalPayment(clientId, patternId, params);
     }
 
-    public String process(String requestId, String extAuthSuccessUri,
-                          String extAuthFailUri, boolean requestToken) {
-        return processExternalPayment(requestId, extAuthSuccessUri, extAuthFailUri, requestToken,
-                null, null);
+    public String process(String requestId, boolean requestToken) {
+        return processExternalPayment(requestId, requestToken, null, null);
     }
 
-    public String process(String requestId, String extAuthSuccessUri,
-                          String extAuthFailUri, String moneySourceToken, String csc) {
-        return processExternalPayment(requestId, extAuthSuccessUri, extAuthFailUri, false,
-                moneySourceToken, csc);
+    public String process(String requestId, String moneySourceToken, String csc) {
+        return processExternalPayment(requestId, false, moneySourceToken, csc);
     }
 
-    private String processExternalPayment(String requestId, String extAuthSuccessUri,
-            String extAuthFailUri, boolean requestToken, String moneySourceToken, String csc) {
+    private String processExternalPayment(String requestId, boolean requestToken,
+                                          String moneySourceToken, String csc) {
+
         String reqId = genRequestId();
         Intent intent = makeIntent(context, reqId, DataService.REQUEST_TYPE_PROCESS_EXTERNAL_PAYMENT);
 
         intent.putExtra(DataService.EXTRA_PROCESS_PAYMENT_REQUEST_ID, requestId);
-        intent.putExtra(DataService.EXTRA_PROCESS_PAYMENT_EXT_AUTH_SUCCESS_URI, extAuthSuccessUri);
-        intent.putExtra(DataService.EXTRA_PROCESS_PAYMENT_EXT_AUTH_FAIL_URI, extAuthFailUri);
+        intent.putExtra(DataService.EXTRA_PROCESS_PAYMENT_EXT_AUTH_SUCCESS_URI, SUCCESS_URI);
+        intent.putExtra(DataService.EXTRA_PROCESS_PAYMENT_EXT_AUTH_FAIL_URI, FAIL_URI);
         intent.putExtra(DataService.EXTRA_PROCESS_PAYMENT_REQUEST_TOKEN, requestToken);
         intent.putExtra(DataService.EXTRA_PROCESS_PAYMENT_MONEY_SOURCE_TOKEN, moneySourceToken);
         intent.putExtra(DataService.EXTRA_PROCESS_PAYMENT_CSC, csc);

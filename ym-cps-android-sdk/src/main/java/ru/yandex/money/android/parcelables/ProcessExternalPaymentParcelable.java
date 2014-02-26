@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.yandex.money.model.cps.ProcessExternalPayment;
+import com.yandex.money.model.cps.misc.MoneySource;
 
 import java.util.Map;
 
@@ -25,11 +26,8 @@ public class ProcessExternalPaymentParcelable implements Parcelable {
         String error = parcel.readString();
         String acsUri = parcel.readString();
         Map<String, String> acsParams = Parcelables.readStringMap(parcel);
-        MoneySourceParcelable moneySourceParcelable =
-                parcel.readParcelable(MoneySourceParcelable.class.getClassLoader());
-        assert moneySourceParcelable != null : "moneySourceParcelable is null";
         this.pep = new ProcessExternalPayment(status, error, acsUri, acsParams,
-                moneySourceParcelable.getMoneySource(), Parcelables.readNullableLong(parcel),
+                readMoneySource(parcel), Parcelables.readNullableLong(parcel),
                 parcel.readString());
     }
 
@@ -44,9 +42,23 @@ public class ProcessExternalPaymentParcelable implements Parcelable {
         dest.writeString(pep.getError());
         dest.writeString(pep.getAcsUri());
         Parcelables.writeStringMap(dest, pep.getAcsParams());
-        dest.writeParcelable(new MoneySourceParcelable(pep.getMoneySource()), flags);
+        writeMoneySource(dest, flags);
         Parcelables.writeNullableLong(dest, pep.getNextRetry());
         dest.writeString(pep.getInvoiceId());
+    }
+
+    private void writeMoneySource(Parcel dest, int flags) {
+        MoneySource moneySource = pep.getMoneySource();
+        MoneySourceParcelable parcelable = moneySource == null ? null :
+                new MoneySourceParcelable(moneySource);
+        Parcelables.writeNullableParcelable(dest, parcelable, flags);
+    }
+
+    private MoneySource readMoneySource(Parcel parcel) {
+        MoneySourceParcelable parcelable =
+                (MoneySourceParcelable) Parcelables.readNullableParcelable(
+                        parcel, MoneySourceParcelable.class.getClassLoader());
+        return parcelable == null ? null : parcelable.getMoneySource();
     }
 
     public ProcessExternalPayment getProcessExternalPayment() {

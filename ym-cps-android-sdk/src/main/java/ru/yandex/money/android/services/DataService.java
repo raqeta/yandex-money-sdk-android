@@ -29,15 +29,15 @@ public class DataService extends IntentService {
     public static final String ACTION_PROCESS_EXTERNAL_PAYMENT = "ru.yandex.money.android.ACTION_PROCESS_EXTERNAL_PAYMENT";
     public static final String ACTION_EXCEPTION = "ru.yandex.money.android.ACTION_PROCESS_EXTERNAL_PAYMENT";
 
-    static final String EXTRA_REQUEST_ID = "ru.yandex.money.android.extra.REQUEST_ID";
+    public static final String EXTRA_REQUEST_ID = "ru.yandex.money.android.extra.REQUEST_ID";
     static final String EXTRA_REQUEST_TYPE = "ru.yandex.money.android.extra.REQUEST_TYPE";
     static final String EXTRA_REQUEST_ACCESS_TOKEN = "ru.yandex.money.android.extra.REQUEST_ACCESS_TOKEN";
 
-    static final String EXTRA_EXCEPTION_MESSAGE = "ru.yandex.money.android.extra.EXCEPTION_MESSAGE";
+    public static final String EXTRA_EXCEPTION_MESSAGE = "ru.yandex.money.android.extra.EXCEPTION_MESSAGE";
 
     static final String EXTRA_EXCEPTION_REQUEST_TYPE = "ru.yandex.money.android.extra.EXCEPTION_REQUEST_TYPE";
 
-    static final String EXTRA_SUCCESS_PARCELABLE = "ru.yandex.money.android.extra.SUCCESS_PARCELABLE";
+    public static final String EXTRA_SUCCESS_PARCELABLE = "ru.yandex.money.android.extra.SUCCESS_PARCELABLE";
     static final String EXTRA_REQUEST_PAYMENT_PARAMS = "ru.yandex.money.android.extra.REQUEST_PAYMENT_PARAMS";
     static final String EXTRA_REQUEST_PAYMENT_CLIENT_ID = "ru.yandex.money.android.extra.CLIENT_PAYMENT_ID";
 
@@ -55,12 +55,10 @@ public class DataService extends IntentService {
     private static final String INSTANCE_ID_ERROR_MESSAGE = "Couldn't perform instanceId request: ";
 
     private YandexMoney ym;
-    private Prefs prefs;
 
     public DataService() {
         super(DataServiceHelper.class.getSimpleName());
         setupYm();
-        prefs = new Prefs(this);
     }
 
     private void setupYm() {
@@ -162,7 +160,7 @@ public class DataService extends IntentService {
     }
 
     private String getInstanceIdOrSendFailBroadcast(String reqId, String clientId, int requestType) {
-        String instanceId = prefs.restoreInstanceId();
+        String instanceId = new Prefs(getApplicationContext()).restoreInstanceId();
         if (TextUtils.isEmpty(instanceId)) {
             return receiveInstanceId(reqId, clientId, requestType);
         } else {
@@ -175,7 +173,7 @@ public class DataService extends IntentService {
             InstanceId resp = ym.performRequest(new InstanceId.Request(clientId));
             if (resp.isSuccess()) {
                 String instanceId = resp.getInstanceId();
-                prefs.storeInstanceId(instanceId);
+                new Prefs(getApplicationContext()).storeInstanceId(instanceId);
                 return instanceId;
             } else {
                 String message = INSTANCE_ID_ERROR_MESSAGE + resp.getError();

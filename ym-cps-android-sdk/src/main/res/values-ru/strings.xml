@@ -24,5 +24,8 @@
     <string name="success_saving_card">Сохраняем данные&#8230;</string>
     <string name="success_saving_card_description">Нужно немного подождать.</string>
     <string name="success_card_saved_description">Все получилось! При следующем платеже нужно указать только %1$s.</string>
+    <string name="payment_name">Название платежа</string>
+    <string name="payment_sum">Сумма</string>
+    <string name="payment_options_available">Доступные способы оплаты</string>
 
 </resources>

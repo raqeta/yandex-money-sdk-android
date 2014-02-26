@@ -7,10 +7,15 @@ import android.os.Bundle;
 
 import com.yandex.money.model.common.params.ParamsP2P;
 import com.yandex.money.model.common.params.ParamsPhone;
+import com.yandex.money.model.cps.misc.MoneySource;
 
+import java.util.Collection;
+
+import ru.yandex.money.android.database.DatabaseStorage;
 import ru.yandex.money.android.fragments.ErrorFragment;
 import ru.yandex.money.android.fragments.SuccessFragment;
 import ru.yandex.money.android.fragments.WebFragment;
+import ru.yandex.money.android.services.DataServiceHelper;
 
 /**
  * @author vyasevich
@@ -20,6 +25,8 @@ public class PaymentActivity extends Activity {
     private static final String EXTRA_ARGUMENTS = "ru.yandex.money.android.extra.ARGUMENTS";
 
     private PaymentArguments arguments;
+    private DataServiceHelper dataServiceHelper;
+    private Collection<MoneySource> cards;
 
     public static void startActivityForResult(Activity activity, String clientId,
                                               ParamsP2P params, int requestCode) {
@@ -47,15 +54,29 @@ public class PaymentActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.payment_activity);
+
         arguments = new PaymentArguments(getIntent().getBundleExtra(EXTRA_ARGUMENTS));
+        dataServiceHelper = new DataServiceHelper(this, arguments.getClientId(), null);
+        cards = new DatabaseStorage(this).selectMoneySources();
 
         if (savedInstanceState == null) {
+//            Fragment fragment = cards.size() == 0 ? WebFragment.newInstance() :
+//                    CardsFragment.newInstance();
+//            replaceFragment(fragment);
             replaceFragment(WebFragment.newInstance());
         }
     }
 
     public PaymentArguments getArguments() {
         return arguments;
+    }
+
+    public DataServiceHelper getDataServiceHelper() {
+        return dataServiceHelper;
+    }
+
+    public Collection<MoneySource> getCards() {
+        return cards;
     }
 
     public void showError(String error) {

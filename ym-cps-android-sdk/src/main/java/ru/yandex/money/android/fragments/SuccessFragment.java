@@ -1,23 +1,17 @@
 package ru.yandex.money.android.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yandex.money.model.cps.ProcessExternalPayment;
 import com.yandex.money.model.cps.misc.MoneySource;
 
-import java.io.IOException;
-
-import ru.yandex.money.android.PaymentActivity;
-import ru.yandex.money.android.PaymentArguments;
-import ru.yandex.money.android.Prefs;
 import ru.yandex.money.android.R;
-import ru.yandex.money.android.YandexMoneyDroid;
 import ru.yandex.money.android.database.DatabaseStorage;
 import ru.yandex.money.android.parcelables.MoneySourceParcelable;
 import ru.yandex.money.android.utils.CardType;
@@ -89,28 +83,50 @@ public class SuccessFragment extends PaymentFragment {
         outState.putParcelable(EXTRA_MONEY_SOURCE, new MoneySourceParcelable(moneySource));
     }
 
+    @Override
+    protected void onExternalPaymentProcessed(ProcessExternalPayment pep) {
+        if (pep.isSuccess()) {
+            moneySource = pep.getMoneySource();
+            new DatabaseStorage(getPaymentActivity()).insertMoneySource(moneySource);
+            state = State.SAVING_COMPLETED;
+            onCardSaved();
+        } else {
+            getPaymentActivity().showError(pep.getError());
+        }
+    }
+
     private void applyState() {
         switch (state) {
             case SUCCESS_SHOWED:
                 saveCard.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onSaveCardClicked.execute();
+                        onSaveCardClicked();
                     }
                 });
                 break;
             case SAVING_INITIATED:
-                onSaveCardClicked.execute();
+                onSaveCardClicked();
                 break;
             case SAVING_COMPLETED:
-                onCardSaved(moneySource);
+                onCardSaved();
                 break;
         }
     }
 
-    private void onCardSaved(MoneySource moneySource) {
-        this.moneySource = moneySource;
-        Views.setText(getView(), R.id.payment_card_type, moneySource.getPaymentCardType());
+    private void onSaveCardClicked() {
+        card.setBackgroundResource(R.drawable.card_process);
+        saveCard.setEnabled(false);
+        saveCard.setText(R.string.success_saving_card);
+        saveCard.setOnClickListener(null);
+        description.setText(R.string.success_saving_card_description);
+        reqId = getPaymentActivity().getDataServiceHelper().process(requestId, true);
+        state = State.SAVING_INITIATED;
+    }
+
+    private void onCardSaved() {
+        Views.setImageResource(getView(), R.id.payment_card_type,
+                CardType.parseCardType(moneySource.getPaymentCardType()).getIcoResId());
         Views.setText(getView(), R.id.pan_fragment, formatPanFragment(moneySource.getPanFragment()));
         card.setBackgroundResource(R.drawable.card_saved);
         saveCard.setVisibility(View.GONE);
@@ -131,52 +147,4 @@ public class SuccessFragment extends PaymentFragment {
         SAVING_INITIATED,
         SAVING_COMPLETED
     }
-
-    private final AsyncTask<Void, Void, MoneySource> onSaveCardClicked =
-            new AsyncTask<Void, Void, MoneySource>() {
-
-        @Override
-        protected void onPreExecute() {
-            card.setBackgroundResource(R.drawable.card_process);
-            saveCard.setEnabled(false);
-            saveCard.setText(R.string.success_saving_card);
-            saveCard.setOnClickListener(null);
-            description.setText(R.string.success_saving_card_description);
-            state = State.SAVING_INITIATED;
-        }
-
-        @Override
-        protected MoneySource doInBackground(Void... params) {
-            PaymentActivity activity = getPaymentActivity();
-            PaymentArguments arguments = activity.getArguments();
-            YandexMoneyDroid ymd = new YandexMoneyDroid(arguments.getClientId(),
-                    new Prefs(activity));
-            MoneySource moneySource = processExternalPayment(ymd, requestId);
-            new DatabaseStorage(activity).insertMoneySource(moneySource);
-            state = State.SAVING_COMPLETED;
-            return moneySource;
-        }
-
-        @Override
-        protected void onPostExecute(MoneySource moneySource) {
-            onCardSaved(moneySource);
-        }
-
-        private MoneySource processExternalPayment(YandexMoneyDroid ymd, String requestId) {
-            try {
-                ProcessExternalPayment pep = ymd.process(requestId, true);
-                if (pep.isInProgress()) {
-                    return processExternalPayment(ymd, requestId);
-                } else if (pep.isSuccess()) {
-                    return pep.getMoneySource();
-                } else {
-                    // TODO catch exception properly
-                    throw new RuntimeException("yeah yeah... we should catch exceptions...");
-                }
-            } catch (IOException e) {
-                // TODO catch exception properly
-                throw new RuntimeException("yeah yeah... we should catch exceptions...");
-            }
-        }
-    };
 }

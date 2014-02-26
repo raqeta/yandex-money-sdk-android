@@ -2,6 +2,7 @@ package ru.yandex.money.android.utils;
 
 import android.os.Bundle;
 import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -19,6 +20,13 @@ public class Parcelables {
         boolean hasValue = writeNullableValue(parcel, value);
         if (hasValue) {
             parcel.writeLong(value);
+        }
+    }
+
+    public static void writeNullableParcelable(Parcel parcel, Parcelable value, int flags) {
+        boolean hasValue = writeNullableValue(parcel, value);
+        if (hasValue) {
+            parcel.writeParcelable(value, flags);
         }
     }
 
@@ -47,6 +55,10 @@ public class Parcelables {
 
     public static Long readNullableLong(Parcel parcel) {
         return hasNullableValue(parcel) ? parcel.readLong() : null;
+    }
+
+    public static Parcelable readNullableParcelable(Parcel parcel, ClassLoader classLoader) {
+        return hasNullableValue(parcel) ? parcel.readParcelable(classLoader) : null;
     }
 
     public static BigDecimal readBigDecimal(Parcel parcel) {
