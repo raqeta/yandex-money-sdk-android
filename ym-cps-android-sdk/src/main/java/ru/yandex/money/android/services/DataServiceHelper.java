@@ -1,4 +1,4 @@
-package ru.yandex.money.android;
+package ru.yandex.money.android.services;
 
 import android.content.Context;
 import android.content.Intent;

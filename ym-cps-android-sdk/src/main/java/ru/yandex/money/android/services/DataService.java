@@ -1,4 +1,4 @@
-package ru.yandex.money.android;
+package ru.yandex.money.android.services;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import com.yandex.money.model.cps.RequestExternalPayment;
 import java.io.IOException;
 import java.util.Map;
 
+import ru.yandex.money.android.Prefs;
 import ru.yandex.money.android.parcelables.ProcessExternalPaymentParcelable;
 import ru.yandex.money.android.parcelables.RequestExternalPaymentParcelable;
 import ru.yandex.money.android.utils.Bundles;
@@ -28,29 +29,28 @@ public class DataService extends IntentService {
     public static final String ACTION_PROCESS_EXTERNAL_PAYMENT = "ru.yandex.money.android.ACTION_PROCESS_EXTERNAL_PAYMENT";
     public static final String ACTION_EXCEPTION = "ru.yandex.money.android.ACTION_PROCESS_EXTERNAL_PAYMENT";
 
-    public static final String EXTRA_REQUEST_ID = "ru.yandex.money.android.extra.REQUEST_ID";
-    public static final String EXTRA_REQUEST_TYPE = "ru.yandex.money.android.extra.REQUEST_TYPE";
-    public static final String EXTRA_REQUEST_ACCESS_TOKEN = "ru.yandex.money.android.extra.REQUEST_ACCESS_TOKEN";
+    static final String EXTRA_REQUEST_ID = "ru.yandex.money.android.extra.REQUEST_ID";
+    static final String EXTRA_REQUEST_TYPE = "ru.yandex.money.android.extra.REQUEST_TYPE";
+    static final String EXTRA_REQUEST_ACCESS_TOKEN = "ru.yandex.money.android.extra.REQUEST_ACCESS_TOKEN";
 
-    public static final String EXTRA_EXCEPTION_MESSAGE = "ru.yandex.money.android.extra.EXCEPTION_MESSAGE";
+    static final String EXTRA_EXCEPTION_MESSAGE = "ru.yandex.money.android.extra.EXCEPTION_MESSAGE";
 
-    public static final String EXTRA_EXCEPTION_REQUEST_TYPE = "ru.yandex.money.android.extra.EXCEPTION_REQUEST_TYPE";
+    static final String EXTRA_EXCEPTION_REQUEST_TYPE = "ru.yandex.money.android.extra.EXCEPTION_REQUEST_TYPE";
 
-    public static final String EXTRA_SUCCESS_PARCELABLE = "ru.yandex.money.android.extra.SUCCESS_PARCELABLE";
-    public static final String EXTRA_REQUEST_PAYMENT_PARAMS = "ru.yandex.money.android.extra.REQUEST_PAYMENT_PARAMS";
-    public static final String EXTRA_REQUEST_PAYMENT_CLIENT_ID = "ru.yandex.money.android.extra.CLIENT_PAYMENT_ID";
+    static final String EXTRA_SUCCESS_PARCELABLE = "ru.yandex.money.android.extra.SUCCESS_PARCELABLE";
+    static final String EXTRA_REQUEST_PAYMENT_PARAMS = "ru.yandex.money.android.extra.REQUEST_PAYMENT_PARAMS";
+    static final String EXTRA_REQUEST_PAYMENT_CLIENT_ID = "ru.yandex.money.android.extra.CLIENT_PAYMENT_ID";
 
-    public static final String EXTRA_REQUEST_PAYMENT_PATTERN_ID = "ru.yandex.money.android.extra.PATTERN_PAYMENT_ID";
-    public static final String EXTRA_PROCESS_PAYMENT_REQUEST_ID = "ru.yandex.money.android.extra.PROCESS_PAYMENT_REQUEST_ID";
-    public static final String EXTRA_PROCESS_PAYMENT_EXT_AUTH_SUCCESS_URI = "ru.yandex.money.android.extra.PROCESS_PAYMENT_EXT_AUTH_SUCCESS_URI";
-    public static final String EXTRA_PROCESS_PAYMENT_EXT_AUTH_FAIL_URI = "ru.yandex.money.android.extra.PROCESS_PAYMENT_EXT_AUTH_FAIL_URI";
-    public static final String EXTRA_PROCESS_PAYMENT_REQUEST_TOKEN = "ru.yandex.money.android.extra.PROCESS_PAYMENT_REQUEST_TOKEN";
-    public static final String EXTRA_PROCESS_PAYMENT_MONEY_SOURCE_TOKEN = "ru.yandex.money.android.extra.PROCESS_PAYMENT_MONEY_SOURCE_TOKEN";
+    static final String EXTRA_REQUEST_PAYMENT_PATTERN_ID = "ru.yandex.money.android.extra.PATTERN_PAYMENT_ID";
+    static final String EXTRA_PROCESS_PAYMENT_REQUEST_ID = "ru.yandex.money.android.extra.PROCESS_PAYMENT_REQUEST_ID";
+    static final String EXTRA_PROCESS_PAYMENT_EXT_AUTH_SUCCESS_URI = "ru.yandex.money.android.extra.PROCESS_PAYMENT_EXT_AUTH_SUCCESS_URI";
+    static final String EXTRA_PROCESS_PAYMENT_EXT_AUTH_FAIL_URI = "ru.yandex.money.android.extra.PROCESS_PAYMENT_EXT_AUTH_FAIL_URI";
+    static final String EXTRA_PROCESS_PAYMENT_REQUEST_TOKEN = "ru.yandex.money.android.extra.PROCESS_PAYMENT_REQUEST_TOKEN";
+    static final String EXTRA_PROCESS_PAYMENT_MONEY_SOURCE_TOKEN = "ru.yandex.money.android.extra.PROCESS_PAYMENT_MONEY_SOURCE_TOKEN";
+    static final String EXTRA_PROCESS_PAYMENT_CSC = "ru.yandex.money.android.extra.PROCESS_PAYMENT_CSC";
 
-    public static final String EXTRA_PROCESS_PAYMENT_CSC = "ru.yandex.money.android.extra.PROCESS_PAYMENT_CSC";
-    public static final int REQUEST_TYPE_INSTANCE_ID = 0;
-    public static final int REQUEST_TYPE_REQUEST_EXTERNAL_PAYMENT = 1;
-    public static final int REQUEST_TYPE_PROCESS_EXTERNAL_PAYMENT = 2;
+    static final int REQUEST_TYPE_REQUEST_EXTERNAL_PAYMENT = 1;
+    static final int REQUEST_TYPE_PROCESS_EXTERNAL_PAYMENT = 2;
 
     private static final String INSTANCE_ID_ERROR_MESSAGE = "Couldn't perform instanceId request: ";
 
@@ -72,9 +72,6 @@ public class DataService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         String reqId = intent.getStringExtra(EXTRA_REQUEST_ID);
         int type = intent.getIntExtra(EXTRA_REQUEST_TYPE, -1);
-        if (!intent.hasExtra(EXTRA_REQUEST_TYPE)) {
-            throw new RuntimeException("request must contain 'type' parameter");
-        }
         String accessToken = intent.getStringExtra(EXTRA_REQUEST_ACCESS_TOKEN);
         accessToken = TextUtils.isEmpty(accessToken) ? null : accessToken;
         String clientId = intent.getStringExtra(EXTRA_REQUEST_PAYMENT_CLIENT_ID);
@@ -86,11 +83,11 @@ public class DataService extends IntentService {
         if (type == REQUEST_TYPE_REQUEST_EXTERNAL_PAYMENT) {
             RequestExternalPayment.Request req = parserRequestParams(intent, accessToken, instanceId);
             requestPayment(reqId, req);
-        }
-
-        if (type == REQUEST_TYPE_PROCESS_EXTERNAL_PAYMENT) {
+        } else if (type == REQUEST_TYPE_PROCESS_EXTERNAL_PAYMENT) {
             ProcessExternalPayment.Request req = parseProcessParams(intent, accessToken, instanceId);
             processPayment(reqId, req);
+        } else {
+            throw new IllegalArgumentException("requestType parameter has invalid value");
         }
     }
 
