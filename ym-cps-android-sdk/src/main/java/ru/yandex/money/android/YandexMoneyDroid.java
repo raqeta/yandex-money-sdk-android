@@ -20,6 +20,7 @@ import java.util.concurrent.Future;
 /**
  * Created by dvmelnikov on 12/02/14.
  */
+@Deprecated
 public class YandexMoneyDroid {
 
     public final static String SUCCESS_URI = "ym-cps-android-sdk://ext_auth_success";
