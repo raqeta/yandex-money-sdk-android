@@ -21,6 +21,7 @@ import ru.yandex.money.android.YandexMoneyDroid;
 import ru.yandex.money.android.database.DatabaseStorage;
 import ru.yandex.money.android.parcelables.MoneySourceParcelable;
 import ru.yandex.money.android.utils.CardType;
+import ru.yandex.money.android.utils.Strings;
 import ru.yandex.money.android.utils.Views;
 
 /**
@@ -110,12 +111,19 @@ public class SuccessFragment extends PaymentFragment {
     private void onCardSaved(MoneySource moneySource) {
         this.moneySource = moneySource;
         Views.setText(getView(), R.id.payment_card_type, moneySource.getPaymentCardType());
-        Views.setText(getView(), R.id.pan_fragment, moneySource.getPanFragment());
+        Views.setText(getView(), R.id.pan_fragment, formatPanFragment(moneySource.getPanFragment()));
         card.setBackgroundResource(R.drawable.card_saved);
         saveCard.setVisibility(View.GONE);
         successMarker.setVisibility(View.VISIBLE);
         description.setText(getString(R.string.success_card_saved_description,
                 CardType.parseCardType(moneySource.getPaymentCardType()).getCscAbbr()));
+    }
+
+    private String formatPanFragment(String panFragment) {
+        String[] fragments = panFragment.split("\\s");
+        panFragment = Strings.concatenate(fragments, "");
+        fragments = Strings.split(panFragment, 4);
+        return Strings.concatenate(fragments, " ");
     }
 
     private enum State {
