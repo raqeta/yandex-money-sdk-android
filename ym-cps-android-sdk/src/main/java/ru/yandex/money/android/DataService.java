@@ -17,6 +17,7 @@ import java.util.Map;
 import ru.yandex.money.android.parcelables.ProcessExternalPaymentParcelable;
 import ru.yandex.money.android.parcelables.RequestExternalPaymentParcelable;
 import ru.yandex.money.android.utils.Bundles;
+import ru.yandex.money.android.utils.Threads;
 
 /**
  * Created by dvmelnikov on 24/02/14.
@@ -49,8 +50,8 @@ public class DataService extends IntentService {
     public static final String EXTRA_PROCESS_PAYMENT_CSC = "ru.yandex.money.android.extra.PROCESS_PAYMENT_CSC";
     public static final int REQUEST_TYPE_INSTANCE_ID = 0;
     public static final int REQUEST_TYPE_REQUEST_EXTERNAL_PAYMENT = 1;
-
     public static final int REQUEST_TYPE_PROCESS_EXTERNAL_PAYMENT = 2;
+
     private static final String INSTANCE_ID_ERROR_MESSAGE = "Couldn't perform instanceId request: ";
 
     private YandexMoney ym;
@@ -123,8 +124,13 @@ public class DataService extends IntentService {
     private void processPayment(String reqId, ProcessExternalPayment.Request req) {
         try {
             ProcessExternalPayment resp = ym.performRequest(req);
-            ProcessExternalPaymentParcelable parc = new ProcessExternalPaymentParcelable(resp);
-            sendSuccessBroadcast(ACTION_PROCESS_EXTERNAL_PAYMENT, reqId, parc);
+            if (resp.isInProgress()) {
+                Threads.sleepSafely(resp.getNextRetry());
+                processPayment(reqId, req);
+            } else {
+                ProcessExternalPaymentParcelable parc = new ProcessExternalPaymentParcelable(resp);
+                sendSuccessBroadcast(ACTION_PROCESS_EXTERNAL_PAYMENT, reqId, parc);
+            }
         } catch (IOException e) {
             sendExceptionBroadcast(reqId, REQUEST_TYPE_REQUEST_EXTERNAL_PAYMENT, e.getMessage());
         }
