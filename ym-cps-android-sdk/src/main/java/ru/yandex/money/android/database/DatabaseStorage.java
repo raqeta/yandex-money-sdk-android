@@ -4,16 +4,19 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.yandex.money.model.cps.misc.MoneySource;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author vyasevich
  */
 public class DatabaseStorage {
+
+    private static final String TAG = "DatabaseStorage";
 
     private final DatabaseHelper helper;
 
@@ -21,9 +24,8 @@ public class DatabaseStorage {
         helper = DatabaseHelper.getInstance(context);
     }
 
-    public Collection<MoneySource> selectMoneySources() {
-        SQLiteDatabase database = helper.getReadableDatabase();
-        assert database != null : "cannot obtain readable database";
+    public List<MoneySource> selectMoneySources() {
+        SQLiteDatabase database = getReadableDatabase();
 
         Cursor cursor = database.rawQuery("SELECT * FROM " + MoneySourceTable.NAME, null);
         final int typeIndex = cursor.getColumnIndex(MoneySourceTable.TYPE);
@@ -31,7 +33,7 @@ public class DatabaseStorage {
         final int panFragmentIndex = cursor.getColumnIndex(MoneySourceTable.PAN_FRAGMENT);
         final int tokenIndex = cursor.getColumnIndex(MoneySourceTable.TOKEN);
 
-        Collection<MoneySource> moneySources = new ArrayList<MoneySource>();
+        List<MoneySource> moneySources = new ArrayList<MoneySource>();
         while (cursor.moveToNext()) {
             moneySources.add(new MoneySource(cursor.getString(typeIndex),
                     cursor.getString(paymentCardTypeIndex), cursor.getString(panFragmentIndex),
@@ -44,6 +46,11 @@ public class DatabaseStorage {
     }
 
     public void insertMoneySource(MoneySource moneySource) {
+        if (moneySource == null) {
+            Log.w(TAG, "trying to insert null money source");
+            return;
+        }
+
         ContentValues values = new ContentValues();
         values.put(MoneySourceTable.TYPE, moneySource.getType());
         values.put(MoneySourceTable.PAYMENT_CARD_TYPE, moneySource.getPaymentCardType());
@@ -51,10 +58,34 @@ public class DatabaseStorage {
         values.put(MoneySourceTable.TOKEN, moneySource.getMoneySourceToken());
 
         if (values.size() != 0) {
-            SQLiteDatabase database = helper.getWritableDatabase();
-            assert database != null : "cannot obtain writable database";
+            SQLiteDatabase database = getWritableDatabase();
             database.insertOrThrow(MoneySourceTable.NAME, null, values);
             database.close();
         }
+    }
+
+    public void deleteMoneySource(MoneySource moneySource) {
+        if (moneySource == null) {
+            Log.w(TAG, "trying to delete null money source");
+            return;
+        }
+
+        SQLiteDatabase database = getWritableDatabase();
+        database.execSQL("DELETE FROM " + MoneySourceTable.NAME +
+                " WHERE " + MoneySourceTable.TOKEN + " = \"" +
+                moneySource.getMoneySourceToken() + "\"");
+        database.close();
+    }
+
+    private SQLiteDatabase getReadableDatabase() {
+        SQLiteDatabase database = helper.getReadableDatabase();
+        assert database != null : "cannot obtain readable database";
+        return database;
+    }
+
+    private SQLiteDatabase getWritableDatabase() {
+        SQLiteDatabase database = helper.getWritableDatabase();
+        assert database != null : "cannot obtain writable database";
+        return database;
     }
 }

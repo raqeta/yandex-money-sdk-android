@@ -23,8 +23,12 @@
     <string name="success_saving_card">Saving card&#8230;</string>
     <string name="success_saving_card_description">Please wait a moment.</string>
     <string name="success_card_saved_description">All done! Next time you need to specify %1$s code only.</string>
-    <string name="payment_name">Payment Name</string>
-    <string name="payment_sum">Total</string>
-    <string name="payment_options_available">Available Payment Options</string>
+
+    <!-- Cards Fragment -->
+    <string name="cards_payment_name">Payment Name</string>
+    <string name="cards_payment_sum">Total</string>
+    <string name="cards_payment_sum_value">%1$.2f rub.</string>
+    <string name="cards_payment_options_available">Available Payment Options</string>
+    <string name="cards_delete_card">Delete</string>
 
 </resources>

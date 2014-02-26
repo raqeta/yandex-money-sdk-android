@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
-            android:text="@string/payment_name"/>
+            android:text="@string/cards_payment_name"/>
 
         <TextView
             style="@style/YandexMoney.TextView"
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
-            android:text="@string/payment_sum"/>
+            android:text="@string/cards_payment_sum"/>
 
         <TextView
             style="@style/YandexMoney.TextView"
@@ -52,7 +52,7 @@
         android:layout_marginLeft="@dimen/ym_screen_border_margin"
         android:layout_marginRight="@dimen/ym_screen_border_margin"
         android:layout_marginBottom="5dp"
-        android:text="@string/payment_options_available"/>
+        android:text="@string/cards_payment_options_available"/>
 
     <ListView
         android:id="@android:id/list"

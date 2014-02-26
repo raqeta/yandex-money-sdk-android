@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yandex.money.model.cps.ProcessExternalPayment;
@@ -13,9 +12,9 @@ import com.yandex.money.model.cps.misc.MoneySource;
 
 import ru.yandex.money.android.R;
 import ru.yandex.money.android.database.DatabaseStorage;
+import ru.yandex.money.android.formatters.MoneySourceFormatter;
 import ru.yandex.money.android.parcelables.MoneySourceParcelable;
 import ru.yandex.money.android.utils.CardType;
-import ru.yandex.money.android.utils.Strings;
 import ru.yandex.money.android.utils.Views;
 
 /**
@@ -85,6 +84,7 @@ public class SuccessFragment extends PaymentFragment {
 
     @Override
     protected void onExternalPaymentProcessed(ProcessExternalPayment pep) {
+        super.onExternalPaymentProcessed(pep);
         if (pep.isSuccess()) {
             moneySource = pep.getMoneySource();
             new DatabaseStorage(getPaymentActivity()).insertMoneySource(moneySource);
@@ -127,19 +127,13 @@ public class SuccessFragment extends PaymentFragment {
     private void onCardSaved() {
         Views.setImageResource(getView(), R.id.payment_card_type,
                 CardType.parseCardType(moneySource.getPaymentCardType()).getIcoResId());
-        Views.setText(getView(), R.id.pan_fragment, formatPanFragment(moneySource.getPanFragment()));
+        Views.setText(getView(), R.id.pan_fragment,
+                MoneySourceFormatter.formatPanFragment(moneySource.getPanFragment()));
         card.setBackgroundResource(R.drawable.card_saved);
         saveCard.setVisibility(View.GONE);
         successMarker.setVisibility(View.VISIBLE);
         description.setText(getString(R.string.success_card_saved_description,
                 CardType.parseCardType(moneySource.getPaymentCardType()).getCscAbbr()));
-    }
-
-    private String formatPanFragment(String panFragment) {
-        String[] fragments = panFragment.split("\\s");
-        panFragment = Strings.concatenate(fragments, "");
-        fragments = Strings.split(panFragment, 4);
-        return Strings.concatenate(fragments, " ");
     }
 
     private enum State {
