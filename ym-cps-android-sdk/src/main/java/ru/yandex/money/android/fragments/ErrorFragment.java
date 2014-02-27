@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.yandex.money.model.cps.Error;
+import com.yandex.money.model.cps.Status;
+
 import ru.yandex.money.android.R;
 import ru.yandex.money.android.utils.Views;
 
@@ -16,10 +19,12 @@ import ru.yandex.money.android.utils.Views;
 public class ErrorFragment extends Fragment {
 
     private static final String EXTRA_ERROR = "ru.yandex.money.android.extra.ERROR";
+    private static final String EXTRA_STATUS = "ru.yandex.money.android.extra.STATUS";
 
-    public static ErrorFragment newInstance(String error) {
+    public static ErrorFragment newInstance(String error, String status) {
         Bundle args = new Bundle();
         args.putString(EXTRA_ERROR, error);
+        args.putString(EXTRA_STATUS, status);
 
         ErrorFragment frg = new ErrorFragment();
         frg.setArguments(args);
@@ -34,40 +39,41 @@ public class ErrorFragment extends Fragment {
         Bundle args = getArguments();
         assert args != null : "you did not pass mandatory arguments for ErrorFragment";
 
-        showError(view, args.getString(EXTRA_ERROR));
+        showError(view, args.getString(EXTRA_ERROR), args.getString(EXTRA_STATUS));
         return view;
     }
 
-    private void showError(View view, String error) {
+    private void showError(View view, String error, String status) {
         final int notSpecified = -1;
 
         final int titleResId;
         final int messageResId;
         final int actionResId;
-        if ("illegal_param_client_id".equals(error)) {
+
+        if (Status.REFUSED.equals(status) || Error.ILLEGAL_PARAM_CLIENT_ID.equals(error)) {
             titleResId = R.string.error_illegal_param_client_id_title;
             messageResId = R.string.error_illegal_param_client_id;
             actionResId = notSpecified;
-        } else if ("illegal_param_csc".equals(error)) {
+        } else if (Error.ILLEGAL_PARAM_CSC.equals(error)) {
             titleResId = R.string.error_oops_title;
             messageResId = R.string.error_illegal_param_csc;
             actionResId = R.string.error_action_try_again;
-        } else if ("authorization_reject".equals(error)) {
+        } else if (Error.AUTHORIZATION_REJECT.equals(error)) {
             titleResId = R.string.error_something_wrong_title;
             messageResId = R.string.error_authorization_reject;
             actionResId = R.string.error_action_try_another_card;
-        } else if ("payee_not_found".equals(error)) {
+        } else if (Error.PAYEE_NOT_FOUND.equals(error)) {
             titleResId = R.string.error_oops_title;
             messageResId = R.string.error_payee_not_found;
             actionResId = notSpecified;
-        } else if ("payment_refused".equals(error)) {
+        } else if (Error.PAYMENT_REFUSED.equals(error)) {
             titleResId = R.string.error_something_wrong_title;
             messageResId = R.string.error_payment_refused;
             actionResId = R.string.error_action_try_again;
         } else {
             titleResId = R.string.error_oops_title;
             messageResId = R.string.error_unknown;
-            actionResId = R.string.error_action_try_again;
+            actionResId = notSpecified;
         }
 
         Views.setText(view, R.id.error_title, getString(titleResId));

@@ -9,16 +9,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="center">
+        android:gravity="center"
+        android:padding="@dimen/ym_screen_border_margin">
 
         <TextView
             style="@style/YandexMoney.TextView.Title"
             android:id="@+id/error_title"
+            android:gravity="center"
             android:text="@string/error_illegal_param_client_id_title"/>
 
         <TextView
-            style="@style/YandexMoney.TextView"
+            style="@style/YandexMoney.TextView.Large"
             android:id="@+id/error_message"
+            android:layout_marginTop="@dimen/ym_screen_border_margin"
+            android:layout_marginBottom="@dimen/ym_screen_border_margin"
+            android:gravity="center"
             android:text="@string/error_illegal_param_client_id"/>
 
         <Button

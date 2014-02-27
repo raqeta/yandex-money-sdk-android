@@ -1,9 +1,12 @@
 package ru.yandex.money.android;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import com.yandex.money.model.common.params.ParamsP2P;
 import com.yandex.money.model.common.params.ParamsPhone;
@@ -36,7 +39,9 @@ public class PaymentActivity extends Activity {
     private List<MoneySource> cards;
 
     private String reqId;
+    private String title;
     private String requestId;
+    private double contractAmount;
 
     public static void startActivityForResult(Activity activity, String clientId,
                                               ParamsP2P params, int requestCode) {
@@ -64,6 +69,10 @@ public class PaymentActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.payment_activity);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         arguments = new PaymentArguments(getIntent().getBundleExtra(EXTRA_ARGUMENTS));
         dataServiceHelper = new DataServiceHelper(this, arguments.getClientId(), null);
@@ -82,8 +91,15 @@ public class PaymentActivity extends Activity {
         unregisterReceiver(receiver);
     }
 
-    public PaymentArguments getArguments() {
-        return arguments;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public DataServiceHelper getDataServiceHelper() {
@@ -94,16 +110,24 @@ public class PaymentActivity extends Activity {
         return cards;
     }
 
-    public void showError(String error) {
-        replaceFragment(ErrorFragment.newInstance(error));
+    public void showWeb() {
+        replaceFragmentAddingToBackStack(WebFragment.newInstance(requestId, contractAmount));
     }
 
-    public void showSuccess(String requestId, double contractAmount) {
-        replaceFragment(SuccessFragment.newInstance(requestId, contractAmount));
+    public void showCards() {
+        replaceFragmentAddingToBackStack(CardsFragment.newInstance(title, contractAmount));
+    }
+
+    public void showError(String error, String status) {
+        replaceFragmentClearBackStack(ErrorFragment.newInstance(error, status));
+    }
+
+    public void showSuccess() {
+        replaceFragmentClearBackStack(SuccessFragment.newInstance(requestId, contractAmount));
     }
 
     public void showCsc(MoneySource moneySource) {
-        replaceFragment(CscFragment.newInstance(requestId, moneySource));
+        replaceFragmentAddingToBackStack(CscFragment.newInstance(requestId, moneySource));
     }
 
     private void requestExternalPayment() {
@@ -113,17 +137,32 @@ public class PaymentActivity extends Activity {
     private void onExternalPaymentReceived(RequestExternalPayment rep) {
         reqId = null;
         if (rep.isSuccess()) {
+            title = rep.getTitle();
             requestId = rep.getRequestId();
-            double contractAmount = rep.getContractAmount().doubleValue();
-            replaceFragment(cards.size() == 0 ?
-                    WebFragment.newInstance(requestId, contractAmount) :
-                    CardsFragment.newInstance(rep.getTitle(), contractAmount));
+            contractAmount = rep.getContractAmount().doubleValue();
+            if (cards.size() == 0) {
+                showWeb();
+            } else {
+                showCards();
+            }
         } else {
-            showError(rep.getError());
+            showError(rep.getError(), rep.getStatus());
         }
     }
 
-    private void replaceFragment(Fragment fragment) {
+    private void replaceFragmentClearBackStack(Fragment fragment) {
+        if (fragment == null) {
+            return;
+        }
+
+        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
+    }
+
+    private void replaceFragmentAddingToBackStack(Fragment fragment) {
         if (fragment == null) {
             return;
         }
@@ -131,6 +170,7 @@ public class PaymentActivity extends Activity {
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container, fragment)
+                .addToBackStack(fragment.getTag())
                 .commit();
     }
 
@@ -140,9 +180,9 @@ public class PaymentActivity extends Activity {
                     @Override
                     public void handle(Intent intent) {
                         if (isManageableIntent(intent)) {
-                            String error = intent.getStringExtra(
-                                    DataService.EXTRA_EXCEPTION_MESSAGE);
-                            showError(error);
+                            String error = intent.getStringExtra(DataService.EXTRA_EXCEPTION_ERROR);
+                            String status = intent.getStringExtra(DataService.EXTRA_EXCEPTION_STATUS);
+                            showError(error, status);
                         }
                     }
                 })

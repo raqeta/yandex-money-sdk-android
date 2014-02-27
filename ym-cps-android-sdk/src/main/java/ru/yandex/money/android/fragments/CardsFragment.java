@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
 import com.yandex.money.model.cps.misc.MoneySource;
 
@@ -63,7 +63,11 @@ public class CardsFragment extends PaymentFragment implements AdapterView.OnItem
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         MoneySource moneySource = (MoneySource) parent.getItemAtPosition(position);
-        getPaymentActivity().showCsc(moneySource);
+        if (moneySource == null) {
+            getPaymentActivity().showWeb();
+        } else {
+            getPaymentActivity().showCsc(moneySource);
+        }
     }
 
     private class CardsAdapter extends BaseAdapter {
@@ -78,7 +82,7 @@ public class CardsFragment extends PaymentFragment implements AdapterView.OnItem
 
         @Override
         public int getCount() {
-            return getCards().size();
+            return getSize() + 1;
         }
 
         @Override
@@ -93,17 +97,20 @@ public class CardsFragment extends PaymentFragment implements AdapterView.OnItem
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            // this is a hack to keep footer height unchanged
+            return position == getSize() ? getFooterView(parent) : getCardView(position, parent);
+        }
 
-            View root = convertView == null ? inflater.inflate(R.layout.card_item, parent,false) :
-                    convertView;
+        private View getCardView(int position, ViewGroup parent) {
+
+            View root = inflater.inflate(R.layout.card_item, parent, false);
             assert root != null : "unable to inflate layout in CardsAdapter";
 
             final MoneySource moneySource = getCardAtPosition(position);
-            ImageView card = (ImageView) root.findViewById(R.id.card);
-            card.setImageResource(CardType.parseCardType(moneySource.getPaymentCardType())
-                    .getCardResId());
-            Views.setText(root, R.id.pan_fragment, MoneySourceFormatter.formatPanFragment(
-                    moneySource.getPanFragment()));
+            final TextView panFragment = (TextView) root.findViewById(R.id.pan_fragment);
+            panFragment.setText(MoneySourceFormatter.formatPanFragment(moneySource.getPanFragment()));
+            panFragment.setCompoundDrawablesWithIntrinsicBounds(CardType.parseCardType(
+                    moneySource.getPaymentCardType()).getCardResId(), 0, 0, 0);
 
             ImageButton button = (ImageButton) root.findViewById(R.id.actions);
             button.setOnClickListener(new View.OnClickListener() {
@@ -116,12 +123,21 @@ public class CardsFragment extends PaymentFragment implements AdapterView.OnItem
             return root;
         }
 
+        private View getFooterView(ViewGroup parent) {
+            return inflater.inflate(R.layout.cards_footer, parent, false);
+        }
+
         private List<MoneySource> getCards() {
             return getPaymentActivity().getCards();
         }
 
+        private int getSize() {
+            return getCards().size();
+        }
+
         private MoneySource getCardAtPosition(int position) {
-            return getCards().get(position);
+            List<MoneySource> cards = getCards();
+            return position == cards.size() ? null : cards.get(position);
         }
 
         private void showPopup(View v, MoneySource moneySource) {

@@ -18,6 +18,7 @@ import ru.yandex.money.android.Prefs;
 import ru.yandex.money.android.parcelables.ProcessExternalPaymentParcelable;
 import ru.yandex.money.android.parcelables.RequestExternalPaymentParcelable;
 import ru.yandex.money.android.utils.Bundles;
+import ru.yandex.money.android.utils.MillisecondsIn;
 import ru.yandex.money.android.utils.Threads;
 
 /**
@@ -33,7 +34,8 @@ public class DataService extends IntentService {
     static final String EXTRA_REQUEST_TYPE = "ru.yandex.money.android.extra.REQUEST_TYPE";
     static final String EXTRA_REQUEST_ACCESS_TOKEN = "ru.yandex.money.android.extra.REQUEST_ACCESS_TOKEN";
 
-    public static final String EXTRA_EXCEPTION_MESSAGE = "ru.yandex.money.android.extra.EXCEPTION_MESSAGE";
+    public static final String EXTRA_EXCEPTION_ERROR = "ru.yandex.money.android.extra.EXTRA_EXCEPTION_ERROR";
+    public static final String EXTRA_EXCEPTION_STATUS = "ru.yandex.money.android.extra.EXTRA_EXCEPTION_STATUS";
 
     static final String EXTRA_EXCEPTION_REQUEST_TYPE = "ru.yandex.money.android.extra.EXCEPTION_REQUEST_TYPE";
 
@@ -53,6 +55,7 @@ public class DataService extends IntentService {
     static final int REQUEST_TYPE_PROCESS_EXTERNAL_PAYMENT = 2;
 
     private static final String INSTANCE_ID_ERROR_MESSAGE = "Couldn't perform instanceId request: ";
+    private static final long REQUEST_TIMEOUT = MillisecondsIn.MINUTE;
 
     private YandexMoney ym;
 
@@ -83,7 +86,7 @@ public class DataService extends IntentService {
             requestPayment(reqId, req);
         } else if (type == REQUEST_TYPE_PROCESS_EXTERNAL_PAYMENT) {
             ProcessExternalPayment.Request req = parseProcessParams(intent, accessToken, instanceId);
-            processPayment(reqId, req);
+            processPayment(reqId, req, System.currentTimeMillis());
         } else {
             throw new IllegalArgumentException("requestType parameter has invalid value");
         }
@@ -116,20 +119,24 @@ public class DataService extends IntentService {
                 instanceId, patternId, params);
     }
 
-    private void processPayment(String reqId, ProcessExternalPayment.Request req) {
+    private void processPayment(String reqId, ProcessExternalPayment.Request req, long startTime) {
+        if (System.currentTimeMillis() - startTime > REQUEST_TIMEOUT) {
+            sendExceptionBroadcast(reqId, REQUEST_TYPE_PROCESS_EXTERNAL_PAYMENT, null, null);
+            return;
+        }
+
         try {
             ProcessExternalPayment resp = ym.performRequest(req);
             if (resp.isInProgress()) {
                 Threads.sleepSafely(resp.getNextRetry());
-                processPayment(reqId, req);
+                processPayment(reqId, req, startTime);
             } else {
                 ProcessExternalPaymentParcelable parc = new ProcessExternalPaymentParcelable(resp);
                 sendSuccessBroadcast(ACTION_PROCESS_EXTERNAL_PAYMENT, reqId, parc);
             }
         } catch (IOException e) {
-            sendExceptionBroadcast(reqId, REQUEST_TYPE_REQUEST_EXTERNAL_PAYMENT, e.getMessage());
+            sendExceptionBroadcast(reqId, REQUEST_TYPE_PROCESS_EXTERNAL_PAYMENT, e.getMessage(), null);
         }
-
     }
 
     private void requestPayment(String reqId, RequestExternalPayment.Request req) {
@@ -138,14 +145,15 @@ public class DataService extends IntentService {
             RequestExternalPaymentParcelable parc = new RequestExternalPaymentParcelable(resp);
             sendSuccessBroadcast(ACTION_REQUEST_EXTERNAL_PAYMENT, reqId, parc);
         } catch (IOException e) {
-            sendExceptionBroadcast(reqId, REQUEST_TYPE_REQUEST_EXTERNAL_PAYMENT, e.getMessage());
+            sendExceptionBroadcast(reqId, REQUEST_TYPE_REQUEST_EXTERNAL_PAYMENT, e.getMessage(), null);
         }
     }
 
-    private void sendExceptionBroadcast(String requestId, int requestType, String errorMessage) {
+    private void sendExceptionBroadcast(String requestId, int requestType, String error, String status) {
         Intent intent = new Intent(ACTION_EXCEPTION);
         intent.setPackage(getPackageName());
-        intent.putExtra(EXTRA_EXCEPTION_MESSAGE, errorMessage);
+        intent.putExtra(EXTRA_EXCEPTION_ERROR, error);
+        intent.putExtra(EXTRA_EXCEPTION_STATUS, status);
         intent.putExtra(EXTRA_EXCEPTION_REQUEST_TYPE, requestType);
         intent.putExtra(EXTRA_REQUEST_ID, requestId);
         sendBroadcast(intent);
@@ -176,13 +184,12 @@ public class DataService extends IntentService {
                 new Prefs(getApplicationContext()).storeInstanceId(instanceId);
                 return instanceId;
             } else {
-                String message = INSTANCE_ID_ERROR_MESSAGE + resp.getError();
-                sendExceptionBroadcast(reqId, requestType, message);
+                sendExceptionBroadcast(reqId, requestType, resp.getError(), resp.getStatus());
                 return null;
             }
         } catch (IOException e) {
             String message = INSTANCE_ID_ERROR_MESSAGE + e.getMessage();
-            sendExceptionBroadcast(reqId, requestType, message);
+            sendExceptionBroadcast(reqId, requestType, message, null);
             return null;
         }
     }

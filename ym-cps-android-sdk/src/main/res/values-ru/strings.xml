@@ -11,6 +11,7 @@
     <string name="error_payee_not_found">Получатель не найден.</string>
     <string name="error_payment_refused_title">Магазин не смог принять ваш платеж.</string>
     <string name="error_unknown">Платеж не прошел: повторите попытку через пару минут.</string>
+    <string name="error_csc_invalid">Код введен неправильно</string>
 
     <!-- Error Actions -->
     <string name="error_action_try_again">Попробовать еще раз</string>
@@ -31,6 +32,7 @@
     <string name="cards_payment_sum_value">%1$.2f руб.</string>
     <string name="cards_payment_options_available">Доступные способы оплаты</string>
     <string name="cards_delete_card">Удалить</string>
+    <string name="cards_pay_another_card">Оплатить с другой карты</string>
 
     <!-- CSC Fragment -->
     <string name="csc_code">Код %1$s</string>

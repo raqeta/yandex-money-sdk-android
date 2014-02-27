@@ -14,12 +14,14 @@
 
         <TextView
             style="@style/YandexMoney.TextView.Title"
+            android:gravity="center"
             android:text="@string/success_thank_you"/>
 
         <TextView
             style="@style/YandexMoney.TextView.Large"
             android:layout_marginTop="5dp"
             android:id="@+id/comment"
+            android:gravity="center"
             android:text="@string/success_comment"/>
 
         <RelativeLayout
@@ -39,6 +41,7 @@
                 style="@style/YandexMoney.TextView.Large"
                 android:id="@+id/pan_fragment"
                 android:layout_centerInParent="true"
+                android:gravity="center"
                 android:paddingTop="50dp"
                 android:textColor="@color/ym_text_color_pan_fragment"/>
 
@@ -62,6 +65,7 @@
             style="@style/YandexMoney.TextView.Small"
             android:id="@+id/description"
             android:layout_marginTop="10dp"
+            android:gravity="center"
             android:text="@string/success_save_card_description"/>
 
     </LinearLayout>

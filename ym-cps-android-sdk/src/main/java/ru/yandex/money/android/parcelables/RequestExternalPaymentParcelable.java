@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.yandex.money.model.cps.RequestExternalPayment;
 
+import java.math.BigDecimal;
+
 import ru.yandex.money.android.utils.Parcelables;
 
 /**
@@ -19,9 +21,12 @@ public class RequestExternalPaymentParcelable implements Parcelable {
     }
 
     private RequestExternalPaymentParcelable(Parcel parcel) {
-        rep = new RequestExternalPayment(parcel.readString(), parcel.readString(),
-                parcel.readString(), Parcelables.readBigDecimal(parcel).toString(),
-                parcel.readString());
+        String status = parcel.readString();
+        String error = parcel.readString();
+        String requestId = parcel.readString();
+        BigDecimal bigDecimal = Parcelables.readBigDecimal(parcel);
+        rep = new RequestExternalPayment(status, error, requestId,
+                bigDecimal == null ? null : bigDecimal.toString(), parcel.readString());
     }
 
     @Override

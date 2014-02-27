@@ -1,6 +1,8 @@
 package ru.yandex.money.android.utils;
 
+import android.text.Editable;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,6 +16,11 @@ public class Views {
         if (textView != null) {
             textView.setText(text);
         }
+    }
+
+    public static String getTextSafely(EditText editText) {
+        Editable text = editText.getText();
+        return text == null ? null : text.toString();
     }
 
     public static void setImageResource(View container, int viewId, int resId) {

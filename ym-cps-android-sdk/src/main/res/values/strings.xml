@@ -10,6 +10,7 @@
     <string name="error_payee_not_found">Payee not found.</string>
     <string name="error_payment_refused">The shop you are trying to pay to couldn\'t accept your payment.</string>
     <string name="error_unknown">Payment failed: please try again in a few minutes.</string>
+    <string name="error_csc_invalid">Security code is invalid.</string>
 
     <!-- Error Actions -->
     <string name="error_action_try_again">Try again</string>
@@ -30,6 +31,7 @@
     <string name="cards_payment_sum_value">%1$.2f rub.</string>
     <string name="cards_payment_options_available">Available Payment Options</string>
     <string name="cards_delete_card">Delete</string>
+    <string name="cards_pay_another_card">Pay with Another Card</string>
 
     <!-- CSC Fragment -->
     <string name="csc_code">%1$s code</string>

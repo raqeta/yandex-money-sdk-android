@@ -54,9 +54,9 @@ public abstract class PaymentFragment extends Fragment {
                     @Override
                     public void handle(Intent intent) {
                         if (isManageableIntent(intent)) {
-                            String error = intent.getStringExtra(
-                                    DataService.EXTRA_EXCEPTION_MESSAGE);
-                            getPaymentActivity().showError(error);
+                            String error = intent.getStringExtra(DataService.EXTRA_EXCEPTION_ERROR);
+                            String status = intent.getStringExtra(DataService.EXTRA_EXCEPTION_STATUS);
+                            getPaymentActivity().showError(error, status);
                         }
                     }
                 })

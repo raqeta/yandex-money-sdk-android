@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/ym_background"
     android:padding="@dimen/ym_screen_border_margin">
 
     <LinearLayout
@@ -15,31 +14,23 @@
 
         <TextView
             style="@style/YandexMoney.TextView.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:text="@string/cards_payment_name"/>
 
         <TextView
             style="@style/YandexMoney.TextView"
             android:id="@+id/payment_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
             android:textColor="@color/ym_text_color_dark"/>
 
         <TextView
             style="@style/YandexMoney.TextView.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:text="@string/cards_payment_sum"/>
 
         <TextView
             style="@style/YandexMoney.TextView"
             android:id="@+id/payment_sum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:textColor="@color/ym_text_color_dark"/>
 
     </LinearLayout>

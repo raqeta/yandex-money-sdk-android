@@ -10,6 +10,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import com.yandex.money.model.cps.Error;
 import com.yandex.money.model.cps.ProcessExternalPayment;
 
 import java.util.Map;
@@ -48,11 +49,6 @@ public class WebFragment extends PaymentFragment {
 
         requestId = args.getString(EXTRA_REQUEST_ID);
         contractAmount = args.getDouble(EXTRA_CONTRACT_AMOUNT);
-
-        if (savedInstanceState != null) {
-            requestId = savedInstanceState.getString(EXTRA_REQUEST_ID);
-            contractAmount = savedInstanceState.getDouble(EXTRA_CONTRACT_AMOUNT);
-        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -103,9 +99,9 @@ public class WebFragment extends PaymentFragment {
             String url = makeUrl(pep);
             webView.loadUrl(url);
         } else if (pep.isSuccess()) {
-            getPaymentActivity().showSuccess(requestId, contractAmount);
+            getPaymentActivity().showSuccess();
         } else {
-            getPaymentActivity().showError(pep.getError());
+            getPaymentActivity().showError(pep.getError(), pep.getStatus());
         }
     }
 
@@ -138,7 +134,7 @@ public class WebFragment extends PaymentFragment {
                 showProgressBar();
                 processExternalPayment();
             } else if (url.contains(DataServiceHelper.FAIL_URI)) {
-                getPaymentActivity().showError("authorization_reject");
+                getPaymentActivity().showError(Error.AUTHORIZATION_REJECT, null);
             }
         }
     }

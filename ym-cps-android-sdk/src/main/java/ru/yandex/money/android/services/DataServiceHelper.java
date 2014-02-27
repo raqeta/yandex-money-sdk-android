@@ -4,9 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.yandex.money.model.common.params.ParamsP2P;
-
-import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -32,7 +29,7 @@ public class DataServiceHelper {
     }
 
     public String requestShop(String patternId, Map<String, String> params) {
-        return requestExternalPayment(clientId, patternId, params);
+        return requestExternalPayment(patternId, params);
     }
 
     public String process(String requestId, boolean requestToken) {
@@ -60,8 +57,7 @@ public class DataServiceHelper {
         return reqId;
     }
 
-    private String requestExternalPayment(String clientId, String patternId,
-                                                 Map<String, String> params) {
+    private String requestExternalPayment(String patternId, Map<String, String> params) {
         String requestId = genRequestId();
         Intent intent = makeIntent(context, requestId, DataService.REQUEST_TYPE_REQUEST_EXTERNAL_PAYMENT);
 
@@ -87,5 +83,4 @@ public class DataServiceHelper {
     private String genRequestId() {
         return UUID.randomUUID().toString();
     }
-
 }
