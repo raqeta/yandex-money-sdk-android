@@ -2,10 +2,12 @@ package ru.yandex.money.android.fragments;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -16,6 +18,7 @@ import com.yandex.money.model.cps.ProcessExternalPayment;
 import java.util.Map;
 
 import ru.yandex.money.android.R;
+import ru.yandex.money.android.parcelables.ProcessExternalPaymentParcelable;
 import ru.yandex.money.android.services.DataServiceHelper;
 
 /**
@@ -23,18 +26,26 @@ import ru.yandex.money.android.services.DataServiceHelper;
  */
 public class WebFragment extends PaymentFragment {
 
-    private static final String EXTRA_LOADED = "ru.yandex.money.android.extra.LOADED";
+    private static final String EXTRA_PROCESS_EXTERNAL_PAYMENT = "ru.yandex.money.android.extra.PROCESS_EXTERNAL_PAYMENT";
 
     private ProgressBar progressBar;
     private WebView webView;
 
     private String requestId;
-    private double contractAmount;
+    private ProcessExternalPayment pep;
 
-    public static WebFragment newInstance(String requestId, double contractAmount) {
+    public static WebFragment newInstance(String requestId) {
+        return newInstance(requestId, null);
+    }
+
+    public static WebFragment newInstance(String requestId, ProcessExternalPayment pep) {
+
         Bundle args = new Bundle();
         args.putString(EXTRA_REQUEST_ID, requestId);
-        args.putDouble(EXTRA_CONTRACT_AMOUNT, contractAmount);
+        if (pep != null) {
+            args.putParcelable(EXTRA_PROCESS_EXTERNAL_PAYMENT,
+                    new ProcessExternalPaymentParcelable(pep));
+        }
 
         WebFragment fragment = new WebFragment();
         fragment.setArguments(args);
@@ -48,7 +59,11 @@ public class WebFragment extends PaymentFragment {
         assert args != null : "specify proper args for WebFragment";
 
         requestId = args.getString(EXTRA_REQUEST_ID);
-        contractAmount = args.getDouble(EXTRA_CONTRACT_AMOUNT);
+        ProcessExternalPaymentParcelable parcelable =
+                args.getParcelable(EXTRA_PROCESS_EXTERNAL_PAYMENT);
+        if (parcelable != null) {
+            pep = parcelable.getProcessExternalPayment();
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -64,30 +79,16 @@ public class WebFragment extends PaymentFragment {
         webView.setWebViewClient(new Client());
         webView.getSettings().setJavaScriptEnabled(true);
 
-        if (savedInstanceState != null) {
-            if (savedInstanceState.getBoolean(EXTRA_LOADED)) {
-                showWebView();
-                webView.restoreState(savedInstanceState);
-            }
-        }
-
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        processExternalPayment();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putDouble(EXTRA_CONTRACT_AMOUNT, contractAmount);
-
-        boolean loaded = webView.getVisibility() == View.VISIBLE;
-        outState.putBoolean(EXTRA_LOADED, loaded);
-        if (loaded) {
-            webView.saveState(outState);
+        if (pep == null) {
+            processExternalPayment();
+        } else {
+            loadPage(pep);
         }
     }
 
@@ -95,14 +96,17 @@ public class WebFragment extends PaymentFragment {
     protected void onExternalPaymentProcessed(ProcessExternalPayment pep) {
         super.onExternalPaymentProcessed(pep);
         if (pep.isExtAuthRequired()) {
-            showWebView();
-            String url = makeUrl(pep);
-            webView.loadUrl(url);
+            loadPage(pep);
         } else if (pep.isSuccess()) {
             getPaymentActivity().showSuccess();
         } else {
             getPaymentActivity().showError(pep.getError(), pep.getStatus());
         }
+    }
+
+    private void loadPage(ProcessExternalPayment pep) {
+        showWebView();
+        webView.loadUrl(makeUrl(pep));
     }
 
     private void showProgressBar() {
@@ -136,6 +140,12 @@ public class WebFragment extends PaymentFragment {
             } else if (url.contains(DataServiceHelper.FAIL_URI)) {
                 getPaymentActivity().showError(Error.AUTHORIZATION_REJECT, null);
             }
+        }
+
+        // TODO remove on production
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            handler.proceed();
         }
     }
 }

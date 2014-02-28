@@ -2,6 +2,7 @@ package ru.yandex.money.android.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import ru.yandex.money.android.utils.Views;
  * @author vyasevich
  */
 public class ErrorFragment extends Fragment {
+
+    private static final String TAG = "ErrorFragment";
 
     private static final String EXTRA_ERROR = "ru.yandex.money.android.extra.ERROR";
     private static final String EXTRA_STATUS = "ru.yandex.money.android.extra.STATUS";
@@ -44,6 +47,8 @@ public class ErrorFragment extends Fragment {
     }
 
     private void showError(View view, String error, String status) {
+        Log.e(TAG, String.format("error=%1$s,status=%2$s", error, status));
+
         final int notSpecified = -1;
 
         final int titleResId;

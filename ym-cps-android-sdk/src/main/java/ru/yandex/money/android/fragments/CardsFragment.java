@@ -29,6 +29,7 @@ import ru.yandex.money.android.utils.Views;
 public class CardsFragment extends PaymentFragment implements AdapterView.OnItemClickListener {
 
     private static final String EXTRA_TITLE = "ru.yandex.money.android.extra.TITLE";
+    private static final String EXTRA_CONTRACT_AMOUNT = "ru.yandex.money.android.extra.CONTRACT_AMOUNT";
 
     public static CardsFragment newInstance(String title, double contractAmount) {
         Bundle args = new Bundle();

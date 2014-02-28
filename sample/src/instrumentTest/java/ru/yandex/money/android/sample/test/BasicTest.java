@@ -35,6 +35,8 @@ public class BasicTest extends ActivityInstrumentationTestCase2 {
     }
 
     private void performTest(Card card) {
+        solo.clickOnButton("Test Phone");
+
         solo.waitForText("Название платежа");
         solo.typeTextInWebElement(By.id(Card.ID_CARD_NUMBER), card.getNumber());
         solo.typeTextInWebElement(By.id(Card.ID_MONTH), card.getMonth());
@@ -43,6 +45,7 @@ public class BasicTest extends ActivityInstrumentationTestCase2 {
         solo.typeTextInWebElement(By.id(Card.ID_FIO), card.getFio());
         solo.typeTextInWebElement(By.id(Card.ID_CPS_EMAIL), card.getEmail());
         solo.clickOnWebElement(By.id("mobile-cps_submit-button"));
-        solo.sleep(100000);
+
+        solo.sleep(5000);
     }
 }

@@ -98,7 +98,9 @@ public class CscFragment extends PaymentFragment {
     protected void onExternalPaymentProcessed(ProcessExternalPayment pep) {
         super.onExternalPaymentProcessed(pep);
         if (pep.isSuccess()) {
-            getPaymentActivity().showSuccess();
+            getPaymentActivity().showSuccess(moneySource);
+        } else if (pep.isExtAuthRequired()) {
+            getPaymentActivity().showWeb(pep);
         } else {
             getPaymentActivity().showError(pep.getError(), pep.getStatus());
         }
@@ -127,7 +129,7 @@ public class CscFragment extends PaymentFragment {
             hideError();
             pay.setEnabled(false);
             cscEditText.setEnabled(false);
-            getPaymentActivity().getDataServiceHelper().process(requestId,
+            reqId = getPaymentActivity().getDataServiceHelper().process(requestId,
                     moneySource.getMoneySourceToken(), csc);
         } else {
             showError(getString(R.string.error_oops_title), getString(R.string.error_csc_invalid));

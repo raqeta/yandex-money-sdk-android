@@ -2,5 +2,7 @@
 <resources>
 
     <string name="app_name">Sample app</string>
+    <string name="test_p2p">Test P2P</string>
+    <string name="test_phone">Test Phone</string>
 
 </resources>

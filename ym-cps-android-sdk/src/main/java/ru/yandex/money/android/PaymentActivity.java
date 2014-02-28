@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.yandex.money.model.common.params.ParamsP2P;
 import com.yandex.money.model.common.params.ParamsPhone;
+import com.yandex.money.model.cps.ProcessExternalPayment;
 import com.yandex.money.model.cps.RequestExternalPayment;
 import com.yandex.money.model.cps.misc.MoneySource;
 
@@ -42,6 +43,7 @@ public class PaymentActivity extends Activity {
     private String title;
     private String requestId;
     private double contractAmount;
+    private boolean success = false;
 
     public static void startActivityForResult(Activity activity, String clientId,
                                               ParamsP2P params, int requestCode) {
@@ -95,11 +97,17 @@ public class PaymentActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        applyResult();
+        super.onBackPressed();
     }
 
     public DataServiceHelper getDataServiceHelper() {
@@ -111,7 +119,11 @@ public class PaymentActivity extends Activity {
     }
 
     public void showWeb() {
-        replaceFragmentAddingToBackStack(WebFragment.newInstance(requestId, contractAmount));
+        replaceFragmentAddingToBackStack(WebFragment.newInstance(requestId));
+    }
+
+    public void showWeb(ProcessExternalPayment pep) {
+        replaceFragmentAddingToBackStack(WebFragment.newInstance(requestId, pep));
     }
 
     public void showCards() {
@@ -123,7 +135,13 @@ public class PaymentActivity extends Activity {
     }
 
     public void showSuccess() {
+        success = true;
         replaceFragmentClearBackStack(SuccessFragment.newInstance(requestId, contractAmount));
+    }
+
+    public void showSuccess(MoneySource moneySource) {
+        success = true;
+        replaceFragmentClearBackStack(SuccessFragment.newInstance(requestId, contractAmount, moneySource));
     }
 
     public void showCsc(MoneySource moneySource) {
@@ -172,6 +190,10 @@ public class PaymentActivity extends Activity {
                 .replace(R.id.container, fragment)
                 .addToBackStack(fragment.getTag())
                 .commit();
+    }
+
+    private void applyResult() {
+        setResult(success ? RESULT_OK : RESULT_CANCELED);
     }
 
     private MultipleBroadcastReceiver buildReceiver() {

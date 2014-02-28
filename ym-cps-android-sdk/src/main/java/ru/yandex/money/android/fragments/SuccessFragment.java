@@ -37,9 +37,18 @@ public class SuccessFragment extends PaymentFragment {
     private TextView description;
 
     public static SuccessFragment newInstance(String requestId, double contractAmount) {
+        return newInstance(requestId, contractAmount, null);
+    }
+
+    public static SuccessFragment newInstance(String requestId, double contractAmount,
+                                              MoneySource moneySource) {
+
         Bundle args = new Bundle();
         args.putString(EXTRA_REQUEST_ID, requestId);
         args.putDouble(EXTRA_CONTRACT_AMOUNT, contractAmount);
+        if (moneySource != null) {
+            args.putParcelable(EXTRA_MONEY_SOURCE, new MoneySourceParcelable(moneySource));
+        }
 
         SuccessFragment frg = new SuccessFragment();
         frg.setArguments(args);
@@ -63,16 +72,23 @@ public class SuccessFragment extends PaymentFragment {
         successMarker = view.findViewById(R.id.success_marker);
         saveCard = (Button) view.findViewById(R.id.save_card);
 
-        if (savedInstanceState != null) {
-            MoneySourceParcelable moneySourceParcelable =
-                    savedInstanceState.getParcelable(EXTRA_MONEY_SOURCE);
-            assert moneySourceParcelable != null : "no money source specified for SuccessFragment";
-            moneySource = moneySourceParcelable.getMoneySource();
+        if (savedInstanceState == null) {
+            moneySource = getMoneySourceFromBundle(args);
+            if (moneySource != null) {
+                state = State.SAVING_COMPLETED;
+            }
+        } else {
             state = (State) savedInstanceState.getSerializable(EXTRA_STATE);
+            moneySource = getMoneySourceFromBundle(savedInstanceState);
         }
-        applyState();
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        applyState();
     }
 
     @Override
@@ -134,6 +150,11 @@ public class SuccessFragment extends PaymentFragment {
         successMarker.setVisibility(View.VISIBLE);
         description.setText(getString(R.string.success_card_saved_description,
                 CardType.parseCardType(moneySource.getPaymentCardType()).getCscAbbr()));
+    }
+
+    private MoneySource getMoneySourceFromBundle(Bundle bundle) {
+        MoneySourceParcelable parcelable = bundle.getParcelable(EXTRA_MONEY_SOURCE);
+        return parcelable == null ? null : parcelable.getMoneySource();
     }
 
     private enum State {
