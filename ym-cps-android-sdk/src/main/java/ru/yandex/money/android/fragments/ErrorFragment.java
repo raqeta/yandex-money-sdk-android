@@ -55,7 +55,7 @@ public class ErrorFragment extends Fragment {
         final int messageResId;
         final int actionResId;
 
-        if (Status.REFUSED.equals(status) || Error.ILLEGAL_PARAM_CLIENT_ID.equals(error)) {
+        if (Error.ILLEGAL_PARAM_CLIENT_ID.equals(error)) {
             titleResId = R.string.error_illegal_param_client_id_title;
             messageResId = R.string.error_illegal_param_client_id;
             actionResId = notSpecified;
@@ -75,6 +75,10 @@ public class ErrorFragment extends Fragment {
             titleResId = R.string.error_something_wrong_title;
             messageResId = R.string.error_payment_refused;
             actionResId = R.string.error_action_try_again;
+        } else if (Status.REFUSED.equals(status)) {
+            titleResId = R.string.error_illegal_param_client_id_title;
+            messageResId = R.string.error_illegal_param_client_id;
+            actionResId = notSpecified;
         } else {
             titleResId = R.string.error_oops_title;
             messageResId = R.string.error_unknown;

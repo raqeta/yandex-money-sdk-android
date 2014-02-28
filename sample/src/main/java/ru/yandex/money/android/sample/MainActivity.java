@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.yandex.money.model.common.IdentifierType;
 import com.yandex.money.model.common.params.ParamsP2P;
 import com.yandex.money.model.common.params.ParamsPhone;
 
@@ -26,8 +25,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 PaymentActivity.startActivityForResult(MainActivity.this, Consts.CLIENT_ID,
-                        new ParamsP2P("41001901291751", IdentifierType.ACCOUNT, new BigDecimal(2)),
-                        REQUEST_CODE);
+                        new ParamsP2P("41003188435866", new BigDecimal(2)), REQUEST_CODE);
             }
         });
 
