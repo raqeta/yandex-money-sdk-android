@@ -1,6 +1,5 @@
 package ru.yandex.money.android.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +16,7 @@ import ru.yandex.money.android.utils.Views;
 /**
  * @author vyasevich
  */
-public class ErrorFragment extends Fragment {
+public class ErrorFragment extends PaymentFragment {
 
     private static final String TAG = "ErrorFragment";
 
@@ -95,7 +94,12 @@ public class ErrorFragment extends Fragment {
         } else {
             action.setText(getString(actionResId));
             action.setVisibility(View.VISIBLE);
-            //action.setOnClickListener(); TODO implement
+            action.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getPaymentActivity().requestExternalPayment();
+                }
+            });
         }
     }
 }

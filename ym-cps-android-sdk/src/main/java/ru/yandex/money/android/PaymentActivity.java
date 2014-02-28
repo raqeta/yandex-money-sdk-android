@@ -148,7 +148,7 @@ public class PaymentActivity extends Activity {
         replaceFragmentAddingToBackStack(CscFragment.newInstance(requestId, moneySource));
     }
 
-    private void requestExternalPayment() {
+    public void requestExternalPayment() {
         reqId = dataServiceHelper.requestShop(arguments.getPatternId(), arguments.getParams());
     }
 
