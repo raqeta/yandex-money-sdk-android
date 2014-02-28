@@ -119,7 +119,7 @@ public class PaymentActivity extends Activity {
     }
 
     public void showWeb() {
-        replaceFragmentAddingToBackStack(WebFragment.newInstance(requestId));
+        replaceFragmentClearBackStack(WebFragment.newInstance(requestId));
     }
 
     public void showWeb(ProcessExternalPayment pep) {
@@ -127,7 +127,7 @@ public class PaymentActivity extends Activity {
     }
 
     public void showCards() {
-        replaceFragmentAddingToBackStack(CardsFragment.newInstance(title, contractAmount));
+        replaceFragmentClearBackStack(CardsFragment.newInstance(title, contractAmount));
     }
 
     public void showError(String error, String status) {
@@ -159,7 +159,7 @@ public class PaymentActivity extends Activity {
             requestId = rep.getRequestId();
             contractAmount = rep.getContractAmount().doubleValue();
             if (cards.size() == 0) {
-                showWeb();
+                replaceFragmentClearBackStack(WebFragment.newInstance(requestId));
             } else {
                 showCards();
             }
