@@ -65,9 +65,9 @@ public class CardsFragment extends PaymentFragment implements AdapterView.OnItem
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         MoneySource moneySource = (MoneySource) parent.getItemAtPosition(position);
         if (moneySource == null) {
-            getPaymentActivity().showWeb();
+            showWeb();
         } else {
-            getPaymentActivity().showCsc(moneySource);
+            showCsc(moneySource);
         }
     }
 

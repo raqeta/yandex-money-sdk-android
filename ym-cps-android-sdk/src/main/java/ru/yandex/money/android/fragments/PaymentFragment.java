@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 
 import com.yandex.money.model.cps.ProcessExternalPayment;
+import com.yandex.money.model.cps.misc.MoneySource;
 
 import ru.yandex.money.android.IntentHandler;
 import ru.yandex.money.android.MultipleBroadcastReceiver;
@@ -38,6 +39,69 @@ public abstract class PaymentFragment extends Fragment {
         return (PaymentActivity) getActivity();
     }
 
+    protected void showWeb() {
+        startActionSafely(new Action() {
+            @Override
+            public void start(PaymentActivity activity) {
+                activity.showWeb();
+            }
+        });
+    }
+
+    protected void showWeb(final ProcessExternalPayment pep) {
+        startActionSafely(new Action() {
+            @Override
+            public void start(PaymentActivity activity) {
+                activity.showWeb(pep);
+            }
+        });
+    }
+
+    protected void showCards() {
+        startActionSafely(new Action() {
+            @Override
+            public void start(PaymentActivity activity) {
+                activity.showCards();
+            }
+        });
+    }
+
+    protected void showError(final String error, final String status) {
+        startActionSafely(new Action() {
+            @Override
+            public void start(PaymentActivity activity) {
+                activity.showError(error, status);
+            }
+        });
+    }
+
+    protected void showCsc(final MoneySource moneySource) {
+        startActionSafely(new Action() {
+            @Override
+            public void start(PaymentActivity activity) {
+                activity.showCsc(moneySource);
+            }
+        });
+    }
+
+    protected void showSuccess() {
+        startActionSafely(new Action() {
+            @Override
+            public void start(PaymentActivity activity) {
+                activity.showSuccess();
+            }
+        });
+    }
+
+    protected void showSuccess(final MoneySource moneySource) {
+        startActionSafely(new Action() {
+            @Override
+            public void start(PaymentActivity activity) {
+                activity.showSuccess(moneySource);
+            }
+        });
+    }
+
     protected boolean isManageableIntent(Intent intent) {
         String requestId = intent.getStringExtra(DataService.EXTRA_REQUEST_ID);
         return requestId != null && requestId.equals(reqId);
@@ -45,6 +109,13 @@ public abstract class PaymentFragment extends Fragment {
 
     protected void onExternalPaymentProcessed(ProcessExternalPayment pep) {
         reqId = null;
+    }
+
+    private void startActionSafely(Action action) {
+        PaymentActivity activity = getPaymentActivity();
+        if (activity != null) {
+            action.start(activity);
+        }
     }
 
     private MultipleBroadcastReceiver buildReceiver() {
@@ -55,7 +126,7 @@ public abstract class PaymentFragment extends Fragment {
                         if (isManageableIntent(intent)) {
                             String error = intent.getStringExtra(DataService.EXTRA_EXCEPTION_ERROR);
                             String status = intent.getStringExtra(DataService.EXTRA_EXCEPTION_STATUS);
-                            getPaymentActivity().showError(error, status);
+                            showError(error, status);
                         }
                     }
                 })
@@ -70,5 +141,9 @@ public abstract class PaymentFragment extends Fragment {
                         }
                     }
                 });
+    }
+
+    private interface Action {
+        public void start(PaymentActivity activity);
     }
 }

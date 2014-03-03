@@ -107,7 +107,7 @@ public class SuccessFragment extends PaymentFragment {
             state = State.SAVING_COMPLETED;
             onCardSaved();
         } else {
-            getPaymentActivity().showError(pep.getError(), pep.getStatus());
+            showError(pep.getError(), pep.getStatus());
         }
     }
 

@@ -98,9 +98,9 @@ public class WebFragment extends PaymentFragment {
         if (pep.isExtAuthRequired()) {
             loadPage(pep);
         } else if (pep.isSuccess()) {
-            getPaymentActivity().showSuccess();
+            showSuccess();
         } else {
-            getPaymentActivity().showError(pep.getError(), pep.getStatus());
+            showError(pep.getError(), pep.getStatus());
         }
     }
 
@@ -134,11 +134,12 @@ public class WebFragment extends PaymentFragment {
     private class Client extends WebViewClient {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            System.out.println("onPageStarted " + url);
             if (url.contains(DataServiceHelper.SUCCESS_URI)) {
                 showProgressBar();
                 processExternalPayment();
             } else if (url.contains(DataServiceHelper.FAIL_URI)) {
-                getPaymentActivity().showError(Error.AUTHORIZATION_REJECT, null);
+                showError(Error.AUTHORIZATION_REJECT, null);
             }
         }
 

@@ -98,19 +98,19 @@ public class CscFragment extends PaymentFragment {
     protected void onExternalPaymentProcessed(ProcessExternalPayment pep) {
         super.onExternalPaymentProcessed(pep);
         if (pep.isSuccess()) {
-            getPaymentActivity().showSuccess(moneySource);
+            showSuccess(moneySource);
         } else if (pep.isExtAuthRequired()) {
-            getPaymentActivity().showWeb(pep);
+            showWeb(pep);
         } else {
-            getPaymentActivity().showError(pep.getError(), pep.getStatus());
+            showError(pep.getError(), pep.getStatus());
         }
     }
 
-    private void hideError() {
+    private void setErrorGone() {
         setError(View.GONE, null, null);
     }
 
-    private void showError(String title, String message) {
+    private void setErrorVisible(String title, String message) {
         setError(View.VISIBLE, title, message);
     }
 
@@ -121,18 +121,19 @@ public class CscFragment extends PaymentFragment {
     }
 
     private void onCancelClicked() {
-        getPaymentActivity().showCards();
+        showCards();
     }
 
     private void onPayClicked() {
         if (valid()) {
-            hideError();
+            setErrorGone();
             pay.setEnabled(false);
             cscEditText.setEnabled(false);
             reqId = getPaymentActivity().getDataServiceHelper().process(requestId,
                     moneySource.getMoneySourceToken(), csc);
         } else {
-            showError(getString(R.string.error_oops_title), getString(R.string.error_csc_invalid));
+            setErrorVisible(getString(R.string.error_oops_title),
+                    getString(R.string.error_csc_invalid));
         }
     }
 
