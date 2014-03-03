@@ -22,6 +22,7 @@ import ru.yandex.money.android.fragments.CscFragment;
 import ru.yandex.money.android.fragments.ErrorFragment;
 import ru.yandex.money.android.fragments.SuccessFragment;
 import ru.yandex.money.android.fragments.WebFragment;
+import ru.yandex.money.android.parcelables.ProcessExternalPaymentParcelable;
 import ru.yandex.money.android.parcelables.RequestExternalPaymentParcelable;
 import ru.yandex.money.android.services.DataService;
 import ru.yandex.money.android.services.DataServiceHelper;
@@ -30,6 +31,8 @@ import ru.yandex.money.android.services.DataServiceHelper;
  * @author vyasevich
  */
 public class PaymentActivity extends Activity {
+
+    public static final String EXTRA_INVOICE_ID = "ru.yandex.money.android.extra.INVOICE_ID";
 
     private static final String EXTRA_ARGUMENTS = "ru.yandex.money.android.extra.ARGUMENTS";
     private static final String EXTRA_REQ_ID = "ru.yandex.money.android.extra.REQ_ID";
@@ -47,6 +50,7 @@ public class PaymentActivity extends Activity {
     private String reqId;
     private String title;
     private String requestId;
+    private String invoiceId;
     private double contractAmount;
     private boolean success = false;
 
@@ -95,6 +99,7 @@ public class PaymentActivity extends Activity {
                 requestExternalPayment();
             } else {
                 title = savedInstanceState.getString(EXTRA_TITLE);
+                invoiceId = savedInstanceState.getString(EXTRA_INVOICE_ID);
                 contractAmount = savedInstanceState.getDouble(EXTRA_CONTRACT_AMOUNT);
                 success = savedInstanceState.getBoolean(EXTRA_SUCCESS);
             }
@@ -130,6 +135,7 @@ public class PaymentActivity extends Activity {
         outState.putString(EXTRA_REQ_ID, reqId);
         outState.putString(EXTRA_TITLE, title);
         outState.putString(EXTRA_REQUEST_ID, requestId);
+        outState.putString(EXTRA_INVOICE_ID, invoiceId);
         outState.putDouble(EXTRA_CONTRACT_AMOUNT, contractAmount);
         outState.putBoolean(EXTRA_SUCCESS, success);
     }
@@ -159,12 +165,10 @@ public class PaymentActivity extends Activity {
     }
 
     public void showSuccess() {
-        success = true;
         replaceFragmentClearBackStack(SuccessFragment.newInstance(requestId, contractAmount));
     }
 
     public void showSuccess(MoneySource moneySource) {
-        success = true;
         replaceFragmentClearBackStack(SuccessFragment.newInstance(requestId, contractAmount, moneySource));
     }
 
@@ -189,6 +193,13 @@ public class PaymentActivity extends Activity {
             }
         } else {
             showError(rep.getError(), rep.getStatus());
+        }
+    }
+
+    private void onExternalPaymentProcessed(ProcessExternalPayment pep) {
+        if (pep.isSuccess()) {
+            success = true;
+            invoiceId = pep.getInvoiceId();
         }
     }
 
@@ -217,7 +228,13 @@ public class PaymentActivity extends Activity {
     }
 
     private void applyResult() {
-        setResult(success ? RESULT_OK : RESULT_CANCELED);
+        if (success) {
+            Intent intent = new Intent();
+            intent.putExtra(EXTRA_INVOICE_ID, invoiceId);
+            setResult(RESULT_OK, intent);
+        } else {
+            setResult(RESULT_CANCELED);
+        }
     }
 
     private MultipleBroadcastReceiver buildReceiver() {
@@ -241,6 +258,15 @@ public class PaymentActivity extends Activity {
                             assert parcelable != null : "request extra is null";
                             onExternalPaymentReceived(parcelable.getRequestExternalPayment());
                         }
+                    }
+                })
+                .addHandler(DataService.ACTION_PROCESS_EXTERNAL_PAYMENT, new IntentHandler() {
+                    @Override
+                    public void handle(Intent intent) {
+                        ProcessExternalPaymentParcelable parcelable = intent.getParcelableExtra(
+                                DataService.EXTRA_SUCCESS_PARCELABLE);
+                        assert parcelable != null : "request extra is null";
+                        onExternalPaymentProcessed(parcelable.getProcessExternalPayment());
                     }
                 });
     }
