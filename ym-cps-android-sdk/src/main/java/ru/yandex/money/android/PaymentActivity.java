@@ -32,6 +32,11 @@ import ru.yandex.money.android.services.DataServiceHelper;
 public class PaymentActivity extends Activity {
 
     private static final String EXTRA_ARGUMENTS = "ru.yandex.money.android.extra.ARGUMENTS";
+    private static final String EXTRA_REQ_ID = "ru.yandex.money.android.extra.REQ_ID";
+    private static final String EXTRA_REQUEST_ID = "ru.yandex.money.android.extra.REQUEST_ID";
+    private static final String EXTRA_TITLE = "ru.yandex.money.android.extra.TITLE";
+    private static final String EXTRA_CONTRACT_AMOUNT = "ru.yandex.money.android.extra.CONTRACT_AMOUNT";
+    private static final String EXTRA_SUCCESS = "ru.yandex.money.android.extra.SUCCESS";
 
     private final MultipleBroadcastReceiver receiver = buildReceiver();
 
@@ -80,11 +85,20 @@ public class PaymentActivity extends Activity {
         dataServiceHelper = new DataServiceHelper(this, arguments.getClientId(), null);
         cards = new DatabaseStorage(this).selectMoneySources();
 
-        if (savedInstanceState == null && requestId == null) {
-            requestExternalPayment();
-        }
-
         registerReceiver(receiver, receiver.buildIntentFilter());
+        if (savedInstanceState == null) {
+            requestExternalPayment();
+        } else {
+            reqId = savedInstanceState.getString(EXTRA_REQ_ID);
+            requestId = savedInstanceState.getString(EXTRA_REQUEST_ID);
+            if (reqId == null && requestId == null) {
+                requestExternalPayment();
+            } else {
+                title = savedInstanceState.getString(EXTRA_TITLE);
+                contractAmount = savedInstanceState.getDouble(EXTRA_CONTRACT_AMOUNT);
+                success = savedInstanceState.getBoolean(EXTRA_SUCCESS);
+            }
+        }
     }
 
     @Override
@@ -108,6 +122,16 @@ public class PaymentActivity extends Activity {
     public void onBackPressed() {
         applyResult();
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(EXTRA_REQ_ID, reqId);
+        outState.putString(EXTRA_TITLE, title);
+        outState.putString(EXTRA_REQUEST_ID, requestId);
+        outState.putDouble(EXTRA_CONTRACT_AMOUNT, contractAmount);
+        outState.putBoolean(EXTRA_SUCCESS, success);
     }
 
     public DataServiceHelper getDataServiceHelper() {
