@@ -95,7 +95,9 @@ public class SuccessFragment extends PaymentFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(EXTRA_STATE, state);
-        outState.putParcelable(EXTRA_MONEY_SOURCE, new MoneySourceParcelable(moneySource));
+        if (moneySource != null) {
+            outState.putParcelable(EXTRA_MONEY_SOURCE, new MoneySourceParcelable(moneySource));
+        }
     }
 
     @Override

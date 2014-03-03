@@ -134,7 +134,6 @@ public class WebFragment extends PaymentFragment {
     private class Client extends WebViewClient {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            System.out.println("onPageStarted " + url);
             if (url.contains(DataServiceHelper.SUCCESS_URI)) {
                 showProgressBar();
                 processExternalPayment();

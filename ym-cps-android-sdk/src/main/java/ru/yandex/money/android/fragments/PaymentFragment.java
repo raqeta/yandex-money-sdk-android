@@ -120,24 +120,15 @@ public abstract class PaymentFragment extends Fragment {
 
     private MultipleBroadcastReceiver buildReceiver() {
         return new MultipleBroadcastReceiver()
-                .addHandler(DataService.ACTION_EXCEPTION, new IntentHandler() {
-                    @Override
-                    public void handle(Intent intent) {
-                        if (isManageableIntent(intent)) {
-                            String error = intent.getStringExtra(DataService.EXTRA_EXCEPTION_ERROR);
-                            String status = intent.getStringExtra(DataService.EXTRA_EXCEPTION_STATUS);
-                            showError(error, status);
-                        }
-                    }
-                })
                 .addHandler(DataService.ACTION_PROCESS_EXTERNAL_PAYMENT, new IntentHandler() {
                     @Override
                     public void handle(Intent intent) {
                         if (isManageableIntent(intent)) {
                             ProcessExternalPaymentParcelable parcelable = intent.getParcelableExtra(
                                     DataService.EXTRA_SUCCESS_PARCELABLE);
-                            assert parcelable != null : "request extra is null";
-                            onExternalPaymentProcessed(parcelable.getProcessExternalPayment());
+                            if (parcelable != null) {
+                                onExternalPaymentProcessed(parcelable.getProcessExternalPayment());
+                            }
                         }
                     }
                 });

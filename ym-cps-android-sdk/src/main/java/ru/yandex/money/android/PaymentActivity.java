@@ -255,8 +255,9 @@ public class PaymentActivity extends Activity {
                         if (isManageableIntent(intent)) {
                             RequestExternalPaymentParcelable parcelable = intent.getParcelableExtra(
                                     DataService.EXTRA_SUCCESS_PARCELABLE);
-                            assert parcelable != null : "request extra is null";
-                            onExternalPaymentReceived(parcelable.getRequestExternalPayment());
+                            if (parcelable != null) {
+                                onExternalPaymentReceived(parcelable.getRequestExternalPayment());
+                            }
                         }
                     }
                 })
@@ -265,8 +266,9 @@ public class PaymentActivity extends Activity {
                     public void handle(Intent intent) {
                         ProcessExternalPaymentParcelable parcelable = intent.getParcelableExtra(
                                 DataService.EXTRA_SUCCESS_PARCELABLE);
-                        assert parcelable != null : "request extra is null";
-                        onExternalPaymentProcessed(parcelable.getProcessExternalPayment());
+                        if (parcelable != null) {
+                            onExternalPaymentProcessed(parcelable.getProcessExternalPayment());
+                        }
                     }
                 });
     }
