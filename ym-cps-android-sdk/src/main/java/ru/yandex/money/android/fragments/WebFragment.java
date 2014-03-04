@@ -136,7 +136,9 @@ public class WebFragment extends PaymentFragment {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             if (url.contains(DataServiceHelper.SUCCESS_URI)) {
                 showProgressBar();
-                processExternalPayment();
+                if (isAdded()) {
+                    processExternalPayment();
+                }
             } else if (url.contains(DataServiceHelper.FAIL_URI)) {
                 showError(Error.AUTHORIZATION_REJECT, null);
             }
