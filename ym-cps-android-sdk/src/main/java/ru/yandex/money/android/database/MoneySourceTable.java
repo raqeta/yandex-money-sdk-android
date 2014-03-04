@@ -15,7 +15,7 @@ public class MoneySourceTable {
             "CREATE TABLE " + NAME + " (\n" +
                     TOKEN + " TEXT PRIMARY KEY,\n" +
                     TYPE + " TEXT NOT NULL,\n" +
-                    PAYMENT_CARD_TYPE + " TEXT,\n" +
+                    PAYMENT_CARD_TYPE + " TEXT NOT NULL,\n" +
                     PAN_FRAGMENT + " TEXT NOT NULL);";
 
     MoneySourceTable() {
