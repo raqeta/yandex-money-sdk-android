@@ -14,10 +14,12 @@ import android.widget.ProgressBar;
 
 import com.yandex.money.model.cps.Error;
 import com.yandex.money.model.cps.ProcessExternalPayment;
+import com.yandex.money.model.cps.misc.MoneySource;
 
 import java.util.Map;
 
 import ru.yandex.money.android.R;
+import ru.yandex.money.android.parcelables.MoneySourceParcelable;
 import ru.yandex.money.android.parcelables.ProcessExternalPaymentParcelable;
 import ru.yandex.money.android.services.DataServiceHelper;
 
@@ -33,18 +35,23 @@ public class WebFragment extends PaymentFragment {
 
     private String requestId;
     private ProcessExternalPayment pep;
+    private MoneySource moneySource;
 
     public static WebFragment newInstance(String requestId) {
-        return newInstance(requestId, null);
+        return newInstance(requestId, null, null);
     }
 
-    public static WebFragment newInstance(String requestId, ProcessExternalPayment pep) {
+    public static WebFragment newInstance(String requestId, ProcessExternalPayment pep,
+                                          MoneySource moneySource) {
 
         Bundle args = new Bundle();
         args.putString(EXTRA_REQUEST_ID, requestId);
         if (pep != null) {
             args.putParcelable(EXTRA_PROCESS_EXTERNAL_PAYMENT,
                     new ProcessExternalPaymentParcelable(pep));
+        }
+        if (moneySource != null) {
+            args.putParcelable(EXTRA_MONEY_SOURCE, new MoneySourceParcelable(moneySource));
         }
 
         WebFragment fragment = new WebFragment();
@@ -59,10 +66,14 @@ public class WebFragment extends PaymentFragment {
         assert args != null : "specify proper args for WebFragment";
 
         requestId = args.getString(EXTRA_REQUEST_ID);
-        ProcessExternalPaymentParcelable parcelable =
+        ProcessExternalPaymentParcelable pepParcelable =
                 args.getParcelable(EXTRA_PROCESS_EXTERNAL_PAYMENT);
-        if (parcelable != null) {
-            pep = parcelable.getProcessExternalPayment();
+        if (pepParcelable != null) {
+            pep = pepParcelable.getProcessExternalPayment();
+        }
+        MoneySourceParcelable moneySourceParcelable = args.getParcelable(EXTRA_MONEY_SOURCE);
+        if (moneySourceParcelable != null) {
+            moneySource = moneySourceParcelable.getMoneySource();
         }
     }
 
@@ -98,7 +109,7 @@ public class WebFragment extends PaymentFragment {
         if (pep.isExtAuthRequired()) {
             loadPage(pep);
         } else if (pep.isSuccess()) {
-            showSuccess();
+            showSuccess(moneySource);
         } else {
             showError(pep.getError(), pep.getStatus());
         }

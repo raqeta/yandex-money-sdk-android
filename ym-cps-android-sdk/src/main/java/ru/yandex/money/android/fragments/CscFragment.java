@@ -24,8 +24,6 @@ import ru.yandex.money.android.utils.Views;
  */
 public class CscFragment extends PaymentFragment {
 
-    private static final String EXTRA_MONEY_SOURCE = "ru.yandex.money.android.extra.MONEY_SOURCE";
-
     private String requestId;
     private MoneySource moneySource;
     private CardType cardType;
@@ -100,7 +98,7 @@ public class CscFragment extends PaymentFragment {
         if (pep.isSuccess()) {
             showSuccess(moneySource);
         } else if (pep.isExtAuthRequired()) {
-            showWeb(pep);
+            showWeb(pep, moneySource);
         } else {
             showError(pep.getError(), pep.getStatus());
         }

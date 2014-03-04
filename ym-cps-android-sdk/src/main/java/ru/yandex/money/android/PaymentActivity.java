@@ -152,8 +152,8 @@ public class PaymentActivity extends Activity {
         replaceFragmentClearBackStack(WebFragment.newInstance(requestId));
     }
 
-    public void showWeb(ProcessExternalPayment pep) {
-        replaceFragmentAddingToBackStack(WebFragment.newInstance(requestId, pep));
+    public void showWeb(ProcessExternalPayment pep, MoneySource moneySource) {
+        replaceFragmentAddingToBackStack(WebFragment.newInstance(requestId, pep, moneySource));
     }
 
     public void showCards() {
@@ -162,10 +162,6 @@ public class PaymentActivity extends Activity {
 
     public void showError(String error, String status) {
         replaceFragmentClearBackStack(ErrorFragment.newInstance(error, status));
-    }
-
-    public void showSuccess() {
-        replaceFragmentClearBackStack(SuccessFragment.newInstance(requestId, contractAmount));
     }
 
     public void showSuccess(MoneySource moneySource) {

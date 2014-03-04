@@ -18,6 +18,7 @@ import ru.yandex.money.android.services.DataService;
 public abstract class PaymentFragment extends Fragment {
 
     protected static final String EXTRA_REQUEST_ID = "ru.yandex.money.android.extra.REQUEST_ID";
+    protected static final String EXTRA_MONEY_SOURCE = "ru.yandex.money.android.extra.MONEY_SOURCE";
 
     protected String reqId;
 
@@ -48,11 +49,11 @@ public abstract class PaymentFragment extends Fragment {
         });
     }
 
-    protected void showWeb(final ProcessExternalPayment pep) {
+    protected void showWeb(final ProcessExternalPayment pep, final MoneySource moneySource) {
         startActionSafely(new Action() {
             @Override
             public void start(PaymentActivity activity) {
-                activity.showWeb(pep);
+                activity.showWeb(pep, moneySource);
             }
         });
     }
@@ -80,15 +81,6 @@ public abstract class PaymentFragment extends Fragment {
             @Override
             public void start(PaymentActivity activity) {
                 activity.showCsc(moneySource);
-            }
-        });
-    }
-
-    protected void showSuccess() {
-        startActionSafely(new Action() {
-            @Override
-            public void start(PaymentActivity activity) {
-                activity.showSuccess();
             }
         });
     }

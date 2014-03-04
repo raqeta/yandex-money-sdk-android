@@ -22,10 +22,8 @@ import ru.yandex.money.android.utils.Views;
  */
 public class SuccessFragment extends PaymentFragment {
 
-    private static final String EXTRA_REQUEST_ID = "ru.yandex.money.android.extra.REQUEST_ID";
     private static final String EXTRA_CONTRACT_AMOUNT = "ru.yandex.money.android.extra.CONTRACT_AMOUNT";
     private static final String EXTRA_STATE = "ru.yandex.money.android.extra.STATE";
-    private static final String EXTRA_MONEY_SOURCE = "ru.yandex.money.android.extra.MONEY_SOURCE";
 
     private String requestId;
     private State state = State.SUCCESS_SHOWED;
@@ -35,10 +33,6 @@ public class SuccessFragment extends PaymentFragment {
     private Button saveCard;
     private View successMarker;
     private TextView description;
-
-    public static SuccessFragment newInstance(String requestId, double contractAmount) {
-        return newInstance(requestId, contractAmount, null);
-    }
 
     public static SuccessFragment newInstance(String requestId, double contractAmount,
                                               MoneySource moneySource) {
