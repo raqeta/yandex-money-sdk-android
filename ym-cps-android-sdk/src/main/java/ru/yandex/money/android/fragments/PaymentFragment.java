@@ -103,7 +103,7 @@ public abstract class PaymentFragment extends Fragment {
         reqId = null;
     }
 
-    private void startActionSafely(Action action) {
+    protected void startActionSafely(Action action) {
         PaymentActivity activity = getPaymentActivity();
         if (activity != null) {
             action.start(activity);
@@ -126,7 +126,7 @@ public abstract class PaymentFragment extends Fragment {
                 });
     }
 
-    private interface Action {
+    public interface Action {
         public void start(PaymentActivity activity);
     }
 }

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="activity_label">Оплата с Карты</string>
+
     <!-- Errors -->
     <string name="error_oops_title">Ой!</string>
     <string name="error_something_wrong_title">Что-то не так</string>

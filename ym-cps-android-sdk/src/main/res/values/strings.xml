@@ -1,5 +1,7 @@
 <resources>
 
+    <string name="activity_label">Card Payment</string>
+
     <!-- Errors -->
     <string name="error_oops_title">Oops!</string>
     <string name="error_something_wrong_title">Something wrong</string>
