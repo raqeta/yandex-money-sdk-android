@@ -29,4 +29,11 @@ public class Views {
             imageView.setImageResource(resId);
         }
     }
+
+    public static void setVisibility(View container, int viewId, int visibility) {
+        View view = container.findViewById(viewId);
+        if (view != null) {
+            view.setVisibility(visibility);
+        }
+    }
 }

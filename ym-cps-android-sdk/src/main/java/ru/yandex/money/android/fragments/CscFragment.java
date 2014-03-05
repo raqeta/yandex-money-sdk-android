@@ -36,6 +36,7 @@ public class CscFragment extends PaymentFragment implements View.OnFocusChangeLi
     private TextView errorTitle;
     private TextView errorMessage;
     private EditText cscEditText;
+    private Button cancel;
     private Button pay;
 
     public static CscFragment newInstance(String requestId, MoneySource moneySource) {
@@ -78,7 +79,7 @@ public class CscFragment extends PaymentFragment implements View.OnFocusChangeLi
                 getString(MoneySourceFormatter.getCscNumberType(cardType)),
                 getString(MoneySourceFormatter.getCscNumberLocation(cardType))));
 
-        Button cancel = (Button) view.findViewById(R.id.cancel);
+        cancel = (Button) view.findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,6 +143,7 @@ public class CscFragment extends PaymentFragment implements View.OnFocusChangeLi
     private void onPayClicked() {
         if (valid()) {
             setErrorGone();
+            cancel.setEnabled(false);
             pay.setEnabled(false);
             cscEditText.setEnabled(false);
             reqId = getPaymentActivity().getDataServiceHelper().process(requestId,

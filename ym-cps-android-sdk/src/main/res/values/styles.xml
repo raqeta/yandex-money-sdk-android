@@ -11,7 +11,7 @@
 
     <style name="YandexMoney.Button.Primary" parent="YandexMoney.Button">
         <item name="android:background">@drawable/button_primary_background</item>
-        <item name="android:textColor">@color/button_primary_color</item>
+        <item name="android:textColor">@color/button_primary</item>
     </style>
 
     <style name="YandexMoney.Button.Primary.Large" parent="YandexMoney.Button.Primary">
@@ -21,7 +21,7 @@
 
     <style name="YandexMoney.Button.Secondary" parent="YandexMoney.Button">
         <item name="android:background">@drawable/button_secondary_background</item>
-        <item name="android:textColor">@color/ym_text_color_dark</item>
+        <item name="android:textColor">@color/button_secondary</item>
     </style>
 
     <style name="YandexMoney.TextView" parent="android:Widget.TextView">
@@ -50,7 +50,7 @@
     </style>
 
     <style name="YandexMoney.Card" parent="android:Widget">
-        <item name="android:layout_width">270dp</item>
+        <item name="android:layout_width">230dp</item>
         <item name="android:layout_height">150dp</item>
         <item name="android:layout_margin">@dimen/ym_screen_border_margin</item>
     </style>

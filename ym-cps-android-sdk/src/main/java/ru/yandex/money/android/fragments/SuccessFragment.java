@@ -69,7 +69,7 @@ public class SuccessFragment extends PaymentFragment {
         if (savedInstanceState == null) {
             moneySource = getMoneySourceFromBundle(args);
             if (moneySource != null) {
-                state = State.SAVING_COMPLETED;
+                state = State.CARD_EXISTS;
             }
         } else {
             state = (State) savedInstanceState.getSerializable(EXTRA_STATE);
@@ -123,6 +123,9 @@ public class SuccessFragment extends PaymentFragment {
             case SAVING_COMPLETED:
                 onCardSaved();
                 break;
+            case CARD_EXISTS:
+                onCardExists();
+                break;
         }
     }
 
@@ -148,6 +151,14 @@ public class SuccessFragment extends PaymentFragment {
                 CardType.parseCardType(moneySource.getPaymentCardType()).getCscAbbr()));
     }
 
+    private void onCardExists() {
+        card.setVisibility(View.GONE);
+        saveCard.setVisibility(View.GONE);
+        successMarker.setVisibility(View.GONE);
+        description.setVisibility(View.GONE);
+        Views.setVisibility(getView(), R.id.success, View.VISIBLE);
+    }
+
     private MoneySource getMoneySourceFromBundle(Bundle bundle) {
         MoneySourceParcelable parcelable = bundle.getParcelable(EXTRA_MONEY_SOURCE);
         return parcelable == null ? null : parcelable.getMoneySource();
@@ -156,6 +167,7 @@ public class SuccessFragment extends PaymentFragment {
     private enum State {
         SUCCESS_SHOWED,
         SAVING_INITIATED,
-        SAVING_COMPLETED
+        SAVING_COMPLETED,
+        CARD_EXISTS
     }
 }

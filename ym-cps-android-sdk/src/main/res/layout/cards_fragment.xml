@@ -49,6 +49,6 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/island"/>
+        android:background="@drawable/island_list"/>
 
 </LinearLayout>
