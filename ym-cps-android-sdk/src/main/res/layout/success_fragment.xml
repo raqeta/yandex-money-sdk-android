@@ -12,6 +12,15 @@
         android:layout_gravity="center"
         android:gravity="center">
 
+        <ImageView
+            android:id="@+id/success"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/ym_screen_border_margin"
+            android:src="@drawable/success_big"
+            android:visibility="gone"
+            tools:ignore="ContentDescription" />
+
         <TextView
             style="@style/YandexMoney.TextView.Title"
             android:gravity="center"
@@ -19,7 +28,7 @@
 
         <TextView
             style="@style/YandexMoney.TextView.Large"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/ym_screen_border_margin"
             android:id="@+id/comment"
             android:gravity="center"
             android:text="@string/success_comment"/>
@@ -46,15 +55,6 @@
                 android:textColor="@color/ym_text_color_pan_fragment"/>
 
         </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/success"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/ym_screen_border_margin"
-            android:src="@drawable/success_big"
-            android:visibility="gone"
-            tools:ignore="ContentDescription" />
 
         <Button
             style="@style/YandexMoney.Button.Primary.Large"
