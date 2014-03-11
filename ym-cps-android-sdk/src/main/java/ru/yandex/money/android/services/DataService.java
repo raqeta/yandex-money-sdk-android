@@ -18,7 +18,6 @@ import ru.yandex.money.android.Prefs;
 import ru.yandex.money.android.parcelables.ProcessExternalPaymentParcelable;
 import ru.yandex.money.android.parcelables.RequestExternalPaymentParcelable;
 import ru.yandex.money.android.utils.Bundles;
-import ru.yandex.money.android.utils.MillisecondsIn;
 import ru.yandex.money.android.utils.Threads;
 
 /**
@@ -55,7 +54,6 @@ public class DataService extends IntentService {
     static final int REQUEST_TYPE_PROCESS_EXTERNAL_PAYMENT = 2;
 
     private static final String INSTANCE_ID_ERROR_MESSAGE = "Couldn't perform instanceId request: ";
-    private static final long REQUEST_TIMEOUT = MillisecondsIn.MINUTE;
 
     private YandexMoney ym;
 
@@ -86,7 +84,7 @@ public class DataService extends IntentService {
             requestPayment(reqId, req);
         } else if (type == REQUEST_TYPE_PROCESS_EXTERNAL_PAYMENT) {
             ProcessExternalPayment.Request req = parseProcessParams(intent, accessToken, instanceId);
-            processPayment(reqId, req, System.currentTimeMillis());
+            processPayment(reqId, req);
         } else {
             throw new IllegalArgumentException("requestType parameter has invalid value");
         }
@@ -119,17 +117,12 @@ public class DataService extends IntentService {
                 instanceId, patternId, params);
     }
 
-    private void processPayment(String reqId, ProcessExternalPayment.Request req, long startTime) {
-        if (System.currentTimeMillis() - startTime > REQUEST_TIMEOUT) {
-            sendExceptionBroadcast(reqId, REQUEST_TYPE_PROCESS_EXTERNAL_PAYMENT, null, null);
-            return;
-        }
-
+    private void processPayment(String reqId, ProcessExternalPayment.Request req) {
         try {
             ProcessExternalPayment resp = ym.performRequest(req);
             if (resp.isInProgress()) {
                 Threads.sleepSafely(resp.getNextRetry());
-                processPayment(reqId, req, startTime);
+                processPayment(reqId, req);
             } else {
                 ProcessExternalPaymentParcelable parc = new ProcessExternalPaymentParcelable(resp);
                 sendSuccessBroadcast(ACTION_PROCESS_EXTERNAL_PAYMENT, reqId, parc);

@@ -22,5 +22,5 @@ dependencies {
     compile project(':ym-cps-android-sdk')
     compile fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 
-    instrumentTestCompile 'com.jayway.android.robotium:robotium-solo:4.+'
+    androidTestCompile 'com.jayway.android.robotium:robotium-solo:4.+'
 }
