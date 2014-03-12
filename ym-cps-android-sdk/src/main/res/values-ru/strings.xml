@@ -11,7 +11,7 @@
     <string name="error_illegal_param_csc">Похоже вы указали неверный код %1$s.</string>
     <string name="error_authorization_reject">Банк не разрешил снять деньги с вашей карты.</string>
     <string name="error_payee_not_found">Получатель не найден.</string>
-    <string name="error_payment_refused_title">Магазин не смог принять ваш платеж.</string>
+    <string name="error_payment_refused">Магазин не смог принять ваш платеж.</string>
     <string name="error_unknown">Платеж не прошел: повторите попытку через пару минут.</string>
     <string name="error_csc_invalid">Код введен неправильно</string>
 
