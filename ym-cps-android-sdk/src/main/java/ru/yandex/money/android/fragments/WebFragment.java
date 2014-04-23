@@ -2,12 +2,11 @@ package ru.yandex.money.android.fragments;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
-import android.net.http.SslError;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -16,6 +15,11 @@ import com.yandex.money.model.cps.Error;
 import com.yandex.money.model.cps.ProcessExternalPayment;
 import com.yandex.money.model.cps.misc.MoneySource;
 
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EncodingUtils;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 
 import ru.yandex.money.android.R;
@@ -117,7 +121,7 @@ public class WebFragment extends PaymentFragment {
 
     private void loadPage(ProcessExternalPayment pep) {
         showWebView();
-        webView.loadUrl(makeUrl(pep));
+        webView.postUrl(pep.getAcsUri(), buildPostData(pep));
     }
 
     private void showProgressBar() {
@@ -134,17 +138,29 @@ public class WebFragment extends PaymentFragment {
         reqId = getPaymentActivity().getDataServiceHelper().process(requestId, false);
     }
 
-    private String makeUrl(ProcessExternalPayment pep) {
-        String url = pep.getAcsUri() + "?";
+    private byte[] buildPostData(ProcessExternalPayment pep) {
+        String url = "";
         for (Map.Entry<String, String> entry : pep.getAcsParams().entrySet()) {
-            url = url + entry.getKey() + "=" + entry.getValue() + "&";
+            url += entry.getKey() + "=" + safeUrlEncoding(entry.getValue()) + "&";
         }
-        return url;
+        return EncodingUtils.getBytes(url, "BASE64");
+    }
+
+    private String safeUrlEncoding(String value) {
+        try {
+            return URLEncoder.encode(value, HTTP.UTF_8);
+        } catch (UnsupportedEncodingException e) {
+            return value;
+        }
     }
 
     private class Client extends WebViewClient {
+
+        private static final String TAG = "WebViewClient";
+
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            Log.d(TAG, "page started " + url);
             if (url.contains(DataServiceHelper.SUCCESS_URI)) {
                 showProgressBar();
                 if (isAdded()) {
@@ -153,12 +169,6 @@ public class WebFragment extends PaymentFragment {
             } else if (url.contains(DataServiceHelper.FAIL_URI)) {
                 showError(Error.AUTHORIZATION_REJECT, null);
             }
-        }
-
-        // TODO remove on production
-        @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            handler.proceed();
         }
     }
 }
