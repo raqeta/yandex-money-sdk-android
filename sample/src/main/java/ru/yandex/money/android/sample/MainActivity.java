@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 PaymentActivity.startActivityForResult(MainActivity.this, Consts.CLIENT_ID,
-                        new ParamsP2P("41003188435866", new BigDecimal(2)), REQUEST_CODE);
+                        new ParamsP2P("41001901291751", new BigDecimal(2)), REQUEST_CODE);
             }
         });
 
@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 PaymentActivity.startActivityForResult(MainActivity.this, Consts.CLIENT_ID,
-                        new ParamsPhone("79112611383", new BigDecimal(2)), REQUEST_CODE);
+                        new ParamsPhone("79213020052", new BigDecimal(2)), REQUEST_CODE);
             }
         });
     }
