@@ -14,6 +14,8 @@ import ru.yandex.money.android.PaymentActivity;
 
 public class MainActivity extends Activity {
 
+    private static final String CLIENT_ID = "[your_client_id]";
+
     private static final int REQUEST_CODE = 101;
 
     @Override
@@ -24,7 +26,7 @@ public class MainActivity extends Activity {
         findButton(R.id.p2pTest).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PaymentActivity.startActivityForResult(MainActivity.this, Consts.CLIENT_ID,
+                PaymentActivity.startActivityForResult(MainActivity.this, CLIENT_ID,
                         new ParamsP2P("41001901291751", new BigDecimal(2)), REQUEST_CODE);
             }
         });
@@ -32,7 +34,7 @@ public class MainActivity extends Activity {
         findButton(R.id.phoneTest).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PaymentActivity.startActivityForResult(MainActivity.this, Consts.CLIENT_ID,
+                PaymentActivity.startActivityForResult(MainActivity.this, CLIENT_ID,
                         new ParamsPhone("79213020052", new BigDecimal(2)), REQUEST_CODE);
             }
         });
