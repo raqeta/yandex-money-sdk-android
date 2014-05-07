@@ -25,16 +25,16 @@ import ru.yandex.money.android.utils.Threads;
  */
 public class DataService extends IntentService {
 
-    public static final String ACTION_REQUEST_EXTERNAL_PAYMENT = "ru.yandex.money.android.ACTION_REQUEST_EXTERNAL_PAYMENT";
-    public static final String ACTION_PROCESS_EXTERNAL_PAYMENT = "ru.yandex.money.android.ACTION_PROCESS_EXTERNAL_PAYMENT";
-    public static final String ACTION_EXCEPTION = "ru.yandex.money.android.ACTION_PROCESS_EXTERNAL_PAYMENT";
+    public static final String ACTION_REQUEST_EXTERNAL_PAYMENT = "ru.yandex.money.android.action.REQUEST_EXTERNAL_PAYMENT";
+    public static final String ACTION_PROCESS_EXTERNAL_PAYMENT = "ru.yandex.money.android.action.PROCESS_EXTERNAL_PAYMENT";
+    public static final String ACTION_EXCEPTION = "ru.yandex.money.android.action.EXCEPTION";
 
     public static final String EXTRA_REQUEST_ID = "ru.yandex.money.android.extra.REQUEST_ID";
     static final String EXTRA_REQUEST_TYPE = "ru.yandex.money.android.extra.REQUEST_TYPE";
     static final String EXTRA_REQUEST_ACCESS_TOKEN = "ru.yandex.money.android.extra.REQUEST_ACCESS_TOKEN";
 
-    public static final String EXTRA_EXCEPTION_ERROR = "ru.yandex.money.android.extra.EXTRA_EXCEPTION_ERROR";
-    public static final String EXTRA_EXCEPTION_STATUS = "ru.yandex.money.android.extra.EXTRA_EXCEPTION_STATUS";
+    public static final String EXTRA_EXCEPTION_ERROR = "ru.yandex.money.android.extra.EXCEPTION_ERROR";
+    public static final String EXTRA_EXCEPTION_STATUS = "ru.yandex.money.android.extra.EXCEPTION_STATUS";
 
     static final String EXTRA_EXCEPTION_REQUEST_TYPE = "ru.yandex.money.android.extra.EXCEPTION_REQUEST_TYPE";
 
