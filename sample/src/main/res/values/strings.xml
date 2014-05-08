@@ -2,7 +2,16 @@
 <resources>
 
     <string name="app_name">Sample app</string>
-    <string name="test_p2p">Test P2P</string>
-    <string name="test_phone">Test Phone</string>
+
+    <!-- Main Activity -->
+    <string name="activity_main_send_p2p">Send P2P</string>
+    <string name="activity_main_top_up_phone">Top Up Phone</string>
+
+    <!-- Pay Activity -->
+    <string name="activity_pay_account_hint">4100 0123 4567 890</string>
+    <string name="activity_pay_phone_hint">+7 (912) 123&#8211;45&#8211;67</string>
+    <string name="activity_pay_amount_hint">100.00</string>
+    <string name="activity_pay_proceed">Proceed</string>
+    <string name="activity_pay_toast">All fields are required.</string>
 
 </resources>

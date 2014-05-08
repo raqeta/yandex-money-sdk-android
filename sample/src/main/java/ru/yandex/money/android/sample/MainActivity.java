@@ -5,37 +5,24 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.yandex.money.model.common.params.ParamsP2P;
-import com.yandex.money.model.common.params.ParamsPhone;
-
-import java.math.BigDecimal;
-
-import ru.yandex.money.android.PaymentActivity;
-
 public class MainActivity extends Activity {
-
-    private static final String CLIENT_ID = "[your_client_id]";
-
-    private static final int REQUEST_CODE = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findButton(R.id.p2pTest).setOnClickListener(new View.OnClickListener() {
+        findButton(R.id.send_p2p).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PaymentActivity.startActivityForResult(MainActivity.this, CLIENT_ID,
-                        new ParamsP2P("41001901291751", new BigDecimal(2)), REQUEST_CODE);
+                PayActivity.startP2P(MainActivity.this);
             }
         });
 
-        findButton(R.id.phoneTest).setOnClickListener(new View.OnClickListener() {
+        findButton(R.id.top_up_phone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PaymentActivity.startActivityForResult(MainActivity.this, CLIENT_ID,
-                        new ParamsPhone("79213020052", new BigDecimal(2)), REQUEST_CODE);
+                PayActivity.startPhone(MainActivity.this);
             }
         });
     }

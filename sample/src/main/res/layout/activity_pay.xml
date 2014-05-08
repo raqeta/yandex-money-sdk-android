@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_layout_padding"
+    tools:context="ru.yandex.money.android.sample.PayActivity">
+
+    <EditText
+        android:id="@+id/payment_to"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/layout_widget_spacing"
+        android:inputType="phone"
+        android:hint="@string/activity_pay_phone_hint"/>
+
+    <EditText
+        android:id="@+id/amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/layout_widget_spacing"
+        android:inputType="numberDecimal"
+        android:hint="@string/activity_pay_amount_hint"/>
+
+    <Button
+        android:id="@+id/proceed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/layout_widget_spacing"
+        android:text="@string/activity_pay_proceed"/>
+
+</LinearLayout>

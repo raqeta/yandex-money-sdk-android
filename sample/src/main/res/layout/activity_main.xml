@@ -3,20 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
+    android:padding="16dp"
     tools:context="ru.yandex.money.android.sample.MainActivity"
     tools:ignore="MergeRootFrame">
 
     <Button
-        android:id="@+id/p2pTest"
-        android:layout_width="wrap_content"
+        android:id="@+id/send_p2p"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/test_p2p"/>
+        android:text="@string/activity_main_send_p2p"/>
 
     <Button
-        android:id="@+id/phoneTest"
-        android:layout_width="wrap_content"
+        android:id="@+id/top_up_phone"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/test_phone"/>
+        android:layout_marginTop="@dimen/layout_widget_spacing"
+        android:text="@string/activity_main_top_up_phone"/>
 
 </LinearLayout>
