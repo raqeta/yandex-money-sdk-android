@@ -31,4 +31,18 @@
         android:layout_marginTop="@dimen/layout_widget_spacing"
         android:text="@string/activity_pay_proceed"/>
 
+    <TextView
+        android:id="@+id/previous"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:paddingLeft="10dp"
+        android:text="@string/activity_pay_previous"/>
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/layout_widget_spacing"/>
+
 </LinearLayout>

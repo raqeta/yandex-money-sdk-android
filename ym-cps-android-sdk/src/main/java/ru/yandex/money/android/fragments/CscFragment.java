@@ -108,6 +108,7 @@ public class CscFragment extends PaymentFragment implements View.OnFocusChangeLi
         } else {
             showError(pep.getError(), pep.getStatus());
         }
+        hideProgressBar();
     }
 
     @Override
@@ -148,6 +149,7 @@ public class CscFragment extends PaymentFragment implements View.OnFocusChangeLi
             cscEditText.setEnabled(false);
             reqId = getPaymentActivity().getDataServiceHelper().process(requestId,
                     moneySource.getMoneySourceToken(), csc);
+            showProgressBar();
         } else {
             setErrorVisible(getString(R.string.error_oops_title),
                     getString(R.string.error_csc_invalid));

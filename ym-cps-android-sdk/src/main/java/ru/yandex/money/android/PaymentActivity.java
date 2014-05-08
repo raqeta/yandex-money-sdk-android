@@ -218,6 +218,7 @@ public class PaymentActivity extends Activity {
             return;
         }
 
+        hideProgressBar();
         getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         getFragmentManager()
                 .beginTransaction()
@@ -230,6 +231,7 @@ public class PaymentActivity extends Activity {
             return;
         }
 
+        hideProgressBar();
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container, fragment)

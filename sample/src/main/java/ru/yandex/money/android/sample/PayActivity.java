@@ -1,27 +1,33 @@
 package ru.yandex.money.android.sample;
 
-import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yandex.money.model.common.params.ParamsP2P;
 import com.yandex.money.model.common.params.ParamsPhone;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import ru.yandex.money.android.PaymentActivity;
+import ru.yandex.money.android.sample.storage.DatabaseHelper;
 import ru.yandex.money.android.utils.Views;
 
 /**
  * @author vyasevich
  */
-public class PayActivity extends Activity {
+public class PayActivity extends ListActivity {
 
     private static final String CLIENT_ID = "[your_client_id]";
 
@@ -30,9 +36,11 @@ public class PayActivity extends Activity {
     private static final String EXTRA_PAYMENT = "ru.yandex.money.android.sample.extra.PAYMENT";
 
     private Payment payment;
+    private DatabaseHelper helper;
 
     private EditText paymentTo;
     private EditText amount;
+    private TextView previous;
 
     public static void startP2P(Context context) {
         startActivity(context, Payment.P2P);
@@ -54,9 +62,30 @@ public class PayActivity extends Activity {
         setContentView(R.layout.activity_pay);
 
         payment = (Payment) getIntent().getSerializableExtra(EXTRA_PAYMENT);
-        if (savedInstanceState == null) {
-            init();
+        helper = DatabaseHelper.getInstance(this);
+
+        init();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            switch (payment) {
+                case P2P:
+                    helper.saveAccountNumber(getPaymentTo());
+                    break;
+                case PHONE:
+                    helper.savePhoneNumber(getPaymentTo());
+                    break;
+            }
+            updatePrevious();
         }
+    }
+
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        paymentTo.setText((String) l.getItemAtPosition(position));
     }
 
     private void init() {
@@ -79,6 +108,46 @@ public class PayActivity extends Activity {
                 proceed();
             }
         });
+
+        previous = (TextView) findViewById(R.id.previous);
+        updatePrevious();
+    }
+
+    private void updatePrevious() {
+        List<String> values = prepareValues(loadValues());
+        if (values.isEmpty()) {
+            setListAdapter(null);
+            getListView().setVisibility(View.GONE);
+            previous.setVisibility(View.GONE);
+        } else {
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_list_item_1, values);
+            setListAdapter(adapter);
+            getListView().setVisibility(View.VISIBLE);
+            previous.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private List<String> prepareValues(List<String> values) {
+        if (payment == Payment.PHONE) {
+            for (int i = 0; i < values.size(); ++i) {
+                String number = PhoneNumberUtils.formatNumber("+" + values.get(i));
+                values.remove(i);
+                values.add(i, number);
+            }
+        }
+        return values;
+    }
+
+    private List<String> loadValues() {
+        switch (payment) {
+            case P2P:
+                return helper.getAccountNumbers();
+            case PHONE:
+                return helper.getPhoneNumber();
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     private void proceed() {
