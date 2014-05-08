@@ -94,6 +94,24 @@ public abstract class PaymentFragment extends Fragment {
         });
     }
 
+    protected void showProgressBar() {
+        startActionSafely(new Action() {
+            @Override
+            public void start(PaymentActivity activity) {
+                activity.showProgressBar();
+            }
+        });
+    }
+
+    protected void hideProgressBar() {
+        startActionSafely(new Action() {
+            @Override
+            public void start(PaymentActivity activity) {
+                activity.hideProgressBar();
+            }
+        });
+    }
+
     protected boolean isManageableIntent(Intent intent) {
         String requestId = intent.getStringExtra(DataService.EXTRA_REQUEST_ID);
         return requestId != null && requestId.equals(reqId);

@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.Window;
 
 import com.yandex.money.model.common.params.ParamsP2P;
 import com.yandex.money.model.common.params.ParamsPhone;
@@ -79,7 +80,9 @@ public class PaymentActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.payment_activity);
+
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -126,6 +129,7 @@ public class PaymentActivity extends Activity {
     @Override
     public void onBackPressed() {
         applyResult();
+        hideProgressBar();
         super.onBackPressed();
     }
 
@@ -172,8 +176,17 @@ public class PaymentActivity extends Activity {
         replaceFragmentAddingToBackStack(CscFragment.newInstance(requestId, moneySource));
     }
 
+    public void showProgressBar() {
+        setProgressBarIndeterminateVisibility(true);
+    }
+
+    public void hideProgressBar() {
+        setProgressBarIndeterminateVisibility(false);
+    }
+
     public void requestExternalPayment() {
         reqId = dataServiceHelper.requestShop(arguments.getPatternId(), arguments.getParams());
+        showProgressBar();
     }
 
     private void onExternalPaymentReceived(RequestExternalPayment rep) {
@@ -190,6 +203,7 @@ public class PaymentActivity extends Activity {
         } else {
             showError(rep.getError(), rep.getStatus());
         }
+        hideProgressBar();
     }
 
     private void onExternalPaymentProcessed(ProcessExternalPayment pep) {

@@ -7,9 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
 
 import com.yandex.money.model.cps.Error;
 import com.yandex.money.model.cps.ProcessExternalPayment;
@@ -34,7 +34,6 @@ public class WebFragment extends PaymentFragment {
 
     private static final String EXTRA_PROCESS_EXTERNAL_PAYMENT = "ru.yandex.money.android.extra.PROCESS_EXTERNAL_PAYMENT";
 
-    private ProgressBar progressBar;
     private WebView webView;
 
     private String requestId;
@@ -86,15 +85,11 @@ public class WebFragment extends PaymentFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.web_fragment, container, false);
-        assert view != null : "view is null";
-
-        progressBar = (ProgressBar) view.findViewById(R.id.progress);
-        webView = (WebView) view.findViewById(R.id.webview);
+        webView = (WebView) inflater.inflate(R.layout.web_fragment, container, false);
         webView.setWebViewClient(new Client());
+        webView.setWebChromeClient(new Chrome());
         webView.getSettings().setJavaScriptEnabled(true);
-
-        return view;
+        return webView;
     }
 
     @Override
@@ -124,13 +119,13 @@ public class WebFragment extends PaymentFragment {
         webView.postUrl(pep.getAcsUri(), buildPostData(pep));
     }
 
-    private void showProgressBar() {
-        progressBar.setVisibility(View.VISIBLE);
+    private void showProgress() {
+        showProgressBar();
         webView.setVisibility(View.GONE);
     }
 
     private void showWebView() {
-        progressBar.setVisibility(View.GONE);
+        hideProgressBar();
         webView.setVisibility(View.VISIBLE);
     }
 
@@ -162,12 +157,25 @@ public class WebFragment extends PaymentFragment {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             Log.d(TAG, "page started " + url);
             if (url.contains(DataServiceHelper.SUCCESS_URI)) {
-                showProgressBar();
+                showProgress();
                 if (isAdded()) {
                     processExternalPayment();
                 }
             } else if (url.contains(DataServiceHelper.FAIL_URI)) {
                 showError(Error.AUTHORIZATION_REJECT, null);
+            }
+        }
+    }
+
+    private class Chrome extends WebChromeClient {
+
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            Log.d("Chrome", "progress = " + newProgress);
+            if (newProgress == 0) {
+                showProgressBar();
+            } else if (newProgress == 100) {
+                hideProgressBar();
             }
         }
     }

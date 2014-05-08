@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -106,8 +107,8 @@ public class PayActivity extends Activity {
     }
 
     private boolean isValid() {
-        return Views.getTextSafely(paymentTo) != null && Views.getTextSafely(amount) != null &&
-                getAmount().doubleValue() > 0;
+        return !TextUtils.isEmpty(Views.getTextSafely(paymentTo)) &&
+                !TextUtils.isEmpty(Views.getTextSafely(amount)) && getAmount().doubleValue() > 0;
     }
 
     private enum Payment {
