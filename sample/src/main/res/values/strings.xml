@@ -11,7 +11,7 @@
     <string name="activity_pay_account_hint">4100 0123 4567 890</string>
     <string name="activity_pay_phone_hint">+7 (912) 123&#8211;45&#8211;67</string>
     <string name="activity_pay_amount_hint">100.00</string>
-    <string name="activity_pay_proceed">Proceed</string>
+    <string name="activity_pay_pay">Pay</string>
     <string name="activity_pay_toast">All fields are required.</string>
     <string name="activity_pay_previous">Previous</string>
 

@@ -5,5 +5,5 @@
         android:id="@+id/pay"
         android:icon="@drawable/ic_action_navigation_accept"
         android:showAsAction="always"
-        android:title="@string/activity_pay_proceed"/>
+        android:title="@string/activity_pay_pay"/>
 </menu>
