@@ -1,14 +1,16 @@
 package ru.yandex.money.android.sample;
 
+import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -61,6 +63,11 @@ public class PayActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay);
 
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         payment = (Payment) getIntent().getSerializableExtra(EXTRA_PAYMENT);
         helper = DatabaseHelper.getInstance(this);
 
@@ -84,6 +91,26 @@ public class PayActivity extends ListActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_pay, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.pay:
+                pay();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         paymentTo.setText((String) l.getItemAtPosition(position));
     }
@@ -100,14 +127,6 @@ public class PayActivity extends ListActivity {
         }
 
         amount = (EditText) findViewById(R.id.amount);
-
-        Button proceed = (Button) findViewById(R.id.proceed);
-        proceed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                proceed();
-            }
-        });
 
         previous = (TextView) findViewById(R.id.previous);
         updatePrevious();
@@ -150,7 +169,7 @@ public class PayActivity extends ListActivity {
         }
     }
 
-    private void proceed() {
+    private void pay() {
         if (isValid()) {
             switch (payment) {
                 case P2P:
