@@ -4,11 +4,11 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application android:allowBackup="true"
-        android:label="@string/activity_label">
+        android:label="@string/ym_activity_label">
 
         <activity android:name=".PaymentActivity"
-            android:label="@string/activity_label"
-            android:theme="@style/YandexMoney.Theme"/>
+            android:label="@string/ym_activity_label"
+            android:theme="@style/ym_theme"/>
 
         <service android:name=".services.DataService"
             android:exported="false"/>

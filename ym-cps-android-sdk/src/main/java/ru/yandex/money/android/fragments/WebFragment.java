@@ -85,7 +85,7 @@ public class WebFragment extends PaymentFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        webView = (WebView) inflater.inflate(R.layout.web_fragment, container, false);
+        webView = (WebView) inflater.inflate(R.layout.ym_web_fragment, container, false);
         webView.setWebViewClient(new Client());
         webView.setWebChromeClient(new Chrome());
         webView.getSettings().setJavaScriptEnabled(true);

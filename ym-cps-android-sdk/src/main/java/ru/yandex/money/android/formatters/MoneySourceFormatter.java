@@ -17,10 +17,10 @@ public class MoneySourceFormatter {
     }
 
     public static int getCscNumberType(CardType cardType) {
-        return cardType == CardType.AMERICAN_EXPRESS ? R.string.csc_four : R.string.csc_three;
+        return cardType == CardType.AMERICAN_EXPRESS ? R.string.ym_csc_four : R.string.ym_csc_three;
     }
 
     public static int getCscNumberLocation(CardType cardType) {
-        return cardType == CardType.AMERICAN_EXPRESS ? R.string.csc_front : R.string.csc_back;
+        return cardType == CardType.AMERICAN_EXPRESS ? R.string.ym_csc_front : R.string.ym_csc_back;
     }
 }

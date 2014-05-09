@@ -51,20 +51,20 @@ public class SuccessFragment extends PaymentFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.success_fragment, container, false);
+        View view = inflater.inflate(R.layout.ym_success_fragment, container, false);
         assert view != null : "view is null";
 
         Bundle args = getArguments();
         assert args != null : "no arguments for SuccessFragment";
 
         requestId = args.getString(EXTRA_REQUEST_ID);
-        Views.setText(view, R.id.comment, getString(R.string.success_comment,
+        Views.setText(view, R.id.ym_comment, getString(R.string.ym_success_comment,
                 args.getDouble(EXTRA_CONTRACT_AMOUNT)));
 
-        card = view.findViewById(R.id.card);
-        description = (TextView) view.findViewById(R.id.description);
-        successMarker = view.findViewById(R.id.success_marker);
-        saveCard = (Button) view.findViewById(R.id.save_card);
+        card = view.findViewById(R.id.ym_card);
+        description = (TextView) view.findViewById(R.id.ym_description);
+        successMarker = view.findViewById(R.id.ym_success_marker);
+        saveCard = (Button) view.findViewById(R.id.ym_save_card);
 
         if (savedInstanceState == null) {
             moneySource = getMoneySourceFromBundle(args);
@@ -130,24 +130,24 @@ public class SuccessFragment extends PaymentFragment {
     }
 
     private void onSaveCardClicked() {
-        card.setBackgroundResource(R.drawable.card_process);
+        card.setBackgroundResource(R.drawable.ym_card_process);
         saveCard.setEnabled(false);
-        saveCard.setText(R.string.success_saving_card);
+        saveCard.setText(R.string.ym_success_saving_card);
         saveCard.setOnClickListener(null);
-        description.setText(R.string.success_saving_card_description);
+        description.setText(R.string.ym_success_saving_card_description);
         reqId = getPaymentActivity().getDataServiceHelper().process(requestId, true);
         state = State.SAVING_INITIATED;
     }
 
     private void onCardSaved() {
-        Views.setImageResource(getView(), R.id.payment_card_type,
+        Views.setImageResource(getView(), R.id.ym_payment_card_type,
                 CardType.parseCardType(moneySource.getPaymentCardType()).getIcoResId());
-        Views.setText(getView(), R.id.pan_fragment,
+        Views.setText(getView(), R.id.ym_pan_fragment,
                 MoneySourceFormatter.formatPanFragment(moneySource.getPanFragment()));
-        card.setBackgroundResource(R.drawable.card_saved);
+        card.setBackgroundResource(R.drawable.ym_card_saved);
         saveCard.setVisibility(View.GONE);
         successMarker.setVisibility(View.VISIBLE);
-        description.setText(getString(R.string.success_card_saved_description,
+        description.setText(getString(R.string.ym_success_card_saved_description,
                 CardType.parseCardType(moneySource.getPaymentCardType()).getCscAbbr()));
     }
 
@@ -156,7 +156,7 @@ public class SuccessFragment extends PaymentFragment {
         saveCard.setVisibility(View.GONE);
         successMarker.setVisibility(View.GONE);
         description.setVisibility(View.GONE);
-        Views.setVisibility(getView(), R.id.success, View.VISIBLE);
+        Views.setVisibility(getView(), R.id.ym_success, View.VISIBLE);
     }
 
     private MoneySource getMoneySourceFromBundle(Bundle bundle) {

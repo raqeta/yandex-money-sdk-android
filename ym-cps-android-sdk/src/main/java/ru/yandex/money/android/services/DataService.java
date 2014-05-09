@@ -21,7 +21,7 @@ import ru.yandex.money.android.utils.Bundles;
 import ru.yandex.money.android.utils.Threads;
 
 /**
- * Created by dvmelnikov on 24/02/14.
+ * @author dvmelnikov
  */
 public class DataService extends IntentService {
 
@@ -64,7 +64,7 @@ public class DataService extends IntentService {
 
     private void setupYm() {
         ym = new YandexMoney();
-        ym.setDebugLogging(true); // set up logging (todo set false for production!)
+        ym.setDebugLogging(false);
     }
 
     @Override

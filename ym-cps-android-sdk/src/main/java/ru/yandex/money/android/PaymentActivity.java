@@ -81,7 +81,7 @@ public class PaymentActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.payment_activity);
+        setContentView(R.layout.ym_payment_activity);
 
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -222,7 +222,7 @@ public class PaymentActivity extends Activity {
         getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container, fragment)
+                .replace(R.id.ym_container, fragment)
                 .commit();
     }
 
@@ -234,7 +234,7 @@ public class PaymentActivity extends Activity {
         hideProgressBar();
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container, fragment)
+                .replace(R.id.ym_container, fragment)
                 .addToBackStack(fragment.getTag())
                 .commit();
     }

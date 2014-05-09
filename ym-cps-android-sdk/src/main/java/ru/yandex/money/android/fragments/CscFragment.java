@@ -62,24 +62,24 @@ public class CscFragment extends PaymentFragment implements View.OnFocusChangeLi
         moneySource = moneySourceParcelable.getMoneySource();
         cardType = CardType.parseCardType(moneySource.getPaymentCardType());
 
-        View view = inflater.inflate(R.layout.csc_fragment, container, false);
+        View view = inflater.inflate(R.layout.ym_csc_fragment, container, false);
         assert view != null : "unable to inflate view in CscFragment";
 
-        error = (LinearLayout) view.findViewById(R.id.error);
-        errorTitle = (TextView) view.findViewById(R.id.error_title);
-        errorMessage = (TextView) view.findViewById(R.id.error_message);
+        error = (LinearLayout) view.findViewById(R.id.ym_error);
+        errorTitle = (TextView) view.findViewById(R.id.ym_error_title);
+        errorMessage = (TextView) view.findViewById(R.id.ym_error_message);
 
-        cscEditText = (EditText) view.findViewById(R.id.csc);
-        cscEditText.setHint(getString(R.string.csc_code, cardType.getCscAbbr()));
+        cscEditText = (EditText) view.findViewById(R.id.ym_csc);
+        cscEditText.setHint(getString(R.string.ym_csc_code, cardType.getCscAbbr()));
         cscEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(cardType.getDigits())});
         cscEditText.setOnFocusChangeListener(this);
         cscEditText.requestFocus();
 
-        Views.setText(view, R.id.csc_hint, getString(R.string.csc_hint,
+        Views.setText(view, R.id.ym_csc_hint, getString(R.string.ym_csc_hint,
                 getString(MoneySourceFormatter.getCscNumberType(cardType)),
                 getString(MoneySourceFormatter.getCscNumberLocation(cardType))));
 
-        cancel = (Button) view.findViewById(R.id.cancel);
+        cancel = (Button) view.findViewById(R.id.ym_cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,7 +87,7 @@ public class CscFragment extends PaymentFragment implements View.OnFocusChangeLi
             }
         });
 
-        pay = (Button) view.findViewById(R.id.pay);
+        pay = (Button) view.findViewById(R.id.ym_pay);
         pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,8 +151,8 @@ public class CscFragment extends PaymentFragment implements View.OnFocusChangeLi
                     moneySource.getMoneySourceToken(), csc);
             showProgressBar();
         } else {
-            setErrorVisible(getString(R.string.error_oops_title),
-                    getString(R.string.error_csc_invalid));
+            setErrorVisible(getString(R.string.ym_error_oops_title),
+                    getString(R.string.ym_error_csc_invalid));
         }
     }
 

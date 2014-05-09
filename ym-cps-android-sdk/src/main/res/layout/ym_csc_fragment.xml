@@ -11,7 +11,7 @@
         android:padding="@dimen/ym_screen_border_margin">
 
         <LinearLayout
-            android:id="@+id/error"
+            android:id="@+id/ym_error"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -19,17 +19,17 @@
             android:visibility="gone">
 
             <TextView
-                style="@style/YandexMoney.TextView"
-                android:id="@+id/error_title"
-                android:text="@string/error_something_wrong_title"
+                style="@style/ym_text_view"
+                android:id="@+id/ym_error_title"
+                android:text="@string/ym_error_something_wrong_title"
                 android:textColor="@color/ym_text_color_dark"/>
 
             <TextView
-                style="@style/YandexMoney.TextView.Small"
-                android:id="@+id/error_message"
+                style="@style/ym_text_view.Small"
+                android:id="@+id/ym_error_message"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:text="@string/error_authorization_reject"/>
+                android:text="@string/ym_error_authorization_reject"/>
 
         </LinearLayout>
 
@@ -37,10 +37,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/island">
+            android:background="@drawable/ym_island">
 
             <EditText
-                android:id="@+id/csc"
+                android:id="@+id/ym_csc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number|numberPassword">
@@ -48,10 +48,10 @@
             </EditText>
 
             <TextView
-                style="@style/YandexMoney.TextView.Small"
-                android:id="@+id/csc_hint"
+                style="@style/ym_text_view.Small"
+                android:id="@+id/ym_csc_hint"
                 android:layout_marginTop="4dp"
-                android:text="@string/csc_hint"/>
+                android:text="@string/ym_csc_hint"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -59,8 +59,8 @@
                 android:layout_marginTop="24dp">
 
                 <Button
-                    style="@style/YandexMoney.Button.Secondary"
-                    android:id="@+id/cancel"
+                    style="@style/ym_button.Secondary"
+                    android:id="@+id/ym_cancel"
                     android:layout_width="match_parent"
                     android:layout_weight="1"
                     android:text="@android:string/cancel"/>
@@ -70,11 +70,11 @@
                     android:layout_height="wrap_content"/>
 
                 <Button
-                    style="@style/YandexMoney.Button.Primary"
-                    android:id="@+id/pay"
+                    style="@style/ym_button.Primary"
+                    android:id="@+id/ym_pay"
                     android:layout_width="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/csc_pay"/>
+                    android:text="@string/ym_csc_pay"/>
 
             </LinearLayout>
 

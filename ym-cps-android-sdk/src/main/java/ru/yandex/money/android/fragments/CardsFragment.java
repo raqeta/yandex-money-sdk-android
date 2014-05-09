@@ -44,14 +44,14 @@ public class CardsFragment extends PaymentFragment implements AdapterView.OnItem
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.cards_fragment, container, false);
+        View view = inflater.inflate(R.layout.ym_cards_fragment, container, false);
         assert view != null : "view is null";
 
         Bundle args = getArguments();
         assert args != null : "specify proper arguments for CardsFragment";
 
-        Views.setText(view, R.id.payment_name, args.getString(EXTRA_TITLE));
-        Views.setText(view, R.id.payment_sum, getString(R.string.cards_payment_sum_value,
+        Views.setText(view, R.id.ym_payment_name, args.getString(EXTRA_TITLE));
+        Views.setText(view, R.id.ym_payment_sum, getString(R.string.ym_cards_payment_sum_value,
                 args.getDouble(EXTRA_CONTRACT_AMOUNT)));
 
         ListView list = (ListView) view.findViewById(android.R.id.list);
@@ -104,16 +104,16 @@ public class CardsFragment extends PaymentFragment implements AdapterView.OnItem
 
         private View getCardView(int position, ViewGroup parent) {
 
-            View root = inflater.inflate(R.layout.card_item, parent, false);
+            View root = inflater.inflate(R.layout.ym_card_item, parent, false);
             assert root != null : "unable to inflate layout in CardsAdapter";
 
             final MoneySource moneySource = getCardAtPosition(position);
-            final TextView panFragment = (TextView) root.findViewById(R.id.pan_fragment);
+            final TextView panFragment = (TextView) root.findViewById(R.id.ym_pan_fragment);
             panFragment.setText(MoneySourceFormatter.formatPanFragment(moneySource.getPanFragment()));
             panFragment.setCompoundDrawablesWithIntrinsicBounds(CardType.parseCardType(
                     moneySource.getPaymentCardType()).getCardResId(), 0, 0, 0);
 
-            ImageButton button = (ImageButton) root.findViewById(R.id.actions);
+            ImageButton button = (ImageButton) root.findViewById(R.id.ym_actions);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -125,7 +125,7 @@ public class CardsFragment extends PaymentFragment implements AdapterView.OnItem
         }
 
         private View getFooterView(ViewGroup parent) {
-            return inflater.inflate(R.layout.cards_footer, parent, false);
+            return inflater.inflate(R.layout.ym_cards_footer, parent, false);
         }
 
         private List<MoneySource> getCards() {
@@ -144,7 +144,7 @@ public class CardsFragment extends PaymentFragment implements AdapterView.OnItem
         private void showPopup(View v, MoneySource moneySource) {
             PopupMenu menu = new PopupMenu(getPaymentActivity(), v);
             MenuInflater inflater = menu.getMenuInflater();
-            inflater.inflate(R.menu.card_actions, menu.getMenu());
+            inflater.inflate(R.menu.ym_card_actions, menu.getMenu());
             menu.setOnMenuItemClickListener(new MenuItemClickListener(moneySource));
             menu.show();
         }
@@ -165,7 +165,7 @@ public class CardsFragment extends PaymentFragment implements AdapterView.OnItem
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.delete) {
+                if (item.getItemId() == R.id.ym_delete) {
                     deleteCard(moneySource);
                     return true;
                 }

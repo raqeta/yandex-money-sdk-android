@@ -10,45 +10,45 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/island">
+        android:background="@drawable/ym_island">
 
         <TextView
-            style="@style/YandexMoney.TextView.Small"
+            style="@style/ym_text_view.Small"
             android:layout_marginBottom="2dp"
-            android:text="@string/cards_payment_name"/>
+            android:text="@string/ym_cards_payment_name"/>
 
         <TextView
-            style="@style/YandexMoney.TextView"
-            android:id="@+id/payment_name"
+            style="@style/ym_text_view"
+            android:id="@+id/ym_payment_name"
             android:layout_marginBottom="15dp"
             android:textColor="@color/ym_text_color_dark"/>
 
         <TextView
-            style="@style/YandexMoney.TextView.Small"
+            style="@style/ym_text_view.Small"
             android:layout_marginBottom="2dp"
-            android:text="@string/cards_payment_sum"/>
+            android:text="@string/ym_cards_payment_sum"/>
 
         <TextView
-            style="@style/YandexMoney.TextView"
-            android:id="@+id/payment_sum"
+            style="@style/ym_text_view"
+            android:id="@+id/ym_payment_sum"
             android:textColor="@color/ym_text_color_dark"/>
 
     </LinearLayout>
 
     <TextView
-        style="@style/YandexMoney.TextView.Small"
+        style="@style/ym_text_view.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:layout_marginLeft="@dimen/ym_screen_border_margin"
         android:layout_marginRight="@dimen/ym_screen_border_margin"
         android:layout_marginBottom="5dp"
-        android:text="@string/cards_payment_options_available"/>
+        android:text="@string/ym_cards_payment_options_available"/>
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/island_list"/>
+        android:background="@drawable/ym_island_list"/>
 
 </LinearLayout>

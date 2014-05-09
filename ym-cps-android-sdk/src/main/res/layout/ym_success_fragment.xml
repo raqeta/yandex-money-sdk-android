@@ -13,42 +13,42 @@
         android:gravity="center">
 
         <ImageView
-            android:id="@+id/success"
+            android:id="@+id/ym_success"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/ym_screen_border_margin"
-            android:src="@drawable/success_big"
+            android:src="@drawable/ym_success_big"
             android:visibility="gone"
             tools:ignore="ContentDescription" />
 
         <TextView
-            style="@style/YandexMoney.TextView.Title"
+            style="@style/ym_text_view.Title"
             android:gravity="center"
-            android:text="@string/success_thank_you"/>
+            android:text="@string/ym_success_thank_you"/>
 
         <TextView
-            style="@style/YandexMoney.TextView.Large"
+            style="@style/ym_text_view.Large"
             android:layout_marginTop="@dimen/ym_screen_border_margin"
-            android:id="@+id/comment"
+            android:id="@+id/ym_comment"
             android:gravity="center"
-            android:text="@string/success_comment"/>
+            android:text="@string/ym_success_comment"/>
 
         <RelativeLayout
-            style="@style/YandexMoney.Card"
-            android:id="@+id/card"
-            android:background="@drawable/card_active">
+            style="@style/ym_card"
+            android:id="@+id/ym_card"
+            android:background="@drawable/ym_card_active">
 
             <ImageView
-                style="@style/YandexMoney.TextView.Large"
-                android:id="@+id/payment_card_type"
+                style="@style/ym_text_view.Large"
+                android:id="@+id/ym_payment_card_type"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="@dimen/ym_screen_border_margin"
                 android:layout_marginRight="@dimen/ym_screen_border_margin"
                 tools:ignore="ContentDescription" />
 
             <TextView
-                style="@style/YandexMoney.TextView.Large"
-                android:id="@+id/pan_fragment"
+                style="@style/ym_text_view.Large"
+                android:id="@+id/ym_pan_fragment"
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:paddingTop="50dp"
@@ -57,25 +57,25 @@
         </RelativeLayout>
 
         <Button
-            style="@style/YandexMoney.Button.Primary.Large"
-            android:id="@+id/save_card"
+            style="@style/ym_button.Primary.Large"
+            android:id="@+id/ym_save_card"
             android:layout_width="300dp"
-            android:text="@string/success_save_card"/>
+            android:text="@string/ym_success_save_card"/>
 
         <ImageView
-            android:id="@+id/success_marker"
+            android:id="@+id/ym_success_marker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/success_marker"
+            android:src="@drawable/ym_success_marker"
             android:visibility="gone"
             tools:ignore="ContentDescription" />
 
         <TextView
-            style="@style/YandexMoney.TextView.Small"
-            android:id="@+id/description"
+            style="@style/ym_text_view.Small"
+            android:id="@+id/ym_description"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="@string/success_save_card_description"/>
+            android:text="@string/ym_success_save_card_description"/>
 
     </LinearLayout>
 

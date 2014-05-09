@@ -13,23 +13,23 @@
         android:padding="@dimen/ym_screen_border_margin">
 
         <TextView
-            style="@style/YandexMoney.TextView.Title"
-            android:id="@+id/error_title"
+            style="@style/ym_text_view.Title"
+            android:id="@+id/ym_error_title"
             android:gravity="center"
-            android:text="@string/error_illegal_param_client_id_title"/>
+            android:text="@string/ym_error_illegal_param_client_id_title"/>
 
         <TextView
-            style="@style/YandexMoney.TextView.Large"
-            android:id="@+id/error_message"
+            style="@style/ym_text_view.Large"
+            android:id="@+id/ym_error_message"
             android:layout_marginTop="@dimen/ym_screen_border_margin"
             android:layout_marginBottom="@dimen/ym_screen_border_margin"
             android:gravity="center"
-            android:text="@string/error_illegal_param_client_id"/>
+            android:text="@string/ym_error_illegal_param_client_id"/>
 
         <Button
-            style="@style/YandexMoney.Button.Primary.Large"
-            android:id="@+id/error_action"
-            android:text="@string/error_action_try_again"/>
+            style="@style/ym_button.Primary.Large"
+            android:id="@+id/ym_error_action"
+            android:text="@string/ym_error_action_try_again"/>
 
     </LinearLayout>
 

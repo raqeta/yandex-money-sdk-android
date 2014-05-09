@@ -9,20 +9,20 @@
     android:gravity="center_vertical">
 
     <TextView
-        style="@style/YandexMoney.TextView.Card"
+        style="@style/ym_text_view.Card"
+        android:id="@+id/ym_pan_fragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:id="@+id/pan_fragment"
-        android:drawableLeft="@drawable/default_card"
+        android:drawableLeft="@drawable/ym_default_card"
         android:drawablePadding="@dimen/ym_card_item_drawable_padding"
         android:gravity="center_vertical"/>
 
     <ImageButton
-        android:id="@+id/actions"
+        android:id="@+id/ym_actions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_overflow"
+        android:background="@drawable/ym_button_overflow"
         tools:ignore="ContentDescription"/>
 
 </LinearLayout>

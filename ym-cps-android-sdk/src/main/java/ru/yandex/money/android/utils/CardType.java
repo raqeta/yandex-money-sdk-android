@@ -7,11 +7,11 @@ import ru.yandex.money.android.R;
  */
 public enum CardType {
 
-    VISA("VISA", "CVV2", R.drawable.visa, R.drawable.visa_card, 3),
-    MASTER_CARD("MasterCard", "CVC2", R.drawable.mc, R.drawable.mc_card, 3),
-    AMERICAN_EXPRESS("AmericanExpress", "CID", R.drawable.ae, R.drawable.ae_card, 4), // also cscAbbr = 4DBC
-    JCB("JCB", "CAV2", R.drawable.default_card, R.drawable.default_card, 3),
-    UNKNOWN("UNKNOWN", "CSC", R.drawable.default_card, R.drawable.default_card, 3);
+    VISA("VISA", "CVV2", R.drawable.ym_visa, R.drawable.ym_visa_card, 3),
+    MASTER_CARD("MasterCard", "CVC2", R.drawable.ym_mc, R.drawable.ym_mc_card, 3),
+    AMERICAN_EXPRESS("AmericanExpress", "CID", R.drawable.ym_ae, R.drawable.ym_ae_card, 4), // also cscAbbr = 4DBC
+    JCB("JCB", "CAV2", R.drawable.ym_default_card, R.drawable.ym_default_card, 3),
+    UNKNOWN("UNKNOWN", "CSC", R.drawable.ym_default_card, R.drawable.ym_default_card, 3);
 
     private final String name;
     private final String cscAbbr;
