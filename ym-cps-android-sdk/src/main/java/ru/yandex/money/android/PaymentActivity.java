@@ -16,6 +16,7 @@ import com.yandex.money.model.cps.RequestExternalPayment;
 import com.yandex.money.model.cps.misc.MoneySource;
 
 import java.util.List;
+import java.util.Map;
 
 import ru.yandex.money.android.database.DatabaseStorage;
 import ru.yandex.money.android.fragments.CardsFragment;
@@ -58,19 +59,26 @@ public class PaymentActivity extends Activity {
     public static void startActivityForResult(Activity activity, String clientId,
                                               ParamsP2P params, int requestCode) {
 
-        startActivity(activity, new PaymentArguments(clientId, ParamsP2P.PATTERN_ID,
+        startActivityForResult(activity, new PaymentArguments(clientId, ParamsP2P.PATTERN_ID,
                 params.makeParams()), requestCode);
     }
 
     public static void startActivityForResult(Activity activity, String clientId,
                                               ParamsPhone params, int requestCode) {
 
-        startActivity(activity, new PaymentArguments(clientId, ParamsPhone.PATTERN_ID,
+        startActivityForResult(activity, new PaymentArguments(clientId, ParamsPhone.PATTERN_ID,
                 params.makeParams()), requestCode);
     }
 
-    private static void startActivity(Activity activity, PaymentArguments arguments,
-                                      int requestCode) {
+    public static void startActivityForResult(Activity activity, String clientId, String patternId,
+                                              Map<String, String> params, int requestCode) {
+
+        startActivityForResult(activity, new PaymentArguments(clientId, patternId, params),
+                requestCode);
+    }
+
+    private static void startActivityForResult(Activity activity, PaymentArguments arguments,
+                                               int requestCode) {
 
         Intent intent = new Intent(activity, PaymentActivity.class);
         intent.putExtra(EXTRA_ARGUMENTS, arguments.toBundle());
