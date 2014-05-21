@@ -1,12 +1,10 @@
 package ru.yandex.money.android.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -15,7 +13,6 @@ import android.widget.TextView;
 import com.yandex.money.model.cps.ProcessExternalPayment;
 import com.yandex.money.model.cps.misc.MoneySource;
 
-import ru.yandex.money.android.PaymentActivity;
 import ru.yandex.money.android.R;
 import ru.yandex.money.android.formatters.MoneySourceFormatter;
 import ru.yandex.money.android.parcelables.MoneySourceParcelable;
@@ -25,7 +22,7 @@ import ru.yandex.money.android.utils.Views;
 /**
  * @author vyasevich
  */
-public class CscFragment extends PaymentFragment implements View.OnFocusChangeListener {
+public class CscFragment extends PaymentFragment {
 
     private String requestId;
     private MoneySource moneySource;
@@ -72,8 +69,6 @@ public class CscFragment extends PaymentFragment implements View.OnFocusChangeLi
         cscEditText = (EditText) view.findViewById(R.id.ym_csc);
         cscEditText.setHint(getString(R.string.ym_csc_code, cardType.getCscAbbr()));
         cscEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(cardType.getDigits())});
-        cscEditText.setOnFocusChangeListener(this);
-        cscEditText.requestFocus();
 
         Views.setText(view, R.id.ym_csc_hint, getString(R.string.ym_csc_hint,
                 getString(MoneySourceFormatter.getCscNumberType(cardType)),
@@ -109,18 +104,6 @@ public class CscFragment extends PaymentFragment implements View.OnFocusChangeLi
             showError(pep.getError(), pep.getStatus());
         }
         hideProgressBar();
-    }
-
-    @Override
-    public void onFocusChange(final View v, final boolean hasFocus) {
-        startActionSafely(new Action() {
-            @Override
-            public void start(PaymentActivity activity) {
-                InputMethodManager manager = (InputMethodManager) activity.getSystemService(
-                        Context.INPUT_METHOD_SERVICE);
-                manager.showSoftInput(v, hasFocus ? InputMethodManager.SHOW_IMPLICIT : 0);
-            }
-        });
     }
 
     private void setErrorGone() {

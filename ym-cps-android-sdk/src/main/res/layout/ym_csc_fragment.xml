@@ -43,9 +43,7 @@
                 android:id="@+id/ym_csc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number|numberPassword">
-                <requestFocus/>
-            </EditText>
+                android:inputType="number|numberPassword"/>
 
             <TextView
                 style="@style/ym_text_view.Small"

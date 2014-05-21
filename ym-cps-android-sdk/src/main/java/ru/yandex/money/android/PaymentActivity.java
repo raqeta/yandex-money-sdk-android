@@ -28,6 +28,7 @@ import ru.yandex.money.android.parcelables.ProcessExternalPaymentParcelable;
 import ru.yandex.money.android.parcelables.RequestExternalPaymentParcelable;
 import ru.yandex.money.android.services.DataService;
 import ru.yandex.money.android.services.DataServiceHelper;
+import ru.yandex.money.android.utils.Keyboards;
 
 /**
  * @author vyasevich
@@ -232,6 +233,7 @@ public class PaymentActivity extends Activity {
                 .beginTransaction()
                 .replace(R.id.ym_container, fragment)
                 .commit();
+        hideKeyboard();
     }
 
     private void replaceFragmentAddingToBackStack(Fragment fragment) {
@@ -245,6 +247,11 @@ public class PaymentActivity extends Activity {
                 .replace(R.id.ym_container, fragment)
                 .addToBackStack(fragment.getTag())
                 .commit();
+        hideKeyboard();
+    }
+
+    private void hideKeyboard() {
+        Keyboards.hideKeyboard(this);
     }
 
     private void applyResult() {
