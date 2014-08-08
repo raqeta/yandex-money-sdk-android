@@ -32,7 +32,6 @@ public class DataService extends IntentService {
 
     public static final String EXTRA_REQUEST_ID = "ru.yandex.money.android.extra.REQUEST_ID";
     static final String EXTRA_REQUEST_TYPE = "ru.yandex.money.android.extra.REQUEST_TYPE";
-    static final String EXTRA_REQUEST_ACCESS_TOKEN = "ru.yandex.money.android.extra.REQUEST_ACCESS_TOKEN";
 
     public static final String EXTRA_EXCEPTION_ERROR = "ru.yandex.money.android.extra.EXCEPTION_ERROR";
     public static final String EXTRA_EXCEPTION_STATUS = "ru.yandex.money.android.extra.EXCEPTION_STATUS";
@@ -64,7 +63,7 @@ public class DataService extends IntentService {
     }
 
     private void setupYm() {
-        ym = new YandexMoney();
+        ym = new YandexMoney("stub");
         ym.setDebugLogging(false);
     }
 
@@ -72,8 +71,6 @@ public class DataService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         String reqId = intent.getStringExtra(EXTRA_REQUEST_ID);
         int type = intent.getIntExtra(EXTRA_REQUEST_TYPE, -1);
-        String accessToken = intent.getStringExtra(EXTRA_REQUEST_ACCESS_TOKEN);
-        accessToken = TextUtils.isEmpty(accessToken) ? null : accessToken;
         String clientId = intent.getStringExtra(EXTRA_REQUEST_PAYMENT_CLIENT_ID);
 
         String instanceId = getInstanceIdOrSendFailBroadcast(reqId, clientId, type);
@@ -81,17 +78,17 @@ public class DataService extends IntentService {
             return;
 
         if (type == REQUEST_TYPE_REQUEST_EXTERNAL_PAYMENT) {
-            RequestExternalPayment.Request req = parserRequestParams(intent, accessToken, instanceId);
+            RequestExternalPayment.Request req = parserRequestParams(intent, instanceId);
             requestPayment(reqId, req);
         } else if (type == REQUEST_TYPE_PROCESS_EXTERNAL_PAYMENT) {
-            ProcessExternalPayment.Request req = parseProcessParams(intent, accessToken, instanceId);
+            ProcessExternalPayment.Request req = parseProcessParams(intent, instanceId);
             processPayment(reqId, req);
         } else {
             throw new IllegalArgumentException("requestType parameter has invalid value");
         }
     }
 
-    private ProcessExternalPayment.Request parseProcessParams(Intent intent, String accessToken, String instanceId) {
+    private ProcessExternalPayment.Request parseProcessParams(Intent intent, String instanceId) {
         String requestId = intent.getStringExtra(EXTRA_PROCESS_PAYMENT_REQUEST_ID);
         String extAuthSuccessUri = intent.getStringExtra(EXTRA_PROCESS_PAYMENT_EXT_AUTH_SUCCESS_URI);
         String extAuthFailUri = intent.getStringExtra(EXTRA_PROCESS_PAYMENT_EXT_AUTH_FAIL_URI);
@@ -101,21 +98,20 @@ public class DataService extends IntentService {
 
         ProcessExternalPayment.Request req;
         if (TextUtils.isEmpty(moneySourceToken)) {
-            req = new ProcessExternalPayment.Request(null, instanceId, requestId,
-                    extAuthSuccessUri, extAuthFailUri, requestToken);
+            req = new ProcessExternalPayment.Request(instanceId, requestId, extAuthSuccessUri,
+                    extAuthFailUri, requestToken);
         } else {
-            req = new ProcessExternalPayment.Request(accessToken, instanceId, requestId,
-                    extAuthSuccessUri, extAuthFailUri, moneySourceToken, csc);
+            req = new ProcessExternalPayment.Request(instanceId, requestId, extAuthSuccessUri,
+                    extAuthFailUri, moneySourceToken, csc);
         }
         return req;
     }
 
-    private RequestExternalPayment.Request parserRequestParams(Intent intent, String accessToken, String instanceId) {
+    private RequestExternalPayment.Request parserRequestParams(Intent intent, String instanceId) {
         String patternId = intent.getStringExtra(EXTRA_REQUEST_PAYMENT_PATTERN_ID);
         Bundle bundle = intent.getParcelableExtra(EXTRA_REQUEST_PAYMENT_PARAMS);
         Map<String, String> params = Bundles.readStringMapFromBundle(bundle);
-        return RequestExternalPayment.Request.newInstance(accessToken,
-                instanceId, patternId, params);
+        return RequestExternalPayment.Request.newInstance(instanceId, patternId, params);
     }
 
     private void processPayment(String reqId, ProcessExternalPayment.Request req) {
@@ -129,7 +125,7 @@ public class DataService extends IntentService {
                 sendSuccessBroadcast(ACTION_PROCESS_EXTERNAL_PAYMENT, reqId, parc);
             }
         } catch (Exception e) {
-            sendExceptionBroadcast(reqId, REQUEST_TYPE_PROCESS_EXTERNAL_PAYMENT, e.getMessage(), null);
+            sendExceptionBroadcast(reqId, REQUEST_TYPE_PROCESS_EXTERNAL_PAYMENT, Error.UNKNOWN, null);
         }
     }
 
@@ -139,7 +135,7 @@ public class DataService extends IntentService {
             RequestExternalPaymentParcelable parc = new RequestExternalPaymentParcelable(resp);
             sendSuccessBroadcast(ACTION_REQUEST_EXTERNAL_PAYMENT, reqId, parc);
         } catch (Exception e) {
-            sendExceptionBroadcast(reqId, REQUEST_TYPE_REQUEST_EXTERNAL_PAYMENT, e.getMessage(), null);
+            sendExceptionBroadcast(reqId, REQUEST_TYPE_REQUEST_EXTERNAL_PAYMENT, Error.UNKNOWN, null);
         }
     }
 
@@ -178,12 +174,13 @@ public class DataService extends IntentService {
                 new Prefs(getApplicationContext()).storeInstanceId(instanceId);
                 return instanceId;
             } else {
-                sendExceptionBroadcast(reqId, requestType, resp.getError(), resp.getStatus());
+                sendExceptionBroadcast(reqId, requestType, resp.getError(),
+                        resp.getStatus().toString());
                 return null;
             }
         } catch (Exception e) {
             String message = INSTANCE_ID_ERROR_MESSAGE + e.getMessage();
-            sendExceptionBroadcast(reqId, requestType, message, null);
+            sendExceptionBroadcast(reqId, requestType, Error.UNKNOWN, null);
             return null;
         }
     }

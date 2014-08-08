@@ -16,8 +16,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.yandex.money.model.common.params.ParamsP2P;
-import com.yandex.money.model.common.params.ParamsPhone;
+import com.yandex.money.model.common.params.P2pParams;
+import com.yandex.money.model.common.params.PhoneParams;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -31,7 +31,7 @@ import ru.yandex.money.android.utils.Views;
  */
 public class PayActivity extends ListActivity {
 
-    private static final String CLIENT_ID = "[your_client_id]";
+    private static final String CLIENT_ID = "your_client_id";
 
     private static final int REQUEST_CODE = 101;
 
@@ -175,11 +175,11 @@ public class PayActivity extends ListActivity {
             switch (payment) {
                 case P2P:
                     PaymentActivity.startActivityForResult(this, CLIENT_ID,
-                            new ParamsP2P(getPaymentTo(), getAmount()), REQUEST_CODE);
+                            new P2pParams(getPaymentTo(), getAmount()), REQUEST_CODE);
                     break;
                 case PHONE:
                     PaymentActivity.startActivityForResult(this, CLIENT_ID,
-                            new ParamsPhone(getPaymentTo(), getAmount()), REQUEST_CODE);
+                            new PhoneParams(getPaymentTo(), getAmount()), REQUEST_CODE);
                     break;
             }
         } else {

@@ -101,7 +101,7 @@ public class PaymentActivity extends Activity {
         }
 
         arguments = new PaymentArguments(getIntent().getBundleExtra(EXTRA_ARGUMENTS));
-        dataServiceHelper = new DataServiceHelper(this, arguments.getClientId(), null);
+        dataServiceHelper = new DataServiceHelper(this, arguments.getClientId());
         cards = new DatabaseStorage(this).selectMoneySources();
 
         registerReceiver(receiver, receiver.buildIntentFilter());

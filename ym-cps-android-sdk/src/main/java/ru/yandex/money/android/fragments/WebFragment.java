@@ -114,7 +114,6 @@ public class WebFragment extends PaymentFragment {
                 break;
             default:
                 showError(pep.getError(), pep.getStatus().toString());
-                return;
         }
     }
 

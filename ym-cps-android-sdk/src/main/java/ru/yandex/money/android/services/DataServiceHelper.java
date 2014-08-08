@@ -20,12 +20,9 @@ public class DataServiceHelper {
     private Context context;
     private String clientId;
 
-    private String accessToken;
-
-    public DataServiceHelper(Context context, String clientId, String accessToken) {
+    public DataServiceHelper(Context context, String clientId) {
         this.context = context;
         this.clientId = clientId;
-        this.accessToken = accessToken;
     }
 
     public String requestShop(String patternId, Map<String, String> params) {
@@ -76,7 +73,6 @@ public class DataServiceHelper {
         Intent intent = new Intent(context, DataService.class);
         intent.putExtra(DataService.EXTRA_REQUEST_ID, requestId);
         intent.putExtra(DataService.EXTRA_REQUEST_TYPE, requestType);
-        intent.putExtra(DataService.EXTRA_REQUEST_ACCESS_TOKEN, accessToken);
         return intent;
     }
 
