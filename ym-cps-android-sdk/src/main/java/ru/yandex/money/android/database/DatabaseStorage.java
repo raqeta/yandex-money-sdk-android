@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.yandex.money.model.cps.misc.MoneySource;
+import com.yandex.money.model.methods.misc.MoneySourceExternal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class DatabaseStorage {
         helper = DatabaseHelper.getInstance(context);
     }
 
-    public List<MoneySource> selectMoneySources() {
+    public List<MoneySourceExternal> selectMoneySources() {
         SQLiteDatabase database = getReadableDatabase();
 
         Cursor cursor = database.rawQuery("SELECT * FROM " + MoneySourceTable.NAME, null);
@@ -33,9 +33,9 @@ public class DatabaseStorage {
         final int panFragmentIndex = cursor.getColumnIndex(MoneySourceTable.PAN_FRAGMENT);
         final int tokenIndex = cursor.getColumnIndex(MoneySourceTable.TOKEN);
 
-        List<MoneySource> moneySources = new ArrayList<MoneySource>();
+        List<MoneySourceExternal> moneySources = new ArrayList<MoneySourceExternal>();
         while (cursor.moveToNext()) {
-            moneySources.add(new MoneySource(cursor.getString(typeIndex),
+            moneySources.add(new MoneySourceExternal(cursor.getString(typeIndex),
                     cursor.getString(paymentCardTypeIndex), cursor.getString(panFragmentIndex),
                     cursor.getString(tokenIndex)));
         }
@@ -45,7 +45,7 @@ public class DatabaseStorage {
         return moneySources;
     }
 
-    public void insertMoneySource(MoneySource moneySource) {
+    public void insertMoneySource(MoneySourceExternal moneySource) {
         if (moneySource == null) {
             Log.w(TAG, "trying to insert null money source");
             return;
@@ -64,7 +64,7 @@ public class DatabaseStorage {
         }
     }
 
-    public void deleteMoneySource(MoneySource moneySource) {
+    public void deleteMoneySource(MoneySourceExternal moneySource) {
         if (moneySource == null) {
             Log.w(TAG, "trying to delete null money source");
             return;

@@ -3,8 +3,9 @@ package ru.yandex.money.android.parcelables;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.yandex.money.model.cps.ProcessExternalPayment;
-import com.yandex.money.model.cps.misc.MoneySource;
+import com.yandex.money.model.Error;
+import com.yandex.money.model.methods.ProcessExternalPayment;
+import com.yandex.money.model.methods.misc.MoneySourceExternal;
 
 import java.util.Map;
 
@@ -22,8 +23,9 @@ public class ProcessExternalPaymentParcelable implements Parcelable {
     }
 
     private ProcessExternalPaymentParcelable(Parcel parcel) {
-        String status = parcel.readString();
-        String error = parcel.readString();
+        ProcessExternalPayment.Status status =
+                (ProcessExternalPayment.Status) parcel.readSerializable();
+        Error error = (Error) parcel.readSerializable();
         String acsUri = parcel.readString();
         Map<String, String> acsParams = Parcelables.readStringMap(parcel);
         this.pep = new ProcessExternalPayment(status, error, acsUri, acsParams,
@@ -38,8 +40,8 @@ public class ProcessExternalPaymentParcelable implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(pep.getStatus());
-        dest.writeString(pep.getError());
+        dest.writeSerializable(pep.getStatus());
+        dest.writeSerializable(pep.getError());
         dest.writeString(pep.getAcsUri());
         Parcelables.writeStringMap(dest, pep.getAcsParams());
         writeMoneySource(dest, flags);
@@ -48,13 +50,13 @@ public class ProcessExternalPaymentParcelable implements Parcelable {
     }
 
     private void writeMoneySource(Parcel dest, int flags) {
-        MoneySource moneySource = pep.getMoneySource();
+        MoneySourceExternal moneySource = pep.getMoneySource();
         MoneySourceParcelable parcelable = moneySource == null ? null :
                 new MoneySourceParcelable(moneySource);
         Parcelables.writeNullableParcelable(dest, parcelable, flags);
     }
 
-    private MoneySource readMoneySource(Parcel parcel) {
+    private MoneySourceExternal readMoneySource(Parcel parcel) {
         MoneySourceParcelable parcelable =
                 (MoneySourceParcelable) Parcelables.readNullableParcelable(
                         parcel, MoneySourceParcelable.class.getClassLoader());

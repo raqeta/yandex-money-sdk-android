@@ -10,8 +10,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.yandex.money.model.cps.ProcessExternalPayment;
-import com.yandex.money.model.cps.misc.MoneySource;
+import com.yandex.money.model.methods.ProcessExternalPayment;
+import com.yandex.money.model.methods.misc.MoneySourceExternal;
 
 import ru.yandex.money.android.R;
 import ru.yandex.money.android.formatters.MoneySourceFormatter;
@@ -25,7 +25,7 @@ import ru.yandex.money.android.utils.Views;
 public class CscFragment extends PaymentFragment {
 
     private String requestId;
-    private MoneySource moneySource;
+    private MoneySourceExternal moneySource;
     private CardType cardType;
     private String csc;
 
@@ -36,7 +36,7 @@ public class CscFragment extends PaymentFragment {
     private Button cancel;
     private Button pay;
 
-    public static CscFragment newInstance(String requestId, MoneySource moneySource) {
+    public static CscFragment newInstance(String requestId, MoneySourceExternal moneySource) {
         Bundle args = new Bundle();
         args.putString(EXTRA_REQUEST_ID, requestId);
         args.putParcelable(EXTRA_MONEY_SOURCE, new MoneySourceParcelable(moneySource));
@@ -96,12 +96,15 @@ public class CscFragment extends PaymentFragment {
     @Override
     protected void onExternalPaymentProcessed(ProcessExternalPayment pep) {
         super.onExternalPaymentProcessed(pep);
-        if (pep.isSuccess()) {
-            showSuccess(moneySource);
-        } else if (pep.isExtAuthRequired()) {
-            showWeb(pep, moneySource);
-        } else {
-            showError(pep.getError(), pep.getStatus());
+        switch (pep.getStatus()) {
+            case SUCCESS:
+                showSuccess(moneySource);
+                break;
+            case EXT_AUTH_REQUIRED:
+                showWeb(pep, moneySource);
+                break;
+            default:
+                showError(pep.getError(), pep.getStatus().toString());
         }
         hideProgressBar();
     }

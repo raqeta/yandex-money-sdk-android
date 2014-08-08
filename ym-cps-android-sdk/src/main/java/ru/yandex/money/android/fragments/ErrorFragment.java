@@ -7,8 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.yandex.money.model.cps.Error;
-import com.yandex.money.model.cps.Status;
+import com.yandex.money.model.Error;
 
 import ru.yandex.money.android.R;
 import ru.yandex.money.android.utils.Views;
@@ -23,9 +22,9 @@ public class ErrorFragment extends PaymentFragment {
     private static final String EXTRA_ERROR = "ru.yandex.money.android.extra.ERROR";
     private static final String EXTRA_STATUS = "ru.yandex.money.android.extra.STATUS";
 
-    public static ErrorFragment newInstance(String error, String status) {
+    public static ErrorFragment newInstance(Error error, String status) {
         Bundle args = new Bundle();
-        args.putString(EXTRA_ERROR, error);
+        args.putSerializable(EXTRA_ERROR, error);
         args.putString(EXTRA_STATUS, status);
 
         ErrorFragment frg = new ErrorFragment();
@@ -41,11 +40,11 @@ public class ErrorFragment extends PaymentFragment {
         Bundle args = getArguments();
         assert args != null : "you did not pass mandatory arguments for ErrorFragment";
 
-        showError(view, args.getString(EXTRA_ERROR), args.getString(EXTRA_STATUS));
+        showError(view, (Error) args.getSerializable(EXTRA_ERROR), args.getString(EXTRA_STATUS));
         return view;
     }
 
-    private void showError(View view, String error, String status) {
+    private void showError(View view, Error error, String status) {
         Log.e(TAG, String.format("error=%1$s,status=%2$s", error, status));
 
         final int notSpecified = -1;
@@ -54,27 +53,27 @@ public class ErrorFragment extends PaymentFragment {
         final int messageResId;
         final int actionResId;
 
-        if (Error.ILLEGAL_PARAM_CLIENT_ID.equals(error)) {
+        if (Error.ILLEGAL_PARAM_CLIENT_ID == error) {
             titleResId = R.string.ym_error_illegal_param_client_id_title;
             messageResId = R.string.ym_error_illegal_param_client_id;
             actionResId = notSpecified;
-        } else if (Error.ILLEGAL_PARAM_CSC.equals(error)) {
+        } else if (Error.ILLEGAL_PARAM_CSC == error) {
             titleResId = R.string.ym_error_oops_title;
             messageResId = R.string.ym_error_illegal_param_csc;
             actionResId = R.string.ym_error_action_try_again;
-        } else if (Error.AUTHORIZATION_REJECT.equals(error)) {
+        } else if (Error.AUTHORIZATION_REJECT == error) {
             titleResId = R.string.ym_error_something_wrong_title;
             messageResId = R.string.ym_error_authorization_reject;
             actionResId = R.string.ym_error_action_try_another_card;
-        } else if (Error.PAYEE_NOT_FOUND.equals(error)) {
+        } else if (Error.PAYEE_NOT_FOUND == error) {
             titleResId = R.string.ym_error_oops_title;
             messageResId = R.string.ym_error_payee_not_found;
             actionResId = notSpecified;
-        } else if (Error.PAYMENT_REFUSED.equals(error)) {
+        } else if (Error.PAYMENT_REFUSED == error) {
             titleResId = R.string.ym_error_something_wrong_title;
             messageResId = R.string.ym_error_payment_refused;
             actionResId = R.string.ym_error_action_try_again;
-        } else if (Status.REFUSED.equals(status)) {
+        } else if ("REFUSED".equals(status)) {
             titleResId = R.string.ym_error_illegal_param_client_id_title;
             messageResId = R.string.ym_error_illegal_param_client_id;
             actionResId = notSpecified;

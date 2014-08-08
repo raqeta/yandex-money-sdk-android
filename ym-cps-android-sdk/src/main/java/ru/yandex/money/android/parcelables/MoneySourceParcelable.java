@@ -3,21 +3,21 @@ package ru.yandex.money.android.parcelables;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.yandex.money.model.cps.misc.MoneySource;
+import com.yandex.money.model.methods.misc.MoneySourceExternal;
 
 /**
  * @author vyasevich
  */
 public class MoneySourceParcelable implements Parcelable {
 
-    private final MoneySource moneySource;
+    private final MoneySourceExternal moneySource;
 
-    public MoneySourceParcelable(MoneySource moneySource) {
+    public MoneySourceParcelable(MoneySourceExternal moneySource) {
         this.moneySource = moneySource;
     }
 
     private MoneySourceParcelable(Parcel parcel) {
-        moneySource = new MoneySource(parcel.readString(), parcel.readString(), parcel.readString(),
+        moneySource = new MoneySourceExternal(parcel.readString(), parcel.readString(), parcel.readString(),
                 parcel.readString());
     }
 
@@ -34,7 +34,7 @@ public class MoneySourceParcelable implements Parcelable {
         dest.writeString(moneySource.getMoneySourceToken());
     }
 
-    public MoneySource getMoneySource() {
+    public MoneySourceExternal getMoneySource() {
         return moneySource;
     }
 

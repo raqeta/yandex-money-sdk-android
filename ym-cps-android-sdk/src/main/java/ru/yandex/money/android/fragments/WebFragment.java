@@ -11,9 +11,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.yandex.money.model.cps.Error;
-import com.yandex.money.model.cps.ProcessExternalPayment;
-import com.yandex.money.model.cps.misc.MoneySource;
+import com.yandex.money.model.Error;
+import com.yandex.money.model.methods.ProcessExternalPayment;
+import com.yandex.money.model.methods.misc.MoneySourceExternal;
 
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EncodingUtils;
@@ -38,14 +38,14 @@ public class WebFragment extends PaymentFragment {
 
     private String requestId;
     private ProcessExternalPayment pep;
-    private MoneySource moneySource;
+    private MoneySourceExternal moneySource;
 
     public static WebFragment newInstance(String requestId) {
         return newInstance(requestId, null, null);
     }
 
     public static WebFragment newInstance(String requestId, ProcessExternalPayment pep,
-                                          MoneySource moneySource) {
+                                          MoneySourceExternal moneySource) {
 
         Bundle args = new Bundle();
         args.putString(EXTRA_REQUEST_ID, requestId);
@@ -105,12 +105,16 @@ public class WebFragment extends PaymentFragment {
     @Override
     protected void onExternalPaymentProcessed(ProcessExternalPayment pep) {
         super.onExternalPaymentProcessed(pep);
-        if (pep.isExtAuthRequired()) {
-            loadPage(pep);
-        } else if (pep.isSuccess()) {
-            showSuccess(moneySource);
-        } else {
-            showError(pep.getError(), pep.getStatus());
+        switch (pep.getStatus()) {
+            case SUCCESS:
+                showSuccess(moneySource);
+                break;
+            case EXT_AUTH_REQUIRED:
+                loadPage(pep);
+                break;
+            default:
+                showError(pep.getError(), pep.getStatus().toString());
+                return;
         }
     }
 

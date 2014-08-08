@@ -7,11 +7,12 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.yandex.money.YandexMoney;
-import com.yandex.money.model.cps.InstanceId;
-import com.yandex.money.model.cps.ProcessExternalPayment;
-import com.yandex.money.model.cps.RequestExternalPayment;
+import com.yandex.money.model.Error;
+import com.yandex.money.model.methods.BaseProcessPayment;
+import com.yandex.money.model.methods.InstanceId;
+import com.yandex.money.model.methods.ProcessExternalPayment;
+import com.yandex.money.model.methods.RequestExternalPayment;
 
-import java.io.IOException;
 import java.util.Map;
 
 import ru.yandex.money.android.Prefs;
@@ -119,30 +120,30 @@ public class DataService extends IntentService {
 
     private void processPayment(String reqId, ProcessExternalPayment.Request req) {
         try {
-            ProcessExternalPayment resp = ym.performRequest(req);
-            if (resp.isInProgress()) {
+            ProcessExternalPayment resp = ym.execute(req);
+            if (resp.getStatus() == BaseProcessPayment.Status.IN_PROGRESS) {
                 Threads.sleepSafely(resp.getNextRetry());
                 processPayment(reqId, req);
             } else {
                 ProcessExternalPaymentParcelable parc = new ProcessExternalPaymentParcelable(resp);
                 sendSuccessBroadcast(ACTION_PROCESS_EXTERNAL_PAYMENT, reqId, parc);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             sendExceptionBroadcast(reqId, REQUEST_TYPE_PROCESS_EXTERNAL_PAYMENT, e.getMessage(), null);
         }
     }
 
     private void requestPayment(String reqId, RequestExternalPayment.Request req) {
         try {
-            RequestExternalPayment resp = ym.performRequest(req);
+            RequestExternalPayment resp = ym.execute(req);
             RequestExternalPaymentParcelable parc = new RequestExternalPaymentParcelable(resp);
             sendSuccessBroadcast(ACTION_REQUEST_EXTERNAL_PAYMENT, reqId, parc);
-        } catch (IOException e) {
+        } catch (Exception e) {
             sendExceptionBroadcast(reqId, REQUEST_TYPE_REQUEST_EXTERNAL_PAYMENT, e.getMessage(), null);
         }
     }
 
-    private void sendExceptionBroadcast(String requestId, int requestType, String error, String status) {
+    private void sendExceptionBroadcast(String requestId, int requestType, Error error, String status) {
         Intent intent = new Intent(ACTION_EXCEPTION);
         intent.setPackage(getPackageName());
         intent.putExtra(EXTRA_EXCEPTION_ERROR, error);
@@ -171,7 +172,7 @@ public class DataService extends IntentService {
 
     private String receiveInstanceId(String reqId, String clientId, int requestType) {
         try {
-            InstanceId resp = ym.performRequest(new InstanceId.Request(clientId));
+            InstanceId resp = ym.execute(new InstanceId.Request(clientId));
             if (resp.isSuccess()) {
                 String instanceId = resp.getInstanceId();
                 new Prefs(getApplicationContext()).storeInstanceId(instanceId);
@@ -180,7 +181,7 @@ public class DataService extends IntentService {
                 sendExceptionBroadcast(reqId, requestType, resp.getError(), resp.getStatus());
                 return null;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             String message = INSTANCE_ID_ERROR_MESSAGE + e.getMessage();
             sendExceptionBroadcast(reqId, requestType, message, null);
             return null;

@@ -9,11 +9,14 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Window;
 
-import com.yandex.money.model.common.params.ParamsP2P;
-import com.yandex.money.model.common.params.ParamsPhone;
-import com.yandex.money.model.cps.ProcessExternalPayment;
-import com.yandex.money.model.cps.RequestExternalPayment;
-import com.yandex.money.model.cps.misc.MoneySource;
+import com.yandex.money.model.Error;
+import com.yandex.money.model.common.params.P2pParams;
+import com.yandex.money.model.common.params.PhoneParams;
+import com.yandex.money.model.methods.BaseProcessPayment;
+import com.yandex.money.model.methods.BaseRequestPayment;
+import com.yandex.money.model.methods.ProcessExternalPayment;
+import com.yandex.money.model.methods.RequestExternalPayment;
+import com.yandex.money.model.methods.misc.MoneySourceExternal;
 
 import java.util.List;
 import java.util.Map;
@@ -48,7 +51,7 @@ public class PaymentActivity extends Activity {
 
     private PaymentArguments arguments;
     private DataServiceHelper dataServiceHelper;
-    private List<MoneySource> cards;
+    private List<MoneySourceExternal> cards;
 
     private String reqId;
     private String title;
@@ -58,16 +61,16 @@ public class PaymentActivity extends Activity {
     private boolean success = false;
 
     public static void startActivityForResult(Activity activity, String clientId,
-                                              ParamsP2P params, int requestCode) {
+                                              P2pParams params, int requestCode) {
 
-        startActivityForResult(activity, new PaymentArguments(clientId, ParamsP2P.PATTERN_ID,
+        startActivityForResult(activity, new PaymentArguments(clientId, P2pParams.PATTERN_ID,
                 params.makeParams()), requestCode);
     }
 
     public static void startActivityForResult(Activity activity, String clientId,
-                                              ParamsPhone params, int requestCode) {
+                                              PhoneParams params, int requestCode) {
 
-        startActivityForResult(activity, new PaymentArguments(clientId, ParamsPhone.PATTERN_ID,
+        startActivityForResult(activity, new PaymentArguments(clientId, PhoneParams.PATTERN_ID,
                 params.makeParams()), requestCode);
     }
 
@@ -157,7 +160,7 @@ public class PaymentActivity extends Activity {
         return dataServiceHelper;
     }
 
-    public List<MoneySource> getCards() {
+    public List<MoneySourceExternal> getCards() {
         return cards;
     }
 
@@ -165,7 +168,7 @@ public class PaymentActivity extends Activity {
         replaceFragmentClearBackStack(WebFragment.newInstance(requestId));
     }
 
-    public void showWeb(ProcessExternalPayment pep, MoneySource moneySource) {
+    public void showWeb(ProcessExternalPayment pep, MoneySourceExternal moneySource) {
         replaceFragmentAddingToBackStack(WebFragment.newInstance(requestId, pep, moneySource));
     }
 
@@ -173,15 +176,15 @@ public class PaymentActivity extends Activity {
         replaceFragmentClearBackStack(CardsFragment.newInstance(title, contractAmount));
     }
 
-    public void showError(String error, String status) {
+    public void showError(Error error, String status) {
         replaceFragmentClearBackStack(ErrorFragment.newInstance(error, status));
     }
 
-    public void showSuccess(MoneySource moneySource) {
+    public void showSuccess(MoneySourceExternal moneySource) {
         replaceFragmentClearBackStack(SuccessFragment.newInstance(requestId, contractAmount, moneySource));
     }
 
-    public void showCsc(MoneySource moneySource) {
+    public void showCsc(MoneySourceExternal moneySource) {
         replaceFragmentAddingToBackStack(CscFragment.newInstance(requestId, moneySource));
     }
 
@@ -200,7 +203,7 @@ public class PaymentActivity extends Activity {
 
     private void onExternalPaymentReceived(RequestExternalPayment rep) {
         reqId = null;
-        if (rep.isSuccess()) {
+        if (rep.getStatus() == BaseRequestPayment.Status.SUCCESS) {
             title = rep.getTitle();
             requestId = rep.getRequestId();
             contractAmount = rep.getContractAmount().doubleValue();
@@ -210,13 +213,13 @@ public class PaymentActivity extends Activity {
                 showCards();
             }
         } else {
-            showError(rep.getError(), rep.getStatus());
+            showError(rep.getError(), rep.getStatus().toString());
         }
         hideProgressBar();
     }
 
     private void onExternalPaymentProcessed(ProcessExternalPayment pep) {
-        if (pep.isSuccess()) {
+        if (pep.getStatus() == BaseProcessPayment.Status.SUCCESS) {
             success = true;
             invoiceId = pep.getInvoiceId();
         }
@@ -270,7 +273,7 @@ public class PaymentActivity extends Activity {
                     @Override
                     public void handle(Intent intent) {
                         if (isManageableIntent(intent)) {
-                            String error = intent.getStringExtra(DataService.EXTRA_EXCEPTION_ERROR);
+                            Error error = (Error) intent.getSerializableExtra(DataService.EXTRA_EXCEPTION_ERROR);
                             String status = intent.getStringExtra(DataService.EXTRA_EXCEPTION_STATUS);
                             showError(error, status);
                         }

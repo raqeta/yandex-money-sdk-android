@@ -7,8 +7,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.yandex.money.model.cps.ProcessExternalPayment;
-import com.yandex.money.model.cps.misc.MoneySource;
+import com.yandex.money.model.methods.BaseProcessPayment;
+import com.yandex.money.model.methods.ProcessExternalPayment;
+import com.yandex.money.model.methods.misc.MoneySourceExternal;
 
 import ru.yandex.money.android.R;
 import ru.yandex.money.android.database.DatabaseStorage;
@@ -27,7 +28,7 @@ public class SuccessFragment extends PaymentFragment {
 
     private String requestId;
     private State state = State.SUCCESS_SHOWED;
-    private MoneySource moneySource;
+    private MoneySourceExternal moneySource;
 
     private View card;
     private Button saveCard;
@@ -35,7 +36,7 @@ public class SuccessFragment extends PaymentFragment {
     private TextView description;
 
     public static SuccessFragment newInstance(String requestId, double contractAmount,
-                                              MoneySource moneySource) {
+                                              MoneySourceExternal moneySource) {
 
         Bundle args = new Bundle();
         args.putString(EXTRA_REQUEST_ID, requestId);
@@ -97,13 +98,13 @@ public class SuccessFragment extends PaymentFragment {
     @Override
     protected void onExternalPaymentProcessed(ProcessExternalPayment pep) {
         super.onExternalPaymentProcessed(pep);
-        if (pep.isSuccess()) {
+        if (pep.getStatus() == BaseProcessPayment.Status.SUCCESS) {
             moneySource = pep.getMoneySource();
             new DatabaseStorage(getPaymentActivity()).insertMoneySource(moneySource);
             state = State.SAVING_COMPLETED;
             onCardSaved();
         } else {
-            showError(pep.getError(), pep.getStatus());
+            showError(pep.getError(), pep.getStatus().toString());
         }
     }
 
@@ -159,7 +160,7 @@ public class SuccessFragment extends PaymentFragment {
         Views.setVisibility(getView(), R.id.ym_success, View.VISIBLE);
     }
 
-    private MoneySource getMoneySourceFromBundle(Bundle bundle) {
+    private MoneySourceExternal getMoneySourceFromBundle(Bundle bundle) {
         MoneySourceParcelable parcelable = bundle.getParcelable(EXTRA_MONEY_SOURCE);
         return parcelable == null ? null : parcelable.getMoneySource();
     }

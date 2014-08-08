@@ -3,7 +3,8 @@ package ru.yandex.money.android.parcelables;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.yandex.money.model.cps.RequestExternalPayment;
+import com.yandex.money.model.Error;
+import com.yandex.money.model.methods.RequestExternalPayment;
 
 import java.math.BigDecimal;
 
@@ -21,12 +22,12 @@ public class RequestExternalPaymentParcelable implements Parcelable {
     }
 
     private RequestExternalPaymentParcelable(Parcel parcel) {
-        String status = parcel.readString();
-        String error = parcel.readString();
+        RequestExternalPayment.Status status = (RequestExternalPayment.Status) parcel.readSerializable();
+        Error error = (Error) parcel.readSerializable();
         String requestId = parcel.readString();
         BigDecimal bigDecimal = Parcelables.readBigDecimal(parcel);
         rep = new RequestExternalPayment(status, error, requestId,
-                bigDecimal == null ? null : bigDecimal.toString(), parcel.readString());
+                bigDecimal == null ? null : bigDecimal, parcel.readString());
     }
 
     @Override
@@ -36,8 +37,8 @@ public class RequestExternalPaymentParcelable implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(rep.getStatus());
-        dest.writeString(rep.getError());
+        dest.writeSerializable(rep.getStatus());
+        dest.writeSerializable(rep.getError());
         dest.writeString(rep.getRequestId());
         Parcelables.writeBigDecimal(dest, rep.getContractAmount());
         dest.writeString(rep.getTitle());

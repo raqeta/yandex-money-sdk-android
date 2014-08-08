@@ -3,8 +3,9 @@ package ru.yandex.money.android.fragments;
 import android.app.Fragment;
 import android.content.Intent;
 
-import com.yandex.money.model.cps.ProcessExternalPayment;
-import com.yandex.money.model.cps.misc.MoneySource;
+import com.yandex.money.model.Error;
+import com.yandex.money.model.methods.ProcessExternalPayment;
+import com.yandex.money.model.methods.misc.MoneySourceExternal;
 
 import ru.yandex.money.android.IntentHandler;
 import ru.yandex.money.android.MultipleBroadcastReceiver;
@@ -49,7 +50,7 @@ public abstract class PaymentFragment extends Fragment {
         });
     }
 
-    protected void showWeb(final ProcessExternalPayment pep, final MoneySource moneySource) {
+    protected void showWeb(final ProcessExternalPayment pep, final MoneySourceExternal moneySource) {
         startActionSafely(new Action() {
             @Override
             public void start(PaymentActivity activity) {
@@ -67,7 +68,7 @@ public abstract class PaymentFragment extends Fragment {
         });
     }
 
-    protected void showError(final String error, final String status) {
+    protected void showError(final Error error, final String status) {
         startActionSafely(new Action() {
             @Override
             public void start(PaymentActivity activity) {
@@ -76,7 +77,7 @@ public abstract class PaymentFragment extends Fragment {
         });
     }
 
-    protected void showCsc(final MoneySource moneySource) {
+    protected void showCsc(final MoneySourceExternal moneySource) {
         startActionSafely(new Action() {
             @Override
             public void start(PaymentActivity activity) {
@@ -85,7 +86,7 @@ public abstract class PaymentFragment extends Fragment {
         });
     }
 
-    protected void showSuccess(final MoneySource moneySource) {
+    protected void showSuccess(final MoneySourceExternal moneySource) {
         startActionSafely(new Action() {
             @Override
             public void start(PaymentActivity activity) {
