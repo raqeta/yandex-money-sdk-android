@@ -3,9 +3,9 @@ package ru.yandex.money.android.fragments;
 import android.app.Fragment;
 import android.content.Intent;
 
-import com.yandex.money.model.Error;
-import com.yandex.money.model.methods.ProcessExternalPayment;
-import com.yandex.money.model.methods.misc.MoneySourceExternal;
+import com.yandex.money.api.methods.ProcessExternalPayment;
+import com.yandex.money.api.model.Error;
+import com.yandex.money.api.model.MoneySourceExternal;
 
 import ru.yandex.money.android.IntentHandler;
 import ru.yandex.money.android.MultipleBroadcastReceiver;

@@ -11,9 +11,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.yandex.money.model.Error;
-import com.yandex.money.model.methods.ProcessExternalPayment;
-import com.yandex.money.model.methods.misc.MoneySourceExternal;
+import com.yandex.money.api.methods.ProcessExternalPayment;
+import com.yandex.money.api.model.Error;
+import com.yandex.money.api.model.MoneySourceExternal;
 
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EncodingUtils;

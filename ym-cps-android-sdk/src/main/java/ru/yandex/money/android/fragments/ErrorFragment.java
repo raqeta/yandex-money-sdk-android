@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.yandex.money.model.Error;
+import com.yandex.money.api.model.Error;
 
 import ru.yandex.money.android.R;
 import ru.yandex.money.android.utils.Views;

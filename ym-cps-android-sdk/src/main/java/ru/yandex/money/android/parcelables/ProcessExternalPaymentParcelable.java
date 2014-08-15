@@ -3,9 +3,9 @@ package ru.yandex.money.android.parcelables;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.yandex.money.model.Error;
-import com.yandex.money.model.methods.ProcessExternalPayment;
-import com.yandex.money.model.methods.misc.MoneySourceExternal;
+import com.yandex.money.api.methods.ProcessExternalPayment;
+import com.yandex.money.api.model.Error;
+import com.yandex.money.api.model.MoneySourceExternal;
 
 import java.util.Map;
 
@@ -27,7 +27,7 @@ public class ProcessExternalPaymentParcelable implements Parcelable {
                 (ProcessExternalPayment.Status) parcel.readSerializable();
         Error error = (Error) parcel.readSerializable();
         String acsUri = parcel.readString();
-        Map<String, String> acsParams = Parcelables.readStringMap(parcel);
+        Map<String, String> acsParams = Parcelables.readNullableStringMap(parcel);
         this.pep = new ProcessExternalPayment(status, error, acsUri, acsParams,
                 readMoneySource(parcel), Parcelables.readNullableLong(parcel),
                 parcel.readString());
@@ -43,7 +43,7 @@ public class ProcessExternalPaymentParcelable implements Parcelable {
         dest.writeSerializable(pep.getStatus());
         dest.writeSerializable(pep.getError());
         dest.writeString(pep.getAcsUri());
-        Parcelables.writeStringMap(dest, pep.getAcsParams());
+        Parcelables.writeNullableStringMap(dest, pep.getAcsParams());
         writeMoneySource(dest, flags);
         Parcelables.writeNullableLong(dest, pep.getNextRetry());
         dest.writeString(pep.getInvoiceId());

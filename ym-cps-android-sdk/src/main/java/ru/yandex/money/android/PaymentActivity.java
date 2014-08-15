@@ -9,14 +9,14 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Window;
 
-import com.yandex.money.model.Error;
-import com.yandex.money.model.common.params.P2pParams;
-import com.yandex.money.model.common.params.PhoneParams;
-import com.yandex.money.model.methods.BaseProcessPayment;
-import com.yandex.money.model.methods.BaseRequestPayment;
-import com.yandex.money.model.methods.ProcessExternalPayment;
-import com.yandex.money.model.methods.RequestExternalPayment;
-import com.yandex.money.model.methods.misc.MoneySourceExternal;
+import com.yandex.money.api.methods.BaseProcessPayment;
+import com.yandex.money.api.methods.BaseRequestPayment;
+import com.yandex.money.api.methods.ProcessExternalPayment;
+import com.yandex.money.api.methods.RequestExternalPayment;
+import com.yandex.money.api.methods.params.P2pParams;
+import com.yandex.money.api.methods.params.PhoneParams;
+import com.yandex.money.api.model.Error;
+import com.yandex.money.api.model.MoneySourceExternal;
 
 import java.util.List;
 import java.util.Map;

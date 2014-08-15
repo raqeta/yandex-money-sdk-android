@@ -37,16 +37,16 @@ public class Parcelables {
         }
     }
 
-    public static void writeStringMap(Parcel parcel, Map<String, String> map) {
+    public static void writeNullableStringMap(Parcel parcel, Map<String, String> map) {
         if (parcel == null) {
             throw new NullPointerException("parcel is null");
         }
-        if (map == null) {
-            throw new NullPointerException("map is null");
+        boolean hasValue = writeNullableValue(parcel, map);
+        if (hasValue) {
+            Bundle bundle = new Bundle();
+            Bundles.writeStringMapToBundle(bundle, map);
+            parcel.writeBundle(bundle);
         }
-        Bundle bundle = new Bundle();
-        Bundles.writeStringMapToBundle(bundle, map);
-        parcel.writeBundle(bundle);
     }
 
     public static boolean readBoolean(Parcel parcel) {
@@ -65,12 +65,16 @@ public class Parcelables {
         return hasNullableValue(parcel) ? new BigDecimal(parcel.readDouble()) : null;
     }
 
-    public static Map<String, String> readStringMap(Parcel parcel) {
+    public static Map<String, String> readNullableStringMap(Parcel parcel) {
         if (parcel == null) {
             throw new NullPointerException("parcel is null");
         }
-        Bundle bundle = parcel.readBundle();
-        return Bundles.readStringMapFromBundle(bundle);
+        if (hasNullableValue(parcel)) {
+            Bundle bundle = parcel.readBundle();
+            return Bundles.readStringMapFromBundle(bundle);
+        } else {
+            return null;
+        }
     }
 
     private static boolean writeNullableValue(Parcel parcel, Object value) {

@@ -3,7 +3,7 @@ package ru.yandex.money.android.parcelables;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.yandex.money.model.methods.misc.MoneySourceExternal;
+import com.yandex.money.api.model.MoneySourceExternal;
 
 /**
  * @author vyasevich

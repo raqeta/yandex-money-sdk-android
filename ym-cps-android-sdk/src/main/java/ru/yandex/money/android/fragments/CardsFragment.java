@@ -13,7 +13,7 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.yandex.money.model.methods.misc.MoneySourceExternal;
+import com.yandex.money.api.model.MoneySourceExternal;
 
 import java.util.List;
 

@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.yandex.money.model.methods.misc.MoneySourceExternal;
+import com.yandex.money.api.model.MoneySourceExternal;
 
 import java.util.ArrayList;
 import java.util.List;

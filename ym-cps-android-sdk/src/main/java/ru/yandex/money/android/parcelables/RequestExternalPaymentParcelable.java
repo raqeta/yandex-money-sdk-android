@@ -3,8 +3,8 @@ package ru.yandex.money.android.parcelables;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.yandex.money.model.Error;
-import com.yandex.money.model.methods.RequestExternalPayment;
+import com.yandex.money.api.methods.RequestExternalPayment;
+import com.yandex.money.api.model.Error;
 
 import java.math.BigDecimal;
 

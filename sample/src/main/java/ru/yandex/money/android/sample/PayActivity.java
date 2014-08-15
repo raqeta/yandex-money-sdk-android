@@ -16,8 +16,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.yandex.money.model.common.params.P2pParams;
-import com.yandex.money.model.common.params.PhoneParams;
+import com.yandex.money.api.methods.params.P2pParams;
+import com.yandex.money.api.methods.params.PhoneParams;
 
 import java.math.BigDecimal;
 import java.util.List;

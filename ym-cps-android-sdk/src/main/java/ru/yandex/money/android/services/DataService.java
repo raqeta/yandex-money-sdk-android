@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-import com.yandex.money.YandexMoney;
-import com.yandex.money.model.Error;
-import com.yandex.money.model.methods.BaseProcessPayment;
-import com.yandex.money.model.methods.InstanceId;
-import com.yandex.money.model.methods.ProcessExternalPayment;
-import com.yandex.money.model.methods.RequestExternalPayment;
+import com.yandex.money.api.YandexMoney;
+import com.yandex.money.api.methods.BaseProcessPayment;
+import com.yandex.money.api.methods.InstanceId;
+import com.yandex.money.api.methods.ProcessExternalPayment;
+import com.yandex.money.api.methods.RequestExternalPayment;
+import com.yandex.money.api.model.Error;
 
 import java.util.Map;
 
@@ -64,7 +64,7 @@ public class DataService extends IntentService {
 
     private void setupYm() {
         ym = new YandexMoney("stub");
-        ym.setDebugLogging(false);
+        ym.setDebugLogging(true);
     }
 
     @Override

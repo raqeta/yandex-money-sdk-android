@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.yandex.money.model.methods.BaseProcessPayment;
-import com.yandex.money.model.methods.ProcessExternalPayment;
-import com.yandex.money.model.methods.misc.MoneySourceExternal;
+import com.yandex.money.api.methods.BaseProcessPayment;
+import com.yandex.money.api.methods.ProcessExternalPayment;
+import com.yandex.money.api.model.MoneySourceExternal;
 
 import ru.yandex.money.android.R;
 import ru.yandex.money.android.database.DatabaseStorage;
