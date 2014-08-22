@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.yandex.money.api.model.ExternalCard;
+
 import java.util.Map;
 import java.util.UUID;
 
+import ru.yandex.money.android.parcelables.ExtendedCardParcelable;
 import ru.yandex.money.android.utils.Bundles;
 
 /**
@@ -33,12 +36,12 @@ public class DataServiceHelper {
         return processExternalPayment(requestId, requestToken, null, null);
     }
 
-    public String process(String requestId, String moneySourceToken, String csc) {
-        return processExternalPayment(requestId, false, moneySourceToken, csc);
+    public String process(String requestId, ExternalCard moneySource, String csc) {
+        return processExternalPayment(requestId, false, moneySource, csc);
     }
 
     private String processExternalPayment(String requestId, boolean requestToken,
-                                          String moneySourceToken, String csc) {
+                                          ExternalCard moneySource, String csc) {
 
         String reqId = genRequestId();
         Intent intent = makeIntent(context, reqId, DataService.REQUEST_TYPE_PROCESS_EXTERNAL_PAYMENT);
@@ -47,7 +50,10 @@ public class DataServiceHelper {
         intent.putExtra(DataService.EXTRA_PROCESS_PAYMENT_EXT_AUTH_SUCCESS_URI, SUCCESS_URI);
         intent.putExtra(DataService.EXTRA_PROCESS_PAYMENT_EXT_AUTH_FAIL_URI, FAIL_URI);
         intent.putExtra(DataService.EXTRA_PROCESS_PAYMENT_REQUEST_TOKEN, requestToken);
-        intent.putExtra(DataService.EXTRA_PROCESS_PAYMENT_MONEY_SOURCE_TOKEN, moneySourceToken);
+        if (moneySource != null) {
+            intent.putExtra(DataService.EXTRA_PROCESS_PAYMENT_MONEY_SOURCE,
+                    new ExtendedCardParcelable(moneySource));
+        }
         intent.putExtra(DataService.EXTRA_PROCESS_PAYMENT_CSC, csc);
 
         context.startService(intent);

@@ -16,7 +16,7 @@ import com.yandex.money.api.methods.RequestExternalPayment;
 import com.yandex.money.api.methods.params.P2pParams;
 import com.yandex.money.api.methods.params.PhoneParams;
 import com.yandex.money.api.model.Error;
-import com.yandex.money.api.model.MoneySourceExternal;
+import com.yandex.money.api.model.ExternalCard;
 
 import java.util.List;
 import java.util.Map;
@@ -51,7 +51,7 @@ public class PaymentActivity extends Activity {
 
     private PaymentArguments arguments;
     private DataServiceHelper dataServiceHelper;
-    private List<MoneySourceExternal> cards;
+    private List<ExternalCard> cards;
 
     private String reqId;
     private String title;
@@ -160,7 +160,7 @@ public class PaymentActivity extends Activity {
         return dataServiceHelper;
     }
 
-    public List<MoneySourceExternal> getCards() {
+    public List<ExternalCard> getCards() {
         return cards;
     }
 
@@ -168,7 +168,7 @@ public class PaymentActivity extends Activity {
         replaceFragmentClearBackStack(WebFragment.newInstance(requestId));
     }
 
-    public void showWeb(ProcessExternalPayment pep, MoneySourceExternal moneySource) {
+    public void showWeb(ProcessExternalPayment pep, ExternalCard moneySource) {
         replaceFragmentAddingToBackStack(WebFragment.newInstance(requestId, pep, moneySource));
     }
 
@@ -180,11 +180,11 @@ public class PaymentActivity extends Activity {
         replaceFragmentClearBackStack(ErrorFragment.newInstance(error, status));
     }
 
-    public void showSuccess(MoneySourceExternal moneySource) {
+    public void showSuccess(ExternalCard moneySource) {
         replaceFragmentClearBackStack(SuccessFragment.newInstance(requestId, contractAmount, moneySource));
     }
 
-    public void showCsc(MoneySourceExternal moneySource) {
+    public void showCsc(ExternalCard moneySource) {
         replaceFragmentAddingToBackStack(CscFragment.newInstance(requestId, moneySource));
     }
 

@@ -13,7 +13,7 @@ import android.webkit.WebViewClient;
 
 import com.yandex.money.api.methods.ProcessExternalPayment;
 import com.yandex.money.api.model.Error;
-import com.yandex.money.api.model.MoneySourceExternal;
+import com.yandex.money.api.model.ExternalCard;
 
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EncodingUtils;
@@ -23,7 +23,7 @@ import java.net.URLEncoder;
 import java.util.Map;
 
 import ru.yandex.money.android.R;
-import ru.yandex.money.android.parcelables.MoneySourceParcelable;
+import ru.yandex.money.android.parcelables.ExtendedCardParcelable;
 import ru.yandex.money.android.parcelables.ProcessExternalPaymentParcelable;
 import ru.yandex.money.android.services.DataServiceHelper;
 
@@ -38,14 +38,14 @@ public class WebFragment extends PaymentFragment {
 
     private String requestId;
     private ProcessExternalPayment pep;
-    private MoneySourceExternal moneySource;
+    private ExternalCard moneySource;
 
     public static WebFragment newInstance(String requestId) {
         return newInstance(requestId, null, null);
     }
 
     public static WebFragment newInstance(String requestId, ProcessExternalPayment pep,
-                                          MoneySourceExternal moneySource) {
+                                          ExternalCard moneySource) {
 
         Bundle args = new Bundle();
         args.putString(EXTRA_REQUEST_ID, requestId);
@@ -54,7 +54,7 @@ public class WebFragment extends PaymentFragment {
                     new ProcessExternalPaymentParcelable(pep));
         }
         if (moneySource != null) {
-            args.putParcelable(EXTRA_MONEY_SOURCE, new MoneySourceParcelable(moneySource));
+            args.putParcelable(EXTRA_MONEY_SOURCE, new ExtendedCardParcelable(moneySource));
         }
 
         WebFragment fragment = new WebFragment();
@@ -74,9 +74,9 @@ public class WebFragment extends PaymentFragment {
         if (pepParcelable != null) {
             pep = pepParcelable.getProcessExternalPayment();
         }
-        MoneySourceParcelable moneySourceParcelable = args.getParcelable(EXTRA_MONEY_SOURCE);
-        if (moneySourceParcelable != null) {
-            moneySource = moneySourceParcelable.getMoneySource();
+        ExtendedCardParcelable extendedCardParcelable = args.getParcelable(EXTRA_MONEY_SOURCE);
+        if (extendedCardParcelable != null) {
+            moneySource = extendedCardParcelable.getExtendedCard();
         }
     }
 

@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.yandex.money.api.methods.ProcessExternalPayment;
 import com.yandex.money.api.model.Error;
-import com.yandex.money.api.model.MoneySourceExternal;
+import com.yandex.money.api.model.ExternalCard;
 
 import java.util.Map;
 
@@ -50,17 +50,17 @@ public class ProcessExternalPaymentParcelable implements Parcelable {
     }
 
     private void writeMoneySource(Parcel dest, int flags) {
-        MoneySourceExternal moneySource = pep.getMoneySource();
-        MoneySourceParcelable parcelable = moneySource == null ? null :
-                new MoneySourceParcelable(moneySource);
+        ExternalCard moneySource = pep.getMoneySource();
+        ExtendedCardParcelable parcelable = moneySource == null ? null :
+                new ExtendedCardParcelable(moneySource);
         Parcelables.writeNullableParcelable(dest, parcelable, flags);
     }
 
-    private MoneySourceExternal readMoneySource(Parcel parcel) {
-        MoneySourceParcelable parcelable =
-                (MoneySourceParcelable) Parcelables.readNullableParcelable(
-                        parcel, MoneySourceParcelable.class.getClassLoader());
-        return parcelable == null ? null : parcelable.getMoneySource();
+    private ExternalCard readMoneySource(Parcel parcel) {
+        ExtendedCardParcelable parcelable =
+                (ExtendedCardParcelable) Parcelables.readNullableParcelable(
+                        parcel, ExtendedCardParcelable.class.getClassLoader());
+        return parcelable == null ? null : parcelable.getExtendedCard();
     }
 
     public ProcessExternalPayment getProcessExternalPayment() {

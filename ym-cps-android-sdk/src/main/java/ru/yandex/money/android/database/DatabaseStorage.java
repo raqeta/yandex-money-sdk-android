@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.yandex.money.api.model.MoneySourceExternal;
+import com.yandex.money.api.model.ExternalCard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,19 +24,19 @@ public class DatabaseStorage {
         helper = DatabaseHelper.getInstance(context);
     }
 
-    public List<MoneySourceExternal> selectMoneySources() {
+    public List<ExternalCard> selectMoneySources() {
         SQLiteDatabase database = getReadableDatabase();
 
         Cursor cursor = database.rawQuery("SELECT * FROM " + MoneySourceTable.NAME, null);
+        final int fundingSourceTypeIndex = cursor.getColumnIndex(MoneySourceTable.FUNDING_SOURCE_TYPE);
         final int typeIndex = cursor.getColumnIndex(MoneySourceTable.TYPE);
-        final int paymentCardTypeIndex = cursor.getColumnIndex(MoneySourceTable.PAYMENT_CARD_TYPE);
         final int panFragmentIndex = cursor.getColumnIndex(MoneySourceTable.PAN_FRAGMENT);
         final int tokenIndex = cursor.getColumnIndex(MoneySourceTable.TOKEN);
 
-        List<MoneySourceExternal> moneySources = new ArrayList<MoneySourceExternal>();
+        List<ExternalCard> moneySources = new ArrayList<ExternalCard>();
         while (cursor.moveToNext()) {
-            moneySources.add(new MoneySourceExternal(cursor.getString(typeIndex),
-                    cursor.getString(paymentCardTypeIndex), cursor.getString(panFragmentIndex),
+            moneySources.add(new ExternalCard(cursor.getString(panFragmentIndex),
+                    cursor.getString(typeIndex), cursor.getString(fundingSourceTypeIndex),
                     cursor.getString(tokenIndex)));
         }
 
@@ -45,15 +45,15 @@ public class DatabaseStorage {
         return moneySources;
     }
 
-    public void insertMoneySource(MoneySourceExternal moneySource) {
+    public void insertMoneySource(ExternalCard moneySource) {
         if (moneySource == null) {
             Log.w(TAG, "trying to insert null money source");
             return;
         }
 
         ContentValues values = new ContentValues();
+        values.put(MoneySourceTable.FUNDING_SOURCE_TYPE, moneySource.getFundingSourceType());
         values.put(MoneySourceTable.TYPE, moneySource.getType());
-        values.put(MoneySourceTable.PAYMENT_CARD_TYPE, moneySource.getPaymentCardType());
         values.put(MoneySourceTable.PAN_FRAGMENT, moneySource.getPanFragment());
         values.put(MoneySourceTable.TOKEN, moneySource.getMoneySourceToken());
 
@@ -64,7 +64,7 @@ public class DatabaseStorage {
         }
     }
 
-    public void deleteMoneySource(MoneySourceExternal moneySource) {
+    public void deleteMoneySource(ExternalCard moneySource) {
         if (moneySource == null) {
             Log.w(TAG, "trying to delete null money source");
             return;

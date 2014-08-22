@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import com.yandex.money.api.methods.ProcessExternalPayment;
 import com.yandex.money.api.model.Error;
-import com.yandex.money.api.model.MoneySourceExternal;
+import com.yandex.money.api.model.ExternalCard;
 
 import ru.yandex.money.android.IntentHandler;
 import ru.yandex.money.android.MultipleBroadcastReceiver;
@@ -50,7 +50,7 @@ public abstract class PaymentFragment extends Fragment {
         });
     }
 
-    protected void showWeb(final ProcessExternalPayment pep, final MoneySourceExternal moneySource) {
+    protected void showWeb(final ProcessExternalPayment pep, final ExternalCard moneySource) {
         startActionSafely(new Action() {
             @Override
             public void start(PaymentActivity activity) {
@@ -77,7 +77,7 @@ public abstract class PaymentFragment extends Fragment {
         });
     }
 
-    protected void showCsc(final MoneySourceExternal moneySource) {
+    protected void showCsc(final ExternalCard moneySource) {
         startActionSafely(new Action() {
             @Override
             public void start(PaymentActivity activity) {
@@ -86,7 +86,7 @@ public abstract class PaymentFragment extends Fragment {
         });
     }
 
-    protected void showSuccess(final MoneySourceExternal moneySource) {
+    protected void showSuccess(final ExternalCard moneySource) {
         startActionSafely(new Action() {
             @Override
             public void start(PaymentActivity activity) {

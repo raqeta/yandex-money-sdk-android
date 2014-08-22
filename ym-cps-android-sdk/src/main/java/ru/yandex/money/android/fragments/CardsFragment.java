@@ -13,7 +13,7 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.yandex.money.api.model.MoneySourceExternal;
+import com.yandex.money.api.model.ExternalCard;
 
 import java.util.List;
 
@@ -63,7 +63,7 @@ public class CardsFragment extends PaymentFragment implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        MoneySourceExternal moneySource = (MoneySourceExternal) parent.getItemAtPosition(position);
+        ExternalCard moneySource = (ExternalCard) parent.getItemAtPosition(position);
         if (moneySource == null) {
             showWeb();
         } else {
@@ -107,11 +107,11 @@ public class CardsFragment extends PaymentFragment implements AdapterView.OnItem
             View root = inflater.inflate(R.layout.ym_card_item, parent, false);
             assert root != null : "unable to inflate layout in CardsAdapter";
 
-            final MoneySourceExternal moneySource = getCardAtPosition(position);
+            final ExternalCard moneySource = getCardAtPosition(position);
             final TextView panFragment = (TextView) root.findViewById(R.id.ym_pan_fragment);
             panFragment.setText(MoneySourceFormatter.formatPanFragment(moneySource.getPanFragment()));
             panFragment.setCompoundDrawablesWithIntrinsicBounds(CardType.parseCardType(
-                    moneySource.getPaymentCardType()).getCardResId(), 0, 0, 0);
+                    moneySource.getType()).getCardResId(), 0, 0, 0);
 
             ImageButton button = (ImageButton) root.findViewById(R.id.ym_actions);
             button.setOnClickListener(new View.OnClickListener() {
@@ -128,7 +128,7 @@ public class CardsFragment extends PaymentFragment implements AdapterView.OnItem
             return inflater.inflate(R.layout.ym_cards_footer, parent, false);
         }
 
-        private List<MoneySourceExternal> getCards() {
+        private List<ExternalCard> getCards() {
             return getPaymentActivity().getCards();
         }
 
@@ -136,12 +136,12 @@ public class CardsFragment extends PaymentFragment implements AdapterView.OnItem
             return getCards().size();
         }
 
-        private MoneySourceExternal getCardAtPosition(int position) {
-            List<MoneySourceExternal> cards = getCards();
+        private ExternalCard getCardAtPosition(int position) {
+            List<ExternalCard> cards = getCards();
             return position == cards.size() ? null : cards.get(position);
         }
 
-        private void showPopup(View v, MoneySourceExternal moneySource) {
+        private void showPopup(View v, ExternalCard moneySource) {
             PopupMenu menu = new PopupMenu(getPaymentActivity(), v);
             MenuInflater inflater = menu.getMenuInflater();
             inflater.inflate(R.menu.ym_card_actions, menu.getMenu());
@@ -149,7 +149,7 @@ public class CardsFragment extends PaymentFragment implements AdapterView.OnItem
             menu.show();
         }
 
-        private void deleteCard(MoneySourceExternal moneySource) {
+        private void deleteCard(ExternalCard moneySource) {
             databaseStorage.deleteMoneySource(moneySource);
             getCards().remove(moneySource);
             notifyDataSetChanged();
@@ -157,9 +157,9 @@ public class CardsFragment extends PaymentFragment implements AdapterView.OnItem
 
         private class MenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
-            private final MoneySourceExternal moneySource;
+            private final ExternalCard moneySource;
 
-            public MenuItemClickListener(MoneySourceExternal moneySource) {
+            public MenuItemClickListener(ExternalCard moneySource) {
                 this.moneySource = moneySource;
             }
 

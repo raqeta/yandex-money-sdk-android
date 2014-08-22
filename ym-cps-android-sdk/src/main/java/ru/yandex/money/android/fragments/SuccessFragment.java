@@ -9,12 +9,12 @@ import android.widget.TextView;
 
 import com.yandex.money.api.methods.BaseProcessPayment;
 import com.yandex.money.api.methods.ProcessExternalPayment;
-import com.yandex.money.api.model.MoneySourceExternal;
+import com.yandex.money.api.model.ExternalCard;
 
 import ru.yandex.money.android.R;
 import ru.yandex.money.android.database.DatabaseStorage;
 import ru.yandex.money.android.formatters.MoneySourceFormatter;
-import ru.yandex.money.android.parcelables.MoneySourceParcelable;
+import ru.yandex.money.android.parcelables.ExtendedCardParcelable;
 import ru.yandex.money.android.utils.CardType;
 import ru.yandex.money.android.utils.Views;
 
@@ -28,7 +28,7 @@ public class SuccessFragment extends PaymentFragment {
 
     private String requestId;
     private State state = State.SUCCESS_SHOWED;
-    private MoneySourceExternal moneySource;
+    private ExternalCard moneySource;
 
     private View card;
     private Button saveCard;
@@ -36,13 +36,13 @@ public class SuccessFragment extends PaymentFragment {
     private TextView description;
 
     public static SuccessFragment newInstance(String requestId, double contractAmount,
-                                              MoneySourceExternal moneySource) {
+                                              ExternalCard moneySource) {
 
         Bundle args = new Bundle();
         args.putString(EXTRA_REQUEST_ID, requestId);
         args.putDouble(EXTRA_CONTRACT_AMOUNT, contractAmount);
         if (moneySource != null) {
-            args.putParcelable(EXTRA_MONEY_SOURCE, new MoneySourceParcelable(moneySource));
+            args.putParcelable(EXTRA_MONEY_SOURCE, new ExtendedCardParcelable(moneySource));
         }
 
         SuccessFragment frg = new SuccessFragment();
@@ -91,7 +91,7 @@ public class SuccessFragment extends PaymentFragment {
         super.onSaveInstanceState(outState);
         outState.putSerializable(EXTRA_STATE, state);
         if (moneySource != null) {
-            outState.putParcelable(EXTRA_MONEY_SOURCE, new MoneySourceParcelable(moneySource));
+            outState.putParcelable(EXTRA_MONEY_SOURCE, new ExtendedCardParcelable(moneySource));
         }
     }
 
@@ -142,14 +142,14 @@ public class SuccessFragment extends PaymentFragment {
 
     private void onCardSaved() {
         Views.setImageResource(getView(), R.id.ym_payment_card_type,
-                CardType.parseCardType(moneySource.getPaymentCardType()).getIcoResId());
+                CardType.parseCardType(moneySource.getType()).getIcoResId());
         Views.setText(getView(), R.id.ym_pan_fragment,
                 MoneySourceFormatter.formatPanFragment(moneySource.getPanFragment()));
         card.setBackgroundResource(R.drawable.ym_card_saved);
         saveCard.setVisibility(View.GONE);
         successMarker.setVisibility(View.VISIBLE);
         description.setText(getString(R.string.ym_success_card_saved_description,
-                CardType.parseCardType(moneySource.getPaymentCardType()).getCscAbbr()));
+                CardType.parseCardType(moneySource.getType()).getCscAbbr()));
     }
 
     private void onCardExists() {
@@ -160,9 +160,9 @@ public class SuccessFragment extends PaymentFragment {
         Views.setVisibility(getView(), R.id.ym_success, View.VISIBLE);
     }
 
-    private MoneySourceExternal getMoneySourceFromBundle(Bundle bundle) {
-        MoneySourceParcelable parcelable = bundle.getParcelable(EXTRA_MONEY_SOURCE);
-        return parcelable == null ? null : parcelable.getMoneySource();
+    private ExternalCard getMoneySourceFromBundle(Bundle bundle) {
+        ExtendedCardParcelable parcelable = bundle.getParcelable(EXTRA_MONEY_SOURCE);
+        return parcelable == null ? null : parcelable.getExtendedCard();
     }
 
     private enum State {

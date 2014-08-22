@@ -16,6 +16,7 @@ import com.yandex.money.api.model.Error;
 import java.util.Map;
 
 import ru.yandex.money.android.Prefs;
+import ru.yandex.money.android.parcelables.ExtendedCardParcelable;
 import ru.yandex.money.android.parcelables.ProcessExternalPaymentParcelable;
 import ru.yandex.money.android.parcelables.RequestExternalPaymentParcelable;
 import ru.yandex.money.android.utils.Bundles;
@@ -47,7 +48,7 @@ public class DataService extends IntentService {
     static final String EXTRA_PROCESS_PAYMENT_EXT_AUTH_SUCCESS_URI = "ru.yandex.money.android.extra.PROCESS_PAYMENT_EXT_AUTH_SUCCESS_URI";
     static final String EXTRA_PROCESS_PAYMENT_EXT_AUTH_FAIL_URI = "ru.yandex.money.android.extra.PROCESS_PAYMENT_EXT_AUTH_FAIL_URI";
     static final String EXTRA_PROCESS_PAYMENT_REQUEST_TOKEN = "ru.yandex.money.android.extra.PROCESS_PAYMENT_REQUEST_TOKEN";
-    static final String EXTRA_PROCESS_PAYMENT_MONEY_SOURCE_TOKEN = "ru.yandex.money.android.extra.PROCESS_PAYMENT_MONEY_SOURCE_TOKEN";
+    static final String EXTRA_PROCESS_PAYMENT_MONEY_SOURCE = "ru.yandex.money.android.extra.PROCESS_PAYMENT_MONEY_SOURCE";
     static final String EXTRA_PROCESS_PAYMENT_CSC = "ru.yandex.money.android.extra.PROCESS_PAYMENT_CSC";
 
     static final int REQUEST_TYPE_REQUEST_EXTERNAL_PAYMENT = 1;
@@ -93,16 +94,16 @@ public class DataService extends IntentService {
         String extAuthSuccessUri = intent.getStringExtra(EXTRA_PROCESS_PAYMENT_EXT_AUTH_SUCCESS_URI);
         String extAuthFailUri = intent.getStringExtra(EXTRA_PROCESS_PAYMENT_EXT_AUTH_FAIL_URI);
         boolean requestToken = intent.getBooleanExtra(EXTRA_PROCESS_PAYMENT_REQUEST_TOKEN, false);
-        String moneySourceToken = intent.getStringExtra(EXTRA_PROCESS_PAYMENT_MONEY_SOURCE_TOKEN);
+        ExtendedCardParcelable parcelable = intent.getParcelableExtra(EXTRA_PROCESS_PAYMENT_MONEY_SOURCE);
         String csc = intent.getStringExtra(EXTRA_PROCESS_PAYMENT_CSC);
 
         ProcessExternalPayment.Request req;
-        if (TextUtils.isEmpty(moneySourceToken)) {
+        if (parcelable == null) {
             req = new ProcessExternalPayment.Request(instanceId, requestId, extAuthSuccessUri,
                     extAuthFailUri, requestToken);
         } else {
             req = new ProcessExternalPayment.Request(instanceId, requestId, extAuthSuccessUri,
-                    extAuthFailUri, moneySourceToken, csc);
+                    extAuthFailUri, parcelable.getExtendedCard(), csc);
         }
         return req;
     }

@@ -11,11 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yandex.money.api.methods.ProcessExternalPayment;
-import com.yandex.money.api.model.MoneySourceExternal;
+import com.yandex.money.api.model.ExternalCard;
 
 import ru.yandex.money.android.R;
 import ru.yandex.money.android.formatters.MoneySourceFormatter;
-import ru.yandex.money.android.parcelables.MoneySourceParcelable;
+import ru.yandex.money.android.parcelables.ExtendedCardParcelable;
 import ru.yandex.money.android.utils.CardType;
 import ru.yandex.money.android.utils.Views;
 
@@ -25,7 +25,7 @@ import ru.yandex.money.android.utils.Views;
 public class CscFragment extends PaymentFragment {
 
     private String requestId;
-    private MoneySourceExternal moneySource;
+    private ExternalCard moneySource;
     private CardType cardType;
     private String csc;
 
@@ -36,10 +36,10 @@ public class CscFragment extends PaymentFragment {
     private Button cancel;
     private Button pay;
 
-    public static CscFragment newInstance(String requestId, MoneySourceExternal moneySource) {
+    public static CscFragment newInstance(String requestId, ExternalCard moneySource) {
         Bundle args = new Bundle();
         args.putString(EXTRA_REQUEST_ID, requestId);
-        args.putParcelable(EXTRA_MONEY_SOURCE, new MoneySourceParcelable(moneySource));
+        args.putParcelable(EXTRA_MONEY_SOURCE, new ExtendedCardParcelable(moneySource));
 
         CscFragment fragment = new CscFragment();
         fragment.setArguments(args);
@@ -52,12 +52,12 @@ public class CscFragment extends PaymentFragment {
         Bundle args = getArguments();
         assert args != null : "provide correct arguments for CscFragment";
 
-        MoneySourceParcelable moneySourceParcelable = args.getParcelable(EXTRA_MONEY_SOURCE);
-        assert moneySourceParcelable != null : "provide money source for CscFragment";
+        ExtendedCardParcelable extendedCardParcelable = args.getParcelable(EXTRA_MONEY_SOURCE);
+        assert extendedCardParcelable != null : "provide money source for CscFragment";
 
         requestId = args.getString(EXTRA_REQUEST_ID);
-        moneySource = moneySourceParcelable.getMoneySource();
-        cardType = CardType.parseCardType(moneySource.getPaymentCardType());
+        moneySource = extendedCardParcelable.getExtendedCard();
+        cardType = CardType.parseCardType(moneySource.getType());
 
         View view = inflater.inflate(R.layout.ym_csc_fragment, container, false);
         assert view != null : "unable to inflate view in CscFragment";
@@ -133,8 +133,7 @@ public class CscFragment extends PaymentFragment {
             cancel.setEnabled(false);
             pay.setEnabled(false);
             cscEditText.setEnabled(false);
-            reqId = getPaymentActivity().getDataServiceHelper().process(requestId,
-                    moneySource.getMoneySourceToken(), csc);
+            reqId = getPaymentActivity().getDataServiceHelper().process(requestId, moneySource, csc);
             showProgressBar();
         } else {
             setErrorVisible(getString(R.string.ym_error_oops_title),
