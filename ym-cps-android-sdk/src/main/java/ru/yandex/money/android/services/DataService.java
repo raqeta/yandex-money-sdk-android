@@ -12,6 +12,7 @@ import com.yandex.money.api.methods.InstanceId;
 import com.yandex.money.api.methods.ProcessExternalPayment;
 import com.yandex.money.api.methods.RequestExternalPayment;
 import com.yandex.money.api.model.Error;
+import com.yandex.money.api.net.DefaultApiClient;
 
 import java.util.Map;
 
@@ -64,7 +65,9 @@ public class DataService extends IntentService {
     }
 
     private void setupYm() {
-        ym = new YandexMoney("stub");
+        // we use stub instead of actual client id because we pass it as an extra when service is
+        // started with a new intent
+        ym = new YandexMoney(new DefaultApiClient("stub", false, "Android"));
         ym.setDebugLogging(true);
     }
 
