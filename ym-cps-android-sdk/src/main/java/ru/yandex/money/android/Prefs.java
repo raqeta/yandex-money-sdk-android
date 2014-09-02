@@ -22,7 +22,7 @@ public class Prefs {
     public void storeInstanceId(String instanceId) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PREF_INSTANCE_ID, instanceId);
-        editor.commit();
+        editor.apply();
     }
 
     public String restoreInstanceId() {
