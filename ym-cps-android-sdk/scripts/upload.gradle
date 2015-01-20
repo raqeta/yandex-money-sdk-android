@@ -27,10 +27,6 @@ project.afterEvaluate {
         repositories {
             mavenDeployer {
 
-                if (isMavenCentralBuild) {
-                    beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-                }
-
                 pom.project {
                     parent {
                         groupId 'org.sonatype.oss'
@@ -72,6 +68,9 @@ project.afterEvaluate {
                 }.writeTo("build/outputs/ym-cps-android-sdk-" + version + ".pom")
 
                 if (isTeamcityBuild || isMavenCentralBuild) {
+                    if (isMavenCentralBuild) {
+                        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+                    }
                     project.ext['auth'] = { authentication(userName: teamcity['maven.username'], password: teamcity['maven.password']) }
                     repository(url: teamcity['maven.repository'], project.ext['auth'])
                     snapshotRepository(url: teamcity['maven.snapshotRepository'], project.ext['auth'])
